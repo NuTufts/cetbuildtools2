@@ -170,19 +170,13 @@ defining their properties</p>
 <p>Options:</p>
 <dl class="docutils">
 <dt>HANDBUILT</dt>
-<dd><dl class="first last docutils">
-<dt>Do not build the target &#8211; it will be provided. This option is</dt>
-<dd>mutually exclusive with the PREBUILT option.</dd>
-</dl>
-</dd>
+<dd>Do not build the target &#8211; it will be provided. This option is
+mutually exclusive with the PREBUILT option.</dd>
 <dt>PREBUILT</dt>
-<dd><dl class="first last docutils">
-<dt>Do not build the target &#8211; pick it up from the source dir (eg</dt>
-<dd>scripts).  This option is mutually exclusive with the HANDBUILT
+<dd>Do not build the target &#8211; pick it up from the source dir (eg
+scripts).  This option is mutually exclusive with the HANDBUILT
 option and simply calls the cet_script() function with appropriate
 options.</dd>
-</dl>
-</dd>
 <dt>NO_AUTO</dt>
 <dd>Do not add the target to the auto test list.</dd>
 <dt>USE_BOOST_UNIT</dt>
@@ -191,49 +185,35 @@ options.</dd>
 <dd>Install this test&#8217;s script / exec in the product&#8217;s binary directory
 (ignored for HANDBUILT).</dd>
 <dt>INSTALL_EXAMPLE</dt>
-<dd><dl class="first last docutils">
-<dt>Install this test and all its data files into the examples area of the</dt>
-<dd>product.</dd>
-</dl>
-</dd>
+<dd>Install this test and all its data files into the examples area of the
+product.</dd>
 <dt>INSTALL_SOURCE</dt>
 <dd>Install this test&#8217;s source in the source area of the product.</dd>
 </dl>
 <p>Args:</p>
-<p>CONFIGURATIONS</p>
-<blockquote>
-<div>Configurations (Debug, etc, etc) under which the test shall be executed.</div></blockquote>
 <dl class="docutils">
+<dt>CONFIGURATIONS</dt>
+<dd>Configurations (Debug, etc, etc) under which the test shall be executed.</dd>
 <dt>DATAFILES</dt>
-<dd><dl class="first last docutils">
-<dt>Input and/or references files to be copied to the test area in the</dt>
-<dd>build tree for use by the test. If there is no path, or a relative
+<dd>Input and/or references files to be copied to the test area in the
+build tree for use by the test. If there is no path, or a relative
 path, the file is assumed to be in or under
 <code class="docutils literal"><span class="pre">CMAKE_CURRENT_SOURCE_DIR</span></code>.</dd>
-</dl>
-</dd>
 <dt>DEPENDENCIES</dt>
-<dd><dl class="first last docutils">
-<dt>List of top-level dependencies to consider for a PREBUILT</dt>
-<dd>target. Top-level implies a target (not file) created with
+<dd>List of top-level dependencies to consider for a PREBUILT
+target. Top-level implies a target (not file) created with
 ADD_EXECUTABLE, ADD_LIBRARY or ADD_CUSTOM_TARGET.</dd>
-</dl>
-</dd>
 <dt>LIBRARIES</dt>
-<dd>Extra libraries with which to link this target.</dd>
+<dd>Extra libraries to link to the resulting target.</dd>
 <dt>OPTIONAL_GROUPS</dt>
-<dd><dl class="first last docutils">
-<dt>Assign this test to one or more named optional groups. If the CMake</dt>
-<dd>list variable CET_TEST_GROUPS is set (e.g. with -D on the CMake
+<dd>Assign this test to one or more named optional groups. If the CMake
+list variable CET_TEST_GROUPS is set (e.g. with -D on the CMake
 command line) and there is overlap between the two lists, execute
 the test. The CET_TEST_GROUPS cache variable may additionally
 contain the optional values ALL or NONE.</dd>
-</dl>
-</dd>
 <dt>REF</dt>
-<dd><dl class="first last docutils">
-<dt>The standard output of the test will be captured and compared against</dt>
-<dd>the specified reference file. It is an error to specify this
+<dd><p class="first">The standard output of the test will be captured and compared against
+the specified reference file. It is an error to specify this
 argument and either the PASS_REGULAR_EXPRESSION or
 FAIL_REGULAR_EXPRESSION test properties to the TEST_PROPERTIES
 argument: success is the logical AND of the exit code from execution
@@ -241,11 +221,10 @@ of the test as originally specified, and the success of the
 filtering and subsequent comparison of the output (and optionally,
 the error stream). Optionally, a second element may be specified
 representing a reference for the error stream; otherwise, standard
-error will be ignored.</dd>
-<dt>If REF is specified, then OUTPUT_FILTER and OUTPUT_FILTER_ARGS may</dt>
-<dd>also be specified. OUTPUT_FILTER must be a program which expects an
-input filename as argument and puts the filtered output on STDOUT.</dd>
-</dl>
+error will be ignored.</p>
+<p class="last">If REF is specified, then OUTPUT_FILTER and OUTPUT_FILTER_ARGS may
+also be specified. OUTPUT_FILTER must be a program which expects an
+input filename as argument and puts the filtered output on STDOUT.</p>
 </dd>
 <dt>REQUIRED_FILES</dt>
 <dd>These files are required to be present before the test will be
@@ -256,31 +235,22 @@ test.</dd>
 <dt>TEST_ARGS</dt>
 <dd>Any arguments to the test to be run.</dd>
 <dt>TEST_EXEC</dt>
-<dd><dl class="first last docutils">
-<dt>The exec to run (if not the target). The HANDBUILT option must</dt>
-<dd>be specified in conjunction with this option.</dd>
-</dl>
-</dd>
+<dd>The exec to run (if not the target). The HANDBUILT option must
+be specified in conjunction with this option.</dd>
 <dt>TEST_PROPERTIES</dt>
-<dd><dl class="first last docutils">
-<dt>Properties to be added to the test. See documentation of the cmake</dt>
-<dd>command, &#8220;set_tests_properties.&#8221;</dd>
-</dl>
-</dd>
+<dd>Properties to be added to the test. See documentation of the cmake
+command, &#8220;set_tests_properties.&#8221;</dd>
 </dl>
 <p>Cache variables</p>
 <dl class="docutils">
 <dt>CET_TEST_GROUPS</dt>
-<dd><dl class="first last docutils">
-<dt>Test group names specified using the OPTIONAL_GROUPS list option are</dt>
-<dd>compared against this list to determine whether to configure the
+<dd>Test group names specified using the OPTIONAL_GROUPS list option are
+compared against this list to determine whether to configure the
 test. Default value is the special value &#8220;NONE,&#8221; meaning no
 optional tests are to be configured. Optionally CET_TEST_GROUPS may
 contain the special value &#8220;ALL.&#8221; Specify multiple values separated
 by &#8221;;&#8221; (escape or protect with quotes) or &#8221;,&#8221; See explanation of
 the OPTIONAL_GROUPS variable above for more details.</dd>
-</dl>
-</dd>
 <dt>CET_DEFINED_TEST_GROUPS</dt>
 <dd>Any test group names CMake sees will be added to this list.</dd>
 </dl>
@@ -309,11 +279,8 @@ cet_test() needs to take account of your preference.</li>
 <p>Options:</p>
 <dl class="docutils">
 <dt>CLEAR</dt>
-<dd><dl class="first last docutils">
-<dt>Clear the global test environment (ie anything previously set with</dt>
-<dd>cet_test_env()) before setting &lt;env&gt;.</dd>
-</dl>
-</dd>
+<dd>Clear the global test environment (ie anything previously set with
+cet_test_env()) before setting &lt;env&gt;.</dd>
 </dl>
 <p>Notes:</p>
 <ul class="simple">
