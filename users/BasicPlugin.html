@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BasicPlugin &mdash; cetbuildtools2 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="cetbuildtools2 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="FindBoost" href="../find-modules/FindBoost.html"/>
+        <link rel="prev" title="CetWriteCXXVersionAPI" href="CetWriteCXXVersionAPI.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> cetbuildtools2
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to cetbuildtools2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetCMakeSettings.html">CetCMakeSettings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetCompilerSettings.html">CetCompilerSettings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetInstallDirs.html">CetInstallDirs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetTest.html">CetTest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetUPS.html">CetUPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetCMakeUtilities.html">CetCMakeUtilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetUninstallTarget.html">CetUninstallTarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetWriteCXXVersionAPI.html">CetWriteCXXVersionAPI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">BasicPlugin</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Find Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindBoost.html">FindBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindSQLite.html">FindSQLite</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers/cmakeguide.html">CMake Coding Conventions for cetbuildtools2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/cmakedocs.html">Documenting CMake Modules and other Constructs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">cetbuildtools2</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>BasicPlugin</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/users/BasicPlugin.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="basicplugin">
+<h1>BasicPlugin<a class="headerlink" href="#basicplugin" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">include</span><span class="p">(</span><span class="s">BasicPlugin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Supplies a function for building <code class="docutils literal"><span class="pre">cetlib</span></code> compatible plugin libraries. Note that
+this provides a slightly different API from the <code class="docutils literal"><span class="pre">cetbuildtools</span></code> version to
+decouple the build/install steps and to remove UPS specifics.</p>
+<p>The following function for building plugin libraries is defined</p>
+<dl class="command">
+<dt id="command:basic_plugin">
+<code class="descname">basic_plugin</code><a class="headerlink" href="#command:basic_plugin" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">basic_plugin</span><span class="p">(</span><span class="s">&lt;name&gt;</span>
+             <span class="s">&lt;plugintype&gt;</span>
+             <span class="s">[[NOP]</span> <span class="s">&lt;libraries&gt;]</span>
+             <span class="s">[USE_BOOST_UNIT]</span>
+             <span class="s">[ALLOW_UNDERSCORES]</span>
+             <span class="s">[BASENAME_ONLY]</span>
+             <span class="s">[USE_PRODUCT_NAME]</span>
+             <span class="s">[SOURCE</span> <span class="s">&lt;sources&gt;]</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>The plugin library&#8217;s name is constructed from the specified <code class="docutils literal"><span class="pre">&lt;name&gt;</span></code>,
+<code class="docutils literal"><span class="pre">&lt;plugintype&gt;</span></code> (eg service, module, source), and (unless
+BASENAME_ONLY is specified) the package subdirectory path (replacing
+&#8220;/&#8221; with &#8220;_&#8221;). The plugin type is expected to be <code class="docutils literal"><span class="pre">service</span></code>, <code class="docutils literal"><span class="pre">source</span></code>, or <code class="docutils literal"><span class="pre">module</span></code>,
+but this is not enforced.</p>
+<p>Options:</p>
+<dl class="docutils">
+<dt>ALLOW_UNDERSCORES</dt>
+<dd>Allow underscores in subdirectory names. Discouraged, as it creates
+a possible ambiguity in the encoded plugin library name
+(e.g. <code class="docutils literal"><span class="pre">foo_bar/baz</span></code> is indistinguishable from <code class="docutils literal"><span class="pre">foo/bar/baz</span></code>).</dd>
+<dt>BASENAME_ONLY</dt>
+<dd>Omit the subdirectory path from the library name. Discouraged, as
+it creates an ambiguity between modules with the same source
+filename in different packages or different subdirectories within
+the same package. The latter case is not possible however, because
+CMake will throw an error because the two CMake targets will have
+the same name and that is not permitted. Mutually exclusive with
+<code class="docutils literal"><span class="pre">USE_PRODUCT_NAME</span></code>.</dd>
+<dt>NOP</dt>
+<dd>Dummy option for the purpose of separating (say) multi-option
+arguments from non-option arguments.</dd>
+<dt>SOURCE</dt>
+<dd>If specified, the provided sources will be used to create the
+library. Otherwise, the generated name <code class="docutils literal"><span class="pre">&lt;name&gt;_&lt;plugin_type&gt;.cc</span></code> will
+be used and this will be expected to be found in the current CMake
+source directory (<code class="docutils literal"><span class="pre">CMAKE_CURRENT_SOURCE_DIR</span></code>).</dd>
+<dt>USE_BOOST_UNIT</dt>
+<dd>Build the plugin to allow its use in Boost.Unit tests</dd>
+<dt>USE_PRODUCT_NAME</dt>
+<dd>Prepend the product name (value of <code class="docutils literal"><span class="pre">PROJECT_NAME</span></code> in non-UPS) to the
+plugin library name. Mutually exclusive with <code class="docutils literal"><span class="pre">BASENAME_ONLY</span></code>.</dd>
+</dl>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">It is likely that this module should be promoted to cetlib because
+the major functionality of the module is to enforce the cetlib plugin
+naming convention. If this convention changes, then it is most clearly communicated
+via changes to the cetlib API. Otherwise, all this module does is to use
+add_library/target_link_libraries that any user would be comfortable with.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../find-modules/FindBoost.html" class="btn btn-neutral float-right" title="FindBoost" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="CetWriteCXXVersionAPI.html" class="btn btn-neutral" title="CetWriteCXXVersionAPI" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ben Morgan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

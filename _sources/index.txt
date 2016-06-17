@@ -14,6 +14,7 @@
    /users/CetCMakeUtilities
    /users/CetUninstallTarget
    /users/CetWriteCXXVersionAPI
+   /users/BasicPlugin
 
 .. toctree::
    :maxdepth: 2

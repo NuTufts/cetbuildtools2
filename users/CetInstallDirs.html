@@ -97,6 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="CetCMakeUtilities.html">CetCMakeUtilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetUninstallTarget.html">CetUninstallTarget</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetWriteCXXVersionAPI.html">CetWriteCXXVersionAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BasicPlugin.html">BasicPlugin</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
@@ -180,7 +181,7 @@ value.  If the value is not already an absolute path, an absolute path
 is constructed typically by prepending the value of the
 <span class="target" id="index-0-variable:CMAKE_INSTALL_PREFIX"></span><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_INSTALL_PREFIX</span></code> variable.</div></blockquote>
 <p>where <code class="docutils literal"><span class="pre">&lt;dir&gt;</span></code> is one of the values as defined in the
-<span class="target" id="index-0-module:cmake:module:GNUInstallDirs"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html#module:GNUInstallDirs" title="(in CMake v3.5.2)"><code class="xref cmake cmake-module docutils literal"><span class="pre">GNUInstallDirs</span> <span class="pre">module</span></code></a>,
+<span class="target" id="index-0-module:cmake:module:GNUInstallDirs"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html#module:GNUInstallDirs" title="(in CMake v3.6.0)"><code class="xref cmake cmake-module docutils literal"><span class="pre">GNUInstallDirs</span> <span class="pre">module</span></code></a>,
 plus the CET extensions</p>
 <dl class="docutils">
 <dt><code class="docutils literal"><span class="pre">CMAKEDIR</span></code></dt>
@@ -198,7 +199,7 @@ after inclusion of this module.</p>
 <div class="section" id="install-hierarchy-policies">
 <h2>Install Hierarchy Policies<a class="headerlink" href="#install-hierarchy-policies" title="Permalink to this headline">¶</a></h2>
 <p>By default, the GNU install policy is used. All <code class="docutils literal"><span class="pre">CMAKE_INSTALL_&lt;dir&gt;</span></code>
-variables will have the defaults as defined in <span class="target" id="index-1-module:cmake:module:GNUInstallDirs"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html#module:GNUInstallDirs" title="(in CMake v3.5.2)"><code class="xref cmake cmake-module docutils literal"><span class="pre">GNUInstallDirs</span></code></a>
+variables will have the defaults as defined in <span class="target" id="index-1-module:cmake:module:GNUInstallDirs"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html#module:GNUInstallDirs" title="(in CMake v3.6.0)"><code class="xref cmake cmake-module docutils literal"><span class="pre">GNUInstallDirs</span></code></a>
 and may be set on the command line on in the CMake interactive dialogs.</p>
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
@@ -215,7 +216,7 @@ install and build output directories</p>
 <dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">cet_set_output_directories</span><span class="p">()</span>
 </pre></div>
 </div>
-<p><span class="target" id="index-0-command:cmake:command:function"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/function.html#command:function" title="(in CMake v3.5.2)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Function</span></code></a> that sets the
+<p><span class="target" id="index-0-command:cmake:command:function"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/function.html#command:function" title="(in CMake v3.6.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Function</span></code></a> that sets the
 values of the default output directories for CMake targets to
 match to the install hierarchy.</p>
 <p>For single mode build generators (make, ninja), the following
@@ -241,7 +242,7 @@ is separated using the hierarchy</p>
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">&lt;CONFIG&gt;</span></code> is repeated for each build configuration listed in
-<span class="target" id="index-0-variable:cmake:variable:CMAKE_CONFIGURATION_TYPES"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CONFIGURATION_TYPES.html#variable:CMAKE_CONFIGURATION_TYPES" title="(in CMake v3.5.2)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CONFIGURATION_TYPES</span></code></a>, e.g. Release, Debug, RelWithDebInfo etc.
+<span class="target" id="index-0-variable:cmake:variable:CMAKE_CONFIGURATION_TYPES"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CONFIGURATION_TYPES.html#variable:CMAKE_CONFIGURATION_TYPES" title="(in CMake v3.6.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CONFIGURATION_TYPES</span></code></a>, e.g. Release, Debug, RelWithDebInfo etc.
 Currently always called by inclusion of the <code class="docutils literal"><span class="pre">CetInstallDirs</span></code>
 module.</p>
 <div class="admonition-todo admonition" id="index-1">
