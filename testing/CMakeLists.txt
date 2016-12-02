@@ -149,6 +149,19 @@ add_test(
   )
 
 
+#-----------------------------------------------------------------------
+# Cet_configure_cxx_standard test
+add_test(
+  NAME testCetConfigureCXXStandard
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetConfigureCXXStandard ${CMAKE_CURRENT_BINARY_DIR}/testCetConfigureCXXStandard
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+  )
+
+
 
 
 
