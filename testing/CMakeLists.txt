@@ -68,14 +68,22 @@ set_tests_properties(testEnumOption_CaseInsensitive
   PROPERTIES PASS_REGULAR_EXPRESSION "baz alice"
   )
 
+#-----------------------------------------------------------------------
 # - Boost.Unit
-# TODO: Needs implementing as a mini-project(s)
-add_test(
-  NAME testBoostUnitProperties
-  COMMAND ${CMAKE_COMMAND}
-          -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules
-          -P ${CMAKE_CURRENT_SOURCE_DIR}/testBoostUnitProperties.cmake
-  )
+find_package(Boost QUIET)
+if(Boost_FOUND)
+  add_test(
+    NAME testBoostUnitProperties
+    COMMAND ${CMAKE_CTEST_COMMAND}
+    --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testBoostUnitProperties ${CMAKE_CURRENT_BINARY_DIR}/testBoostUnitProperties
+    --build-generator ${CMAKE_GENERATOR}
+    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+    --build-config $<CONFIG>
+    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}" "-DBOOST_ROOT=${BOOST_ROOT}"
+    )
+else()
+  message(STATUS "System Boost install not found, disabling testBoostUnitProperties")
+endif()
 
 #-----------------------------------------------------------------------
 # CetInstallDirs tests
