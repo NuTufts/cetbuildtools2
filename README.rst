@@ -1,6 +1,8 @@
 cetbuildtools2: CMake Modules for FNAL CET Projects
 ***************************************************
 
+[![Build Status](https://travis-ci.org/drbenmorgan/cetbuildtools2.svg?branch=develop)](https://travis-ci.org/drbenmorgan/cetbuildtools2)
+
 A rewrite of the `FNAL cetbuildtools`_ `CMake`_ modules to
 
 1. Decouple the functionality from the `FNAL UPS`_ configuration management system
