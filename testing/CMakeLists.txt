@@ -151,17 +151,21 @@ add_test(
 
 #-----------------------------------------------------------------------
 # Cet_configure_cxx_standard test
-add_test(
-  NAME testCetConfigureCXXStandard
-  COMMAND ${CMAKE_CTEST_COMMAND}
-          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetConfigureCXXStandard ${CMAKE_CURRENT_BINARY_DIR}/testCetConfigureCXXStandard
-          --build-generator ${CMAKE_GENERATOR}
-          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-          --build-config $<CONFIG>
-          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
-  )
+foreach(cxx_epoch IN ITEMS 11 14 17 2a)
+  add_test(
+    NAME testCetConfigureCXXStandard_${cxx_epoch}
+    COMMAND ${CMAKE_CTEST_COMMAND}
+            --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetConfigureCXXStandard ${CMAKE_CURRENT_BINARY_DIR}/testCetConfigureCXXStandard_${cxx_epoch}
+            --build-generator ${CMAKE_GENERATOR}
+            --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+            --build-config $<CONFIG>
+            --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_CXX_STANDARD=${cxx_epoch}"
+            --test-command ${CMAKE_CTEST_COMMAND} -VV
+     )
+endforeach()
 
-
+# Should mark tests as failing if used compiler known to not support epoch?
+set_tests_properties(testCetConfigureCXXStandard_2a PROPERTIES WILL_FAIL TRUE)
 
 
 

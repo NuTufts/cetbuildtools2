@@ -4,8 +4,11 @@ project(testCetConfigureCXXStandard)
 
 # Mock inclusion of cetbuildtools2)
 set(CMAKE_MODULE_PATH ${cetbuildtools2_MODULE_PATH})
-
+include(CetCMakeSettings)
 include(CetCompilerSettings)
-cet_configure_cxx_standard(11)
 
-message(STATUS "CXX STANDARD = ${CET_COMPILER_CXX_STANDARD}")
+add_executable(test-cxxstd test-cxxstd.cc)
+add_test(NAME test-cxxstd COMMAND test-cxxstd)
+set_tests_properties(test-cxxstd
+  PROPERTIES PASS_REGULAR_EXPRESSION "${CET_CXX_STANDARD}"
+  )

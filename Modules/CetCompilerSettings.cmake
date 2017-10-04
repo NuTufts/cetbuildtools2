@@ -156,47 +156,35 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # .. _`UPS Qualifiers`: https://cdcvs.fnal.gov/redmine/projects/cet-is-public/wiki/AboutQualifiers
 # .. _`SD-6`: https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations
 #
+# Projects may need to define the minimum standard, so VALUES needs to
+# take that into account, and set DEFAULT to the first entry.
+enum_option(CET_COMPILER_CXX_STANDARD
+  VALUES 11 14 17 2a
+  TYPE STRING
+  DEFAULT 14
+  DOC "Set C++ Standard to compile against"
+  )
+mark_as_advanced(CET_COMPILER_CXX_STANDARD)
 
-# Define a function to set the minimum standard, create an option based off of this
-# and set the requisite values of CXX_STANDARD
-# May need to be a macro if variables are set that need to propagate
-# option is o.k. as that's cached.
-function(cet_configure_cxx_standard _minimum)
-  # Can only be called once
-  get_property(__called GLOBAL PROPERTY __cet_configure_cxx_standard_CALLED)
-  if(__called)
-    message(FATAL_ERROR "cet_configure_cxx_standard can only be called once per project")
-  else()
-    set_property(GLOBAL PROPERTY __cet_configure_cxx_standard_CALLED 1)
-  endif()
+# - Quick and dirty check of standard
+#   If the standard compile option is not defined, then CMake doesn't
+#   know about standard support of this compiler
+if(NOT DEFINED CMAKE_CXX${CET_COMPILER_CXX_STANDARD}_STANDARD_COMPILE_OPTION)
+  message(FATAL_ERROR
+"C++ Standard `${CET_COMPILER_CXX_STANDARD}` requested, but detected compiler
+${CMAKE_CXX_COMPILER_ID} v${CMAKE_CXX_COMPILER_VERSION}\n"
+"is not known to support it. If this is an error, you can add support by setting "
+"the variables CMAKE_CXX${CET_COMPILER_CXX_STANDARD}_STANDARD_COMPILE_OPTION to the "
+"flag required to be passed to the compiler to activate this standard. This setting "
+"must be done before inclusion of CetCompilerSettings"
+  )
+endif()
 
-  # Validate input
-  # NB, this list should be in epoch order from old to new!
-  set(__cet_valid_cxx_stds 98 11 14)
-  list(FIND __cet_valid_cxx_stds "${_minimum}" __index_of_minimum)
+# Set global standard to compile against
+set(CMAKE_CXX_STANDARD ${CET_COMPILER_CXX_STANDARD})
 
-  if(__index_of_minimum LESS 0)
-    message(FATAL_ERROR "cet_configure_cxx_standard called with invalid C++ Standard '${_minimum}'
-Value must be selected from '98', '11' or '14'")
-  endif()
-
-  # Extract possible standards into sublist
-  list(LENGTH __cet_valid_cxx_stds __number_of_cxxstds)
-  math(EXPR __last "${__number_of_cxxstds} - 1")
-  set(__cet_configurable_cxx_stds)
-  foreach(_index RANGE ${__index_of_minimum} ${__last})
-    list(GET __cet_valid_cxx_stds ${_index} _tmp)
-    list(APPEND __cet_configurable_cxx_stds ${_tmp})
-  endforeach()
-
-  # This could also just be on CMAKE_CXX_STANDARD...
-  enum_option(CET_COMPILER_CXX_STANDARD
-    VALUES ${__cet_configurable_cxx_stds}
-    TYPE STRING
-    DEFAULT ${_minimum}
-    DOC "Set C++ Standard to compile against"
-    )
-endfunction()
+# Could, for suitable CMake versions/compatibility, use the cxx_std_<EPOCH>
+# feature (from CMake 3.8 onwards?)...
 
 #-----------------------------------------------------------------------
 #.rst:
