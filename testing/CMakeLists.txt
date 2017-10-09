@@ -159,13 +159,38 @@ foreach(cxx_epoch IN ITEMS 11 14 17 2a)
             --build-generator ${CMAKE_GENERATOR}
             --build-makeprogram ${CMAKE_MAKE_PROGRAM}
             --build-config $<CONFIG>
-            --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_CXX_STANDARD=${cxx_epoch}"
+            --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_CXX_STANDARD=${cxx_epoch}" "-DEXPECTED_CXX_STD=${cxx_epoch}"
             --test-command ${CMAKE_CTEST_COMMAND} -VV
      )
 endforeach()
 
 # Should mark tests as failing if used compiler known to not support epoch?
 set_tests_properties(testCetConfigureCXXStandard_2a PROPERTIES WILL_FAIL TRUE)
+
+# Test that unknown min standard fails
+add_test(
+  NAME testCetConfigureCXXStandard_invalidminimum
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetConfigureCXXStandard ${CMAKE_CURRENT_BINARY_DIR}/testCetConfigureCXXStandard_invalidminimum
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_CXX_STANDARD_MINIMUM=42" "-DEXPECTED_CXX_STD=42"
+          --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+set_tests_properties(testCetConfigureCXXStandard_invalidminimum PROPERTIES WILL_FAIL TRUE)
+
+# Test that a valid min standard is also the default standard
+add_test(
+  NAME testCetConfigureCXXStandard_minimumisdefault
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetConfigureCXXStandard ${CMAKE_CURRENT_BINARY_DIR}/testCetConfigureCXXStandard_minimumisdefault
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_CXX_STANDARD_MINIMUM=14" "-DEXPECTED_CXX_STD=14"
+          --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
 
 
 

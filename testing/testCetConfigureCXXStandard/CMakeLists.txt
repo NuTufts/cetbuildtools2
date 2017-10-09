@@ -10,5 +10,5 @@ include(CetCompilerSettings)
 add_executable(test-cxxstd test-cxxstd.cc)
 add_test(NAME test-cxxstd COMMAND test-cxxstd)
 set_tests_properties(test-cxxstd
-  PROPERTIES PASS_REGULAR_EXPRESSION "${CET_CXX_STANDARD}"
+  PROPERTIES PASS_REGULAR_EXPRESSION "${EXPECTED_CXX_STD}"
   )

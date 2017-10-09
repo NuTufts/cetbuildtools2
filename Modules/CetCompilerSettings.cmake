@@ -158,10 +158,35 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #
 # Projects may need to define the minimum standard, so VALUES needs to
 # take that into account, and set DEFAULT to the first entry.
+# Because upcoming versions may be alphanumeric, this list should be ordered
+set(CET_SUPPORTED_CXX_STANDARDS 11 14 17 2a)
+set(CET_PROJECT_CXX_STANDARDS)
+
+if(CET_COMPILER_CXX_STANDARD_MINIMUM)
+  # Value must be in supported list
+  list(FIND CET_SUPPORTED_CXX_STANDARDS "${CET_COMPILER_CXX_STANDARD_MINIMUM}" _cxx_min_index)
+  if(_cxx_min_index LESS 0)
+    message(FATAL_ERROR
+"project has requested a minimum C++ Standard of `${CET_COMPILER_CXX_STANDARD_MINIMUM}`,
+but this is not in the list of known standards:\n"
+"${CET_SUPPORTED_CXX_STANDARDS}"
+    )
+  endif()
+
+  # must include all elements from index->end
+  list(LENGTH CET_SUPPORTED_CXX_STANDARDS __number_of_cxxstds)
+  math(EXPR __last "${__number_of_cxxstds} - 1")
+  foreach(_index RANGE ${_cxx_min_index} ${__last})
+    list(GET CET_SUPPORTED_CXX_STANDARDS ${_index} _tmp)
+    list(APPEND CET_PROJECT_CXX_STANDARDS ${_tmp})
+  endforeach()
+else()
+  set(CET_PROJECT_CXX_STANDARDS ${CET_SUPPORTED_CXX_STANDARDS})
+endif()
+
 enum_option(CET_COMPILER_CXX_STANDARD
-  VALUES 11 14 17 2a
+  VALUES ${CET_PROJECT_CXX_STANDARDS}
   TYPE STRING
-  DEFAULT 14
   DOC "Set C++ Standard to compile against"
   )
 mark_as_advanced(CET_COMPILER_CXX_STANDARD)
