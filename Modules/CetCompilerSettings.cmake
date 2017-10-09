@@ -156,6 +156,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # .. _`UPS Qualifiers`: https://cdcvs.fnal.gov/redmine/projects/cet-is-public/wiki/AboutQualifiers
 # .. _`SD-6`: https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations
 #
+# TODO: Look at functionizing the below - at present, have to do
+#
+#  set(CET_COMPILER_CXX_STANDARD_MINIMUM 14)
+#  include(CetCompilerSettings)
+#
+# Review whether it's better to do
+#
+#  include(CetCompilerSettings)
+#  cet_compiler_cxx_standard_minimum(14)
+#
+# NB: trick here is that variable has sensible default (NULL),
+# but how to do a default function call? Could just set CXX_STANDARD
+# to sensible default in CetCompilerSettings, then if the function is
+# overidden, provides configuration?
+
+
 # Projects may need to define the minimum standard, so VALUES needs to
 # take that into account, and set DEFAULT to the first entry.
 # Because upcoming versions may be alphanumeric, this list should be ordered
