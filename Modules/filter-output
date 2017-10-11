@@ -13,7 +13,7 @@
 ########################################################################
 use strict;
 
-my ($in_tt, $in_mm, $mm_format, $final_mm_clause, $in_ev_list);
+my ($in_memReport);
 my $n_sep = 0;
 
 while (<>) {
@@ -24,7 +24,7 @@ while (<>) {
   s&\d+-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\d{4}(?:\s+(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?(?:\s+(?:[-+]\d+|[A-Z]+))?)?)?&<date-time>&g;
   ########################################################################
   # filter absolute paths for modules and services.
-  s&/.*/(\w*_(plugin|module|service|source).cc)&<path>/${1}&g;
+  s&/.*/(\w*_(plugin|module|service|source|tool).cc)&<path>/${1}&g;
   ########################################################################
   # Messagefacility messages.
   s&^(\%MSG.*?:\s+).*?(<date-time>)&${1}${2}&; # OS X does not currently print application.
@@ -32,8 +32,18 @@ while (<>) {
   # TimeReport lines.
   m&^TimeReport& and s&[\d\.]+&<duration>&g;
   ########################################################################
+  # MemReport lines.
+  m&^MemReport\s+-+\s+Memory\s+Summary& and $in_memReport = 1;
+  if ($in_memReport) {
+    undef $in_memReport if m&^\s*$&;
+    next;
+  }
+  ########################################################################
   # Variable-length separators.
   s&([-=\.*~/]){15,}&<separator (${1})>&g;
+  ########################################################################
+  # Platform specification (generic, and UPS-style).
+  s&(?:Darwin|Linux)(?:64bit)?(?:\+[-\d\+]*)?&<platform>&g;
   ########################################################################
   print;
 }

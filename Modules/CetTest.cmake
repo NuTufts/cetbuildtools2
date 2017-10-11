@@ -35,11 +35,34 @@
 #   option and simply calls the cet_script() function with appropriate
 #   options.
 #
-# NO_AUTO
-#   Do not add the target to the auto test list.
-#
 # USE_BOOST_UNIT
 #   This test uses the Boost Unit Test Framework.
+#
+# USE_CATCH_MAIN
+#   This test will use the Catch test framework
+#   (https://github.com/philsquared/Catch). The specified target will be
+#   built from a precompiled main program to run tests described in the
+#   files specified by SOURCES.
+#
+#   N.B.: if you wish to use the ParseAndAddCatchTests() facility
+#   contributed to the Catch system, you should specify NO_AUTO to avoid
+#   generating a, "standard" test. Note also that you may have your own
+#   test executables using Catch without using USE_CATCH_MAIN. However,
+#   be aware that the compilation of a Catch main is quite expensive,
+#   and any tests that *do* use this option will all share the same
+#   compiled main.
+#
+#   TODO: Supply Catch directly so versions consistent? Same for
+#         Parse and add?
+#   Note also that client packages are responsible for making sure Catch
+#   is available, such as with:
+#
+#     catch             <version>               -nq-    only_for_build
+#
+#   in product_deps.
+#
+# NO_AUTO
+#   Do not add the target to the auto test list.
 #
 # INSTALL_BIN
 #   Install this test's script / exec in the product's binary directory
@@ -107,6 +130,10 @@
 #   These files are required to be present before the test will be
 #   executed. If any are missing, ctest will record NOT RUN for this
 #   test.
+#
+# SCOPED
+#   Test target (but not script nor compiled executable) names will
+#   be scoped by project name (<PROJECT_NAME>:...)
 #
 # SOURCES
 #   Sources to use to build the target (default is ${target}.cc).
@@ -194,8 +221,8 @@
 #
 
 #-----------------------------------------------------------------------
-# Modifications Copyright 2015 Ben Morgan <Ben.Morgan@warwick.ac.uk
-# Modifications Copyright 2015 University of Warwick
+# Modifications Copyright 2015-2017 Ben Morgan <Ben.Morgan@warwick.ac.uk
+# Modifications Copyright 2015-2017 University of Warwick
 #
 # Distributed under the OSI-approved BSD 3-Clause License (the "License");
 # see accompanying file LICENSE for details.
@@ -223,6 +250,9 @@ include(CetMake)
 # May need to escape a string to avoid misinterpretation as regex
 #include(CetRegexEscape)
 
+#-----------------------------------------------------------------------
+# Global Data
+#-----------------------------------------------------------------------
 # If Boost has been specified but the library hasn't, load the library.
 #IF((NOT Boost_UNIT_TEST_FRAMEWORK_LIBRARY) AND BOOST_VERS)
 #  find_ups_boost(${BOOST_VERS} unit_test_framework)
@@ -231,9 +261,16 @@ include(CetMake)
 # Module Know Thine Self
 set(CET_TEST_MODULE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
+# Our vendored (for now) catch source
+set(CET_CATCH_MAIN_SOURCE "${CMAKE_CURRENT_LIST_DIR}/catch/cet_catch_main.cpp")
+set(CET_CATCH_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}")
+
+# Wrap the comparator so we always use ours
+set(CET_RUNANDCOMPARE "${CET_TEST_MODULE_DIR}/RunAndCompare.cmake")
+
 # Wrap the cet_test_exec so we always use ours - It means that PATH
 # is not needed.
-set(CET_EXEC_TEST "${CET_TEST_MODULE_DIR}/cet_exec_test")
+set(CET_CET_EXEC_TEST "${CET_TEST_MODULE_DIR}/cet_exec_test")
 
 # Test groups
 set(CET_TEST_GROUPS "NONE"
@@ -247,6 +284,11 @@ set(CET_TEST_ENV ""
   CACHE INTERNAL "Environment to add to every test"
   FORCE
   )
+
+#-----------------------------------------------------------------------
+# CetTest Public API
+#-----------------------------------------------------------------------
+
 
 # - ??
 function(_update_defined_test_groups)
@@ -306,7 +348,9 @@ macro(cet_test_env)
   list(APPEND CET_TEST_ENV ${CET_TEST_UNPARSED_ARGUMENTS})
 endmacro()
 
-# -- Actual heavy lifting
+#-----------------------------------------------------------------------
+# function: cet_test
+#-----------------------------------------------------------------------
 function(cet_test CET_TARGET)
   # Parse arguments
   if(${CET_TARGET} MATCHES .*/.*)
@@ -315,7 +359,7 @@ function(cet_test CET_TARGET)
   endif()
 
   cmake_parse_arguments(CET
-    "HANDBUILT;PREBUILT;NO_AUTO;USE_BOOST_UNIT;INSTALL_BIN;INSTALL_EXAMPLE;INSTALL_SOURCE"
+    "HANDBUILT;PREBUILT;USE_CATCH_MAIN;NO_AUTO;USE_BOOST_UNIT;INSTALL_BIN;INSTALL_EXAMPLE;INSTALL_SOURCE;SCOPED"
     "OUTPUT_FILTER;TEST_EXEC"
     "CONFIGURATIONS;DATAFILES;DEPENDENCIES;LIBRARIES;OPTIONAL_GROUPS;OUTPUT_FILTERS;OUTPUT_FILTER_ARGS;REQUIRED_FILES;SOURCES;TEST_ARGS;TEST_PROPERTIES;REF"
     ${ARGN}
@@ -323,6 +367,13 @@ function(cet_test CET_TARGET)
 
   if(CET_OUTPUT_FILTERS AND CET_OUTPUT_FILTER_ARGS)
     message(FATAL_ERROR "OUTPUT_FILTERS is incompatible with FILTER_ARGS:\nEither use the singular OUTPUT_FILTER or use double-quoted strings in OUTPUT_FILTERS\nE.g. OUTPUT_FILTERS \"filter1 -x -y\" \"filter2 -y -z\"")
+  endif()
+
+  # If GLOBAL is not set, prepend "${PROJECT_NAME}:" to the target name
+  if(CET_SCOPED)
+    set(TARGET_NAME "${PROJECT_NAME}:${CET_TARGET}")
+  else()
+    set(TARGET_NAME "${CET_TARGET}")
   endif()
 
   # Set up to handle a per-test work directory for parallel testing.
@@ -340,7 +391,8 @@ function(cet_test CET_TARGET)
   endif()
 
   if(CET_UNPARSED_ARGUMENTS)
-    message(FATAL_ERROR "cet_test: DATAFILES option is now mandatory: non-option arguments are no longer permitted.")
+    message(FATAL_ERROR "cet_test: Unparsed (non-option) arguments detected: \"${CET_UNPARSED_ARGUMENTS}\"
+Check for missing keyword(s) in the definition of test ${CET_TARGET} in your CMakeLists.txt.")
   endif()
 
   # - Collect datafiles
@@ -362,12 +414,11 @@ function(cet_test CET_TARGET)
 
   #-----------------------------
   # - Define the test executable
-  if(CET_HANDBUILT AND CET_PREBUILT)
-    # CET_HANDBUILT and CET_PREBUILT are mutually exclusive.
-    message(FATAL_ERROR
-      "cet_test: target ${CET_TARGET} cannot have both CET_HANDBUILT "
-      "and CET_PREBUILT options set."
-      )
+  if((CET_HANDBUILT AND CET_PREBUILT) OR
+    (CET_HANDBUILT AND CET_USE_CATCH_MAIN) OR
+    (CET_PREBUILT AND CET_USE_CATCH_MAIN))
+    # HANDBUILT/PREBUILT/USE_CATCH_MAIN are mutually exclusive
+    message(FATAL_ERROR "cet_test: target ${CET_TARGET} must have only one of the CET_HANDBUILT, CET_PREBUILT, or CET_USE_CATCH_MAIN options set.")
   elseif(CET_PREBUILT)
     # eg scripts.
     if(NOT CET_INSTALL_BIN)
@@ -380,10 +431,8 @@ function(cet_test CET_TARGET)
       DEPENDENCIES ${CET_DEPENDENCIES}
       )
   elseif(NOT CET_HANDBUILT)
-    # Normal build.
-    # Too noisy for now! (??So is it deprecated or not??)
-    #    MESSAGE(WARNING "Building the test executable with cet_test is deprecated: use cet_make_exec(NO_INSTALL) or art_make_exec(NO_INSTALL) and cet_test(HANDBUILT) instead.")
-    # Build the executable.
+    # Normal build
+    # Build the executable
     if(NOT CET_SOURCES) # Useful default.
       set(CET_SOURCES ${CET_TARGET}.cc)
     endif()
@@ -391,6 +440,13 @@ function(cet_test CET_TARGET)
     add_executable(${CET_TARGET} ${CET_SOURCES})
     # -- !! It's this that *should* allow running without explicit paths!!
     set(CET_TEST_EXEC $<TARGET_FILE:${CET_TARGET}>)
+
+    if(CET_USE_CATCH_MAIN)
+      # Create the catch-main target on demand
+      # Link it to testing target
+      add_catch_main_library(${PROJECT_NAME}_catch_main)
+      target_link_libraries("${CET_TARGET}" PRIVATE ${PROJECT_NAME}_catch_main)
+    endif()
 
     # Boost.Unit-ify
     if(CET_USE_BOOST_UNIT)
@@ -402,30 +458,31 @@ function(cet_test CET_TARGET)
 
     # Link to any required libs
     if(CET_LIBRARIES)
-      set(link_lib_list "")
-      foreach(lib ${CET_LIBRARIES})
-        # ?? What is the intent of this path matching or uppercasing ??
-        string(REGEX MATCH [/] has_path "${lib}")
-        if(has_path)
-          list(APPEND link_lib_list ${lib})
-        else()
-          string(TOUPPER ${lib} ${lib}_UC)
-
-          if(${${lib}_UC})
-            _cet_debug_message( "changing ${lib} to ${${${lib}_UC}}")
-            list(APPEND link_lib_list ${${${lib}_UC}})
-          else()
-            list(APPEND link_lib_list ${lib})
-          endif()
-        endif()
-      endforeach()
-
-      target_link_libraries(${CET_TARGET} PRIVATE ${link_lib_list})
+      # Gonna ignore this section for now and see if it makes any difference
+      # In any case, LIBRARIES should always be a list of valid things
+      # CMake can link - full paths or target names
+      #set(link_lib_list "")
+      #foreach(lib ${CET_LIBRARIES})
+      #  # ?? What is the intent of this path matching or uppercasing ??
+      #  string(REGEX MATCH [/] has_path "${lib}")
+      #  if(has_path)
+      #    list(APPEND link_lib_list ${lib})
+      #  else()
+      #    string(TOUPPER ${lib} ${lib}_UC)
+      #
+      #    if(${${lib}_UC})
+      #      _cet_debug_message( "changing ${lib} to ${${${lib}_UC}}")
+      #      list(APPEND link_lib_list ${${${lib}_UC}})
+      #    else()
+      #      list(APPEND link_lib_list ${lib})
+      #    endif()
+      #  endif()
+      #endforeach()
+      target_link_libraries(${CET_TARGET} PRIVATE ${CET_LIBRARIES})
     endif()
   endif()
 
-  #------
-  # Setup
+  # Setup Data, Configurations, Groups
   cet_copy(${CET_DATAFILES} DESTINATION ${CET_TEST_WORKDIR} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
   if(CET_CONFIGURATIONS)
@@ -435,6 +492,7 @@ function(cet_test CET_TARGET)
   _update_defined_test_groups(${CET_OPTIONAL_GROUPS})
   _check_want_test("${CET_OPTIONAL_GROUPS}" WANT_TEST)
 
+  # Configure Properties and Behaviour
   if(NOT CET_NO_AUTO AND WANT_TEST)
     list(FIND CET_TEST_PROPERTIES SKIP_RETURN_CODE skip_return_code)
 
@@ -477,18 +535,11 @@ function(cet_test CET_TARGET)
         set(DEFINE_OUTPUT_FILTERS "-DOUTPUT_FILTERS=${DEFINE_OUTPUT_FILTERS}")
       endif()
 
-      #if(DEFINED ENV{CETBUILDTOOLS_DIR})
-      #  set(COMPARE $ENV{CETBUILDTOOLS_DIR}/Modules/RunAndCompare.cmake)
-      #else() # Inside cetbuildtools itself.
-      # set(COMPARE ${PROJECT_SOURCE_DIR}/Modules/RunAndCompare.cmake)
-      #endif()
-      # - !! CetBuildTools always knows itself !!
-      set(COMPARE "${CET_TEST_MODULE_DIR}/RunAndCompare.cmake")
 
       # ADD_TEST
-      add_test(NAME ${CET_TARGET}
+      add_test(NAME "${TARGET_NAME}"
         ${CONFIGURATIONS_CMD} ${CET_CONFIGURATIONS}
-        COMMAND ${CET_EXEC_TEST} --wd ${CET_TEST_WORKDIR}
+        COMMAND ${CET_CET_EXEC_TEST} --wd ${CET_TEST_WORKDIR}
         --required-files "${CET_REQUIRED_FILES}"
         --datafiles "${CET_DATAFILES}"
         --skip-return-code ${skip_return_code}
@@ -500,14 +551,14 @@ function(cet_test CET_TARGET)
         ${DEFINE_TEST_ERR}
         -DTEST_OUT=${CET_TARGET}.out
         ${DEFINE_OUTPUT_FILTER} ${DEFINE_OUTPUT_FILTER_ARGS} ${DEFINE_OUTPUT_FILTERS}
-        -P ${COMPARE}
+        -P ${CET_RUNANDCOMPARE}
         )
     else()
       # Add the test.
-      add_test(NAME ${CET_TARGET}
+      add_test(NAME "${TARGET_NAME}"
         ${CONFIGURATIONS_CMD} ${CET_CONFIGURATIONS}
         COMMAND
-        ${CET_EXEC_TEST} --wd ${CET_TEST_WORKDIR}
+        ${CET_CET_EXEC_TEST} --wd ${CET_TEST_WORKDIR}
         --required-files "${CET_REQUIRED_FILES}"
         --datafiles "${CET_DATAFILES}"
         --skip-return-code ${skip_return_code}
@@ -517,20 +568,25 @@ function(cet_test CET_TARGET)
 
     # Collate and apply directly known properties
     # -- CMake 2.8 and higher, but that's o.k. as we rely 2.8 anyway
-    set_tests_properties(${CET_TARGET}
+    set_tests_properties("${TARGET_NAME}"
       PROPERTIES WORKING_DIRECTORY ${CET_TEST_WORKDIR}
       )
 
     if(CET_TEST_PROPERTIES)
-      set_tests_properties(${CET_TARGET} PROPERTIES ${CET_TEST_PROPERTIES})
+      set_tests_properties("${TARGET_NAME}" PROPERTIES ${CET_TEST_PROPERTIES})
     endif()
 
-    # - Simplify ENV/REF by using append - if prepend is required, write a
-    #   function to do this (or submit a patch upstream to extend set_property)
+    # Prepend local ENV/Append local REQ to any global settings
     if(CET_TEST_ENV)
-      set_property(TEST ${CET_TARGET}
-        APPEND PROPERTY ENVIRONMENT "${CET_TEST_ENV}"
+      get_test_property("${TARGET_NAME}" ENVIRONMENT CET_TEST_ENV_TMP)
+      set_property(TEST "${TARGET_NAME}"
+        PROPERTY ENVIRONMENT "${CET_TEST_ENV}"
         )
+      if(CET_TEST_ENV_TMP)
+        set_property(TEST "${TARGET_NAME}"
+          APPEND PROPERTY ENVIRONMENT "${CET_TEST_ENV_TMP}"
+          )
+      endif()
     endif()
 
     if(CET_REF)
@@ -544,35 +600,14 @@ function(cet_test CET_TARGET)
     endif()
   endif()
 
-  # ?? Are there *any* use cases where we want to install test programs??
-  # Or rather, if there are, don't do it here!
-  #if(CET_INSTALL_BIN)
-  #  if(CET_HANDBUILT)
-  #    message(WARNING "INSTALL_BIN option ignored for HANDBUILT tests.")
-  #  elseif(NOT CET_PREBUILT)
-  #    install(TARGETS ${CET_TARGET} DESTINATION ${flavorqual_dir}/bin)
-  #  endif()
-  #endif()
-
-  #if(CET_INSTALL_EXAMPLE)
-  #  # Install to examples directory of product.
-  #  install(FILES ${CET_SOURCES} ${CET_DATAFILES}
-  #    DESTINATION ${product}/${version}/example
-  #    )
-  #endif()
-
-  #if(CET_INSTALL_SOURCE)
-  #  # Install to sources/test (will need to be amended for eg ART's
-  #  # multiple test directories.
-  #  install(FILES ${CET_SOURCES}
-  #    DESTINATION ${product}/${version}/source/test
-  #    )
-  #endif()
+  if(CET_INSTALL_BIN OR CET_INSTALL_EXAMPLE OR CET_INSTALL_SOURCE)
+    message(WARNING "Install of tests not supported in cetbuildtools2::cet_test")
+  endif()
 endfunction()
 
-# - ??
+# - Checks test output for existance of specific assert()?
 function(cet_test_assertion CONDITION FIRST_TARGET)
-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set_tests_properties(${FIRST_TARGET} ${ARGN} PROPERTIES
       PASS_REGULAR_EXPRESSION
       "Assertion failed: \\(${CONDITION}\\), "
@@ -585,3 +620,13 @@ function(cet_test_assertion CONDITION FIRST_TARGET)
   endif()
 endfunction()
 
+# - Build local catch main
+# Scope the name with "PROJECT_NAME"
+function(add_catch_main_library _target_name)
+  if(NOT TARGET "${_target_name}")
+    add_library(${_target_name} STATIC "${CET_CATCH_MAIN_SOURCE}")
+    target_include_directories(${_target_name}
+      PUBLIC "${CET_CATCH_INCLUDE_DIRS}"
+      )
+  endif()
+endfunction()
