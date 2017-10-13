@@ -7,9 +7,14 @@ int main() {
   // mark __cplusplus with that epoch
   if (__cplusplus == 201103L) {
     std::cout << "11\n";
-  } else if (__cplusplus == 201402L) {
+  }
+  // Compilers may mark C++14 partial support with intermediate numbers
+  else if ((__cplusplus > 201103L) && (__cplusplus <= 201402L)) {
     std::cout << "14\n";
-  } else if (__cplusplus > 201402L) {
+  }
+  // Anything greater than 14 should be partial or full C++17
+  // Actual ISO value TBD
+  else if (__cplusplus > 201402L) {
     std::cout << "17\n";
   } else {
     std::cout << "unsupported\n";
