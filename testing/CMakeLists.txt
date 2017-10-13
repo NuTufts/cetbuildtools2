@@ -162,10 +162,20 @@ foreach(cxx_epoch IN ITEMS 11 14 17 2a)
             --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_CXX_STANDARD=${cxx_epoch}" "-DEXPECTED_CXX_STD=${cxx_epoch}"
             --test-command ${CMAKE_CTEST_COMMAND} -VV
      )
-endforeach()
 
-# Should mark tests as failing if used compiler known to not support epoch?
-set_tests_properties(testCetConfigureCXXStandard_2a PROPERTIES WILL_FAIL TRUE)
+   # Check on expected pass/fail of test
+   # May need further special cases as/when additional compilers/cmake
+   # versions are supported.
+   if(NOT DEFINED CMAKE_CXX${cxx_epoch}_STANDARD_COMPILE_OPTION)
+     # CMake/Compiler doesn't know about this standard, test should fail
+     set_tests_properties(testCetConfigureCXXStandard_${cxx_epoch} PROPERTIES WILL_FAIL TRUE)
+   endif()
+
+   # Special case for GCC < 4.9: It does not report __cplusplus correctly
+   if(CMAKE_COMPILER_IS_GNUCXX AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9) AND (cxx_epoch GREATER 11))
+     set_tests_properties(testCetConfigureCXXStandard_${cxx_epoch} PROPERTIES WILL_FAIL TRUE)
+   endif()
+endforeach()
 
 # Test that unknown min standard fails
 add_test(
@@ -181,6 +191,12 @@ add_test(
 set_tests_properties(testCetConfigureCXXStandard_invalidminimum PROPERTIES WILL_FAIL TRUE)
 
 # Test that a valid min standard is also the default standard
+if(DEFINED CMAKE_CXX14_STANDARD_COMPILE_OPTION)
+  set(_cxxmin 14)
+else()
+  set(_cxxmin 11)
+endif()
+
 add_test(
   NAME testCetConfigureCXXStandard_minimumisdefault
   COMMAND ${CMAKE_CTEST_COMMAND}
@@ -188,10 +204,11 @@ add_test(
           --build-generator ${CMAKE_GENERATOR}
           --build-makeprogram ${CMAKE_MAKE_PROGRAM}
           --build-config $<CONFIG>
-          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_CXX_STANDARD_MINIMUM=14" "-DEXPECTED_CXX_STD=14"
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_CXX_STANDARD_MINIMUM=${_cxxmin}" "-DEXPECTED_CXX_STD=${_cxxmin}"
           --test-command ${CMAKE_CTEST_COMMAND} -VV
   )
 
-
-
-
+# Special case for GCC < 4.9: It does not report __cplusplus correctly
+if(CMAKE_COMPILER_IS_GNUCXX AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9))
+  set_tests_properties(testCetConfigureCXXStandard_minimumisdefault PROPERTIES WILL_FAIL TRUE)
+endif()

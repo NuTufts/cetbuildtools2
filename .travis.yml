@@ -1,17 +1,43 @@
-# Use cpp as language as tests relay on build small projects
+# Use cpp as language as tests rely on build small projects
 language: cpp
 
-# Can test on one each of Linux/macOS because support is mainly
-# across cmake versions (may need more as C++ standard support evolves)
+# Test across Linux/macOS
+# - Add g++-6 and 7 from ppa
+# Only 1 cmake version (may need more as C++ standard support evolves)
+# This gives x4 rows in the matrix, three linux, two macOS
 matrix:
   include:
     - os: linux
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
     - os: osx
       osx_image: xcode9
       compiler: clang
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
 
-# At least on mac, should have suitable CMake via Homebrew, but want to upgrade
-# to keep track of boost...
+# Configure the CC/CXX values
+before_install:
+  - eval "${MATRIX_EVAL}"
+
+# At least on mac, should have suitable CMake via Homebrew
 # On Linux, can grab CMake bundle, or use Docker, or use pullProducts
 install:
   - |
