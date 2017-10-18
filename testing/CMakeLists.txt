@@ -200,7 +200,7 @@ endif()
 # Tests of cet_test
 # Basic
 add_test(
-  NAME testCetTest
+  NAME testCetTest_sanity
   COMMAND ${CMAKE_CTEST_COMMAND}
           --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTest ${CMAKE_CURRENT_BINARY_DIR}/testCetTest
           --build-generator ${CMAKE_GENERATOR}
@@ -210,6 +210,32 @@ add_test(
           --test-command ${CMAKE_CTEST_COMMAND} -VV
   )
 # Check Fail cases...
+foreach(_cettestfailcase UNPARSED TEST_EXEC_NO_HANDBUILT EXECUTABLE_COMBINATION_HP EXECUTABLE_COMBINATION_HU EXECUTABLE_COMBINATION_PU)
+  add_test(
+    NAME testCetTest_${_cettestfailcase}
+    COMMAND ${CMAKE_CTEST_COMMAND}
+    --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTest ${CMAKE_CURRENT_BINARY_DIR}/testCetTest_${_cettestfailcase}
+    --build-generator ${CMAKE_GENERATOR}
+    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+    --build-config $<CONFIG>
+    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-D__CT_FAILURE_${_cettestfailcase}=1"
+    --test-command ${CMAKE_CTEST_COMMAND} -VV
+    )
+  set_tests_properties(testCetTest_${_cettestfailcase} PROPERTIES WILL_FAIL TRUE)
+endforeach()
+
+# Test use of internal catchmain
+add_test(
+  NAME testCetTestCatchMain
+  COMMAND ${CMAKE_CTEST_COMMAND}
+  --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTestCatchMain ${CMAKE_CURRENT_BINARY_DIR}/testCetTestCatchMain
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+          --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+
 
 # Test boost.unit
 find_package(Boost QUIET)
