@@ -6,7 +6,9 @@ project(testBoostUnitProperties)
 set(CMAKE_MODULE_PATH ${cetbuildtools2_MODULE_PATH})
 include(CetTest)
 
+if(NOT TEST_FAILCASE)
 find_package(Boost REQUIRED unit_test_framework)
+endif()
 
 # Handbuilt...
 add_executable(foo_handbuilt foo_cet.cc)
