@@ -418,7 +418,7 @@ Check for missing keyword(s) in the definition of test ${CET_TARGET} in your CMa
     (CET_HANDBUILT AND CET_USE_CATCH_MAIN) OR
     (CET_PREBUILT AND CET_USE_CATCH_MAIN))
     # HANDBUILT/PREBUILT/USE_CATCH_MAIN are mutually exclusive
-    message(FATAL_ERROR "cet_test: target ${CET_TARGET} must have only one of the CET_HANDBUILT, CET_PREBUILT, or CET_USE_CATCH_MAIN options set.")
+    message(FATAL_ERROR "cet_test: target ${CET_TARGET} must have only one of the HANDBUILT, PREBUILT, or USE_CATCH_MAIN options set.")
   elseif(CET_PREBUILT)
     # eg scripts.
     if(NOT CET_INSTALL_BIN)
