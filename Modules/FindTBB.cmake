@@ -1,6 +1,7 @@
 # The MIT License (MIT)
 #
 # Copyright (c) 2015 Justus Calvin
+# Modifications Copyright (c) 2017 Ben Morgan
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -170,7 +171,10 @@ endif()
 find_path(TBB_INCLUDE_DIR tbb/tbb.h
   HINTS ${TBB_INCLUDE_DIR} ${TBB_SEARCH_DIR}
   PATHS ${TBB_DEFAULT_SEARCH_DIR}
-  PATH_SUFFIXES include)
+  PATH_SUFFIXES include
+  DOC "TBB include directory"
+  )
+mark_as_advanced(TBB_INCLUDE_DIR)
 
 ##################################
 # Set version strings
@@ -186,84 +190,65 @@ if(TBB_INCLUDE_DIR)
   set(TBB_VERSION "${TBB_VERSION_MAJOR}.${TBB_VERSION_MINOR}")
 endif()
 
+########################################
+# Find TBB library and requested components
 ##################################
-# Find TBB library and components
-##################################
-find_library(TBB_LIBRARY_RELEASE
-  NAMES tbb
-  HINTS ${TBB_LIBRARY} ${TBB_SEARCH_DIR}
-  PATHS ${TBB_DEFAULT_SEARCH_DIR} ENV LIBRARY_PATH
-  PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX}
-  )
-find_library(TBB_LIBRARY_DEBUG
-  NAMES tbb_debug
-  HINTS ${TBB_LIBRARY} ${TBB_SEARCH_DIR}
-  PATHS ${TBB_DEFAULT_SEARCH_DIR} ENV LIBRARY_PATH
-  PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX}
-  )
-
-if(TBB_VERSION VERSION_LESS 4.3)
-  set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc)
-else()
-  set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc_proxy tbbmalloc)
+if(NOT TBB_LIBRARY)
+  find_library(TBB_LIBRARY_RELEASE
+    NAMES tbb
+    HINTS ${TBB_LIBRARY} ${TBB_SEARCH_DIR}
+    PATHS ${TBB_DEFAULT_SEARCH_DIR} ENV LIBRARY_PATH
+    PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX}
+    DOC "TBB library (release)"
+    )
+  find_library(TBB_LIBRARY_DEBUG
+    NAMES tbb_debug
+    HINTS ${TBB_LIBRARY} ${TBB_SEARCH_DIR}
+    PATHS ${TBB_DEFAULT_SEARCH_DIR} ENV LIBRARY_PATH
+    PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX}
+    DOC "TBB library (debug)"
+    )
+  mark_as_advanced(TBB_LIBRARY_RELEASE TBB_LIBRARY_DEBUG)
+  include(SelectLibraryConfigurations)
+  select_library_configurations(TBB)
 endif()
 
-# Find each component
-foreach(_comp ${TBB_SEARCH_COMPOMPONENTS})
-  if(";${TBB_FIND_COMPONENTS};tbb;" MATCHES ";${_comp};")
-    # Search for the libraries
+# Don't as yet check that component is know
+#if(TBB_VERSION VERSION_LESS 4.3)
+#  set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc)
+#else()
+#  set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc_proxy tbbmalloc)
+#endif()
+
+foreach(_comp ${TBB_FIND_COMPONENTS})
+  if(NOT TBB_${_comp}_LIBRARY)
     find_library(TBB_${_comp}_LIBRARY_RELEASE ${_comp}
       HINTS ${TBB_LIBRARY} ${TBB_SEARCH_DIR}
       PATHS ${TBB_DEFAULT_SEARCH_DIR} ENV LIBRARY_PATH
-      PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX})
+      PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX}
+      )
 
     find_library(TBB_${_comp}_LIBRARY_DEBUG ${_comp}_debug
       HINTS ${TBB_LIBRARY} ${TBB_SEARCH_DIR}
       PATHS ${TBB_DEFAULT_SEARCH_DIR} ENV LIBRARY_PATH
-      PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX})
+      PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX}
+      )
 
-    if(TBB_${_comp}_LIBRARY_DEBUG)
-      list(APPEND TBB_LIBRARIES_DEBUG "${TBB_${_comp}_LIBRARY_DEBUG}")
-    endif()
-
-    if(TBB_${_comp}_LIBRARY_RELEASE)
-      list(APPEND TBB_LIBRARIES_RELEASE "${TBB_${_comp}_LIBRARY_RELEASE}")
-    endif()
-
-    if(TBB_${_comp}_LIBRARY_${TBB_BUILD_TYPE} AND NOT TBB_${_comp}_LIBRARY)
-      set(TBB_${_comp}_LIBRARY "${TBB_${_comp}_LIBRARY_${TBB_BUILD_TYPE}}")
-    endif()
-
-    if(TBB_${_comp}_LIBRARY AND EXISTS "${TBB_${_comp}_LIBRARY}")
+    mark_as_advanced(TBB_${_comp}_LIBRARY_RELEASE TBB_${_comp}_LIBRARY_DEBUG)
+    select_library_configurations(TBB_${_comp})
+    if(TBB_${_comp}_LIBRARY)
       set(TBB_${_comp}_FOUND TRUE)
-    else()
-      set(TBB_${_comp}_FOUND FALSE)
     endif()
-
-    # Mark internal variables as advanced
-    mark_as_advanced(TBB_${_comp}_LIBRARY_RELEASE)
-    mark_as_advanced(TBB_${_comp}_LIBRARY_DEBUG)
-    mark_as_advanced(TBB_${_comp}_LIBRARY)
   endif()
 endforeach()
 
-##################################
-# Set compile flags and libraries
-##################################
-set(TBB_INCLUDE_DIRS "${TBB_INCLUDE_DIR}")
+# Need compile definitions for release/debug modes
+# Use "SelectLibraryConfigurations" logic to set a suitable TBB_DEFINITIONS?
+# Difficult though because add_definitions doesn't support generator expressions!
+# May just need to set TBB_DEFINITIONS appropriately and document multimode
+# case
 set(TBB_DEFINITIONS_RELEASE "")
 set(TBB_DEFINITIONS_DEBUG "-DTBB_USE_DEBUG=1")
-
-if(TBB_LIBRARIES_${TBB_BUILD_TYPE})
-  set(TBB_DEFINITIONS "${TBB_DEFINITIONS_${TBB_BUILD_TYPE}}")
-  set(TBB_LIBRARIES "${TBB_LIBRARIES_${TBB_BUILD_TYPE}}")
-elseif(TBB_LIBRARIES_RELEASE)
-  set(TBB_DEFINITIONS "${TBB_DEFINITIONS_RELEASE}")
-  set(TBB_LIBRARIES "${TBB_LIBRARIES_RELEASE}")
-elseif(TBB_LIBRARIES_DEBUG)
-  set(TBB_DEFINITIONS "${TBB_DEFINITIONS_DEBUG}")
-  set(TBB_LIBRARIES "${TBB_LIBRARIES_DEBUG}")
-endif()
 
 #-----------------------------------------------------------------------
 # Handle the QUIETLY/REQUIRED arguments and set TBB_FOUND to TRUE if
@@ -273,41 +258,52 @@ find_package_handle_standard_args(TBB
     TBB_FOUND
   REQUIRED_VARS
     TBB_INCLUDE_DIR
-    TBB_LIBRARIES
+    TBB_LIBRARY
   HANDLE_COMPONENTS
   VERSION_VAR
-  TBB_VERSION
+    TBB_VERSION
   )
 
-##################################
-# Create Imported targets
-# NB: Should create these individually rather than dumping
-#     contents of TBB_LIBRARIES
-##################################
-if(NOT CMAKE_VERSION VERSION_LESS 3.0 AND TBB_FOUND)
-  add_library(TBB::tbb SHARED IMPORTED)
-  set_target_properties(TBB::tbb PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES  ${TBB_INCLUDE_DIRS}
-    IMPORTED_LOCATION              ${TBB_tbb_LIBRARY})
-  if(TBB_LIBRARIES_RELEASE AND TBB_LIBRARIES_DEBUG)
-    set_target_properties(tbb PROPERTIES
-      INTERFACE_COMPILE_DEFINITIONS "$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:TBB_USE_DEBUG=1>"
-      IMPORTED_LOCATION_DEBUG          ${TBB_LIBRARIES_DEBUG}
-      IMPORTED_LOCATION_RELWITHDEBINFO ${TBB_LIBRARIES_DEBUG}
-      IMPORTED_LOCATION_RELEASE        ${TBB_LIBRARIES_RELEASE}
-      IMPORTED_LOCATION_MINSIZEREL     ${TBB_LIBRARIES_RELEASE}
+if(TBB_FOUND)
+  set(TBB_INCLUDE_DIRS "${TBB_INCLUDE_DIR}")
+  set(TBB_LIBRARIES "${TBB_LIBRARIES}")
+
+  # Add any requested components to LIBRARIES
+  foreach(_comp ${TBB_FIND_COMPONENTS})
+    if(TBB_${_comp}_FOUND)
+      set(TBB_LIBRARIES "${TBB_LIBRARIES} ${TBB_${_comp}_LIBRARIES}")
+    endif()
+  endforeach()
+
+  # On CMake >= 3, create imported targets
+  if(CMAKE_VERSION VERSION_GREATER 2.99 AND NOT TARGET TBB::tbb)
+    # TBB is always a shared library
+    add_library(TBB::tbb SHARED IMPORTED)
+    set_target_properties(TBB::tbb PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${TBB_INCLUDE_DIRS}"
       )
-  elseif(TBB_LIBRARIES_RELEASE)
-    set_target_properties(tbb PROPERTIES IMPORTED_LOCATION ${TBB_LIBRARIES_RELEASE})
-  else()
-    set_target_properties(tbb PROPERTIES
-      INTERFACE_COMPILE_DEFINITIONS "${TBB_DEFINITIONS_DEBUG}"
-      IMPORTED_LOCATION              ${TBB_LIBRARIES_DEBUG}
-      )
+    if(TBB_LIBRARY_RELEASE AND TBB_LIBRARY_DEBUG)
+      set_target_properties(TBB::tbb PROPERTIES
+        # Note setting vs latter Debug only one
+        # Have to be careful to apply correct -D flag for R-AND-D
+        # vs D only cases.
+        INTERFACE_COMPILE_DEFINITIONS "$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:TBB_USE_DEBUG=1>"
+        IMPORTED_LOCATION_DEBUG          ${TBB_LIBRARY_DEBUG}
+        IMPORTED_LOCATION_RELWITHDEBINFO ${TBB_LIBRARY_DEBUG}
+        IMPORTED_LOCATION_RELEASE        ${TBB_LIBRARY_RELEASE}
+        IMPORTED_LOCATION_MINSIZEREL     ${TBB_LIBRARY_RELEASE}
+        )
+    elseif(TBB_LIBRARIES_RELEASE)
+      set_target_properties(TBB::tbb PROPERTIES IMPORTED_LOCATION ${TBB_LIBRARY_RELEASE})
+    else()
+      set_target_properties(TBB::tbb PROPERTIES
+        INTERFACE_COMPILE_DEFINITIONS "${TBB_DEFINITIONS_DEBUG}"
+        IMPORTED_LOCATION              "${TBB_LIBRARY_DEBUG}"
+        )
+    endif()
   endif()
 endif()
 
-mark_as_advanced(TBB_INCLUDE_DIRS TBB_LIBRARIES)
 
 unset(TBB_ARCHITECTURE)
 unset(TBB_BUILD_TYPE)
