@@ -13,8 +13,19 @@ if(TBB_FOUND)
     message(FATAL_ERROR "TBB found, but no TBB::tbb target present")
   endif()
 
-  # Try refinding with components
-  find_package(TBB REQUIRED tbbmalloc tbbmalloc_proxy)
+  # Try refinding with components tbbmalloc should be available on
+  # all current versions
+  find_package(TBB REQUIRED tbbmalloc)
+  # Test that target created
+  if(NOT TARGET TBB::tbbmalloc)
+    message(FATAL_ERROR "TBB found, but TBB::tbbmalloc target not present")
+  endif()
+
+  # Check linking a basic target
+  add_executable(testFindTBB testFindTBB.cc)
+  target_link_libraries(testFindTBB PRIVATE TBB::tbb)
+
+  add_test(NAME testFindTBB COMMAND testFindTBB)
 endif()
 
 # This is purely for visual checking that
