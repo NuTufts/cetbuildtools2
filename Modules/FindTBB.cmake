@@ -41,39 +41,43 @@
 # Imported Targets
 # ^^^^^^^^^^^^^^^^
 #
-# This module defines the following :cmake:prop_tgt:`IMPORTED` targets if
+# This module defines the following :cmake:prop_tgt:`IMPORTED` target if
 # TBB has been found::
 #
-#  TBB::tbb             - The main TBB library.
-#  TBB::tbbmalloc       - The TBB memory allocator library.
-#  TBB::tbbmalloc_proxy - The TBB memory allocator proxy library.
-#  TBB::tbb_preview     - The TBB feature preview library.
+#  TBB::tbb - Target for main TBB library.
+#  TBB::<C> - Target for TBB component ``<C>`` library, if requested in
+#             ``COMPONENTS`` argument.
+#
+# Valid arguments to ``COMPONENTS`` are ``tbbmalloc``, ``tbbmalloc_proxy``
+# and ``tbb_preview``.
 #
 # Result Variables
 # ^^^^^^^^^^^^^^^^
 #
 # This module will set the following variables in your project::
 #
-#   TBB_FOUND                       - True if TBB found.
-#   TBB_INCLUDE_DIRS                - The include directory for TBB headers.
-#   TBB_LIBRARIES                   - The libraries to link against to use TBB.
-#   TBB_LIBRARIES_RELEASE           - The release libraries to link against to use TBB.
-#   TBB_LIBRARIES_DEBUG             - The debug libraries to link against to use TBB.
-#                                     TBB.
-#   TBB_DEFINITIONS                 - Definitions to use when compiling code that uses
-#                                     TBB
-#   TBB_DEFINITIONS_RELEASE         - Definitions to use when compiling release code that
-#                                     uses TBB.
-#   TBB_DEFINITIONS_DEBUG           - Definitions to use when compiling debug code that
-#                                     uses TBB.
-#   TBB_VERSION                     - The full version string of the found TBB.
-#   TBB_VERSION_MAJOR               - The major version
-#   TBB_VERSION_MINOR               - The minor version
-#   TBB_INTERFACE_VERSION           - The interface version number defined in
-#                                     tbb/tbb_stddef.h.
-#   TBB_<component>_FOUND           - True if optional <component> of TBB is found.
-#   TBB_<component>_LIBRARY_RELEASE - The release library for <component> TBB library.
-#   TBB_<component>_LIBRARY_DEBUG   - The debug library for <component> TBB library.
+#   TBB_FOUND               - True if TBB found.
+#   TBB_INCLUDE_DIRS        - The include directory for TBB headers.
+#   TBB_LIBRARIES           - The libraries to link against to use TBB.
+#   TBB_LIBRARIES_RELEASE   - The release libraries to link against to use TBB.
+#   TBB_LIBRARIES_DEBUG     - The debug libraries to link against to use TBB.
+#                             TBB.
+#   TBB_DEFINITIONS         - Definitions to use when compiling code that uses
+#                             TBB
+#   TBB_DEFINITIONS_RELEASE - Definitions to use when compiling code that uses
+#                             the TBB release library.
+#   TBB_DEFINITIONS_DEBUG   - Definitions to use when compiling code that uses
+#                             the TBB debug library.
+#   TBB_VERSION             - The full version string of the found TBB.
+#   TBB_VERSION_MAJOR       - The major version
+#   TBB_VERSION_MINOR       - The minor version
+#   TBB_INTERFACE_VERSION   - The interface version number defined in
+#                             tbb/tbb_stddef.h.
+#   TBB_<C>_FOUND           - True if optional component <C> of TBB is found.
+#   TBB_<C>_LIBRARY_RELEASE - The release library for component <C> TBB library.
+#   TBB_<C>_LIBRARY_DEBUG   - The debug library for component <C> TBB library.
+#
+# Valid values for ``<C>`` are as described above for the Imported Targets.
 #
 # Hints
 # ^^^^^
@@ -89,22 +93,46 @@
 #
 
 #-----------------------------------------------------------------------
-include(FindPackageHandleStandardArgs)
+# Macro to create imported targets for main TBB library and
+# components
+macro(_TBB_make_imported_target _target _component)
+  if(NOT TARGET TBB::${_target})
+    # TBB is generally (and recommended to be) a shared
+    # library, so make this explicit for now. If Static
+    # version need to be supported, mark lib as UNKNOWN
+    # and set IMPORTED_LINK_INTERFACE_LANGUAGES as needed.
+    add_library(TBB::${_target} SHARED IMPORTED)
+    set_target_properties(TBB::${_target} PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${TBB_INCLUDE_DIRS}"
+      )
 
-##################################
-# Check the build type
-##################################
-if(NOT DEFINED TBB_USE_DEBUG_BUILD)
-  if(CMAKE_BUILD_TYPE MATCHES "(Debug|DEBUG|debug|RelWithDebInfo|RELWITHDEBINFO|relwithdebinfo)")
-    set(TBB_BUILD_TYPE DEBUG)
-  else()
-    set(TBB_BUILD_TYPE RELEASE)
+    # See cmake-developer(7) for logic of selection/ordering
+    if(TBB_${_component}LIBRARY_RELEASE)
+      set_property(TARGET TBB::${_target} APPEND PROPERTY
+        IMPORTED_CONFIGURATIONS RELEASE
+        )
+      set_target_properties(TBB::${_target} PROPERTIES
+        IMPORTED_LOCATION_RELEASE "${TBB_${_component}LIBRARY_RELEASE}"
+        )
+    endif()
+    if(TBB_${_component}LIBRARY_DEBUG)
+      set_property(TARGET TBB::${_target} APPEND PROPERTY
+        IMPORTED_CONFIGURATIONS DEBUG
+        )
+      set_target_properties(TBB::${_target} PROPERTIES
+        INTERFACE_COMPILE_DEFINITIONS "$<$<CONFIG:Debug>:TBB_USE_DEBUG=1>"
+        IMPORTED_LOCATION_DEBUG "${TBB_${_component}LIBRARY_DEBUG}"
+        )
+    endif()
+    if(NOT TBB_${_component}LIBRARY_RELEASE AND NOT TBB_${_component}LIBRARY_DEBUG)
+      # variable set directly
+      set_target_properties(TBB::${_target} PROPERTIES
+        IMPORTED_LOCATION "${TBB_${_component}LIBRARY}"
+        )
+    endif()
   endif()
-elseif(TBB_USE_DEBUG_BUILD)
-  set(TBB_BUILD_TYPE DEBUG)
-else()
-  set(TBB_BUILD_TYPE RELEASE)
-endif()
+endmacro()
+
 
 ##################################
 # Set the TBB search directories
@@ -213,25 +241,35 @@ if(NOT TBB_LIBRARY)
   select_library_configurations(TBB)
 endif()
 
-# Don't as yet check that component is know
-#if(TBB_VERSION VERSION_LESS 4.3)
-#  set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc)
-#else()
-#  set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc_proxy tbbmalloc)
-#endif()
+#-----------------------------------------------------------------------
+# Check/Search components as requested
+if(TBB_VERSION VERSION_LESS 4.3)
+  set(_TBB_KNOWN_COMPONENTS tbb_preview tbbmalloc)
+else()
+  set(_TBB_KNOWN_COMPONENTS tbb_preview tbbmalloc tbbmalloc_proxy)
+endif()
 
 foreach(_comp ${TBB_FIND_COMPONENTS})
   if(NOT TBB_${_comp}_LIBRARY)
+    list(FIND _TBB_KNOWN_COMPONENTS ${_comp} _tbb_comp_index)
+    if(_tbb_comp_index LESS 0)
+      message(FATAL_ERROR "Find of TBB component '${_comp}' requested, but it is not a known component of TBB\n"
+        "Known components of TBB: ${_TBB_KNOWN_COMPONENTS}"
+        )
+    endif()
+
     find_library(TBB_${_comp}_LIBRARY_RELEASE ${_comp}
       HINTS ${TBB_LIBRARY} ${TBB_SEARCH_DIR}
       PATHS ${TBB_DEFAULT_SEARCH_DIR} ENV LIBRARY_PATH
       PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX}
+      DOC "TBB ${_comp} library (release)"
       )
 
     find_library(TBB_${_comp}_LIBRARY_DEBUG ${_comp}_debug
       HINTS ${TBB_LIBRARY} ${TBB_SEARCH_DIR}
       PATHS ${TBB_DEFAULT_SEARCH_DIR} ENV LIBRARY_PATH
       PATH_SUFFIXES ${TBB_LIB_PATH_SUFFIX}
+      DOC "TBB ${_comp} library (debug)"
       )
 
     mark_as_advanced(TBB_${_comp}_LIBRARY_RELEASE TBB_${_comp}_LIBRARY_DEBUG)
@@ -253,6 +291,7 @@ set(TBB_DEFINITIONS_DEBUG "-DTBB_USE_DEBUG=1")
 #-----------------------------------------------------------------------
 # Handle the QUIETLY/REQUIRED arguments and set TBB_FOUND to TRUE if
 # all listed variables are TRUE
+include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TBB
   FOUND_VAR
     TBB_FOUND
@@ -275,33 +314,10 @@ if(TBB_FOUND)
     endif()
   endforeach()
 
-  # On CMake >= 3, create imported targets
-  if(CMAKE_VERSION VERSION_GREATER 2.99 AND NOT TARGET TBB::tbb)
-    # TBB is always a shared library
-    add_library(TBB::tbb SHARED IMPORTED)
-    set_target_properties(TBB::tbb PROPERTIES
-      INTERFACE_INCLUDE_DIRECTORIES "${TBB_INCLUDE_DIRS}"
-      )
-    if(TBB_LIBRARY_RELEASE AND TBB_LIBRARY_DEBUG)
-      set_target_properties(TBB::tbb PROPERTIES
-        # Note setting vs latter Debug only one
-        # Have to be careful to apply correct -D flag for R-AND-D
-        # vs D only cases.
-        INTERFACE_COMPILE_DEFINITIONS "$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:TBB_USE_DEBUG=1>"
-        IMPORTED_LOCATION_DEBUG          ${TBB_LIBRARY_DEBUG}
-        IMPORTED_LOCATION_RELWITHDEBINFO ${TBB_LIBRARY_DEBUG}
-        IMPORTED_LOCATION_RELEASE        ${TBB_LIBRARY_RELEASE}
-        IMPORTED_LOCATION_MINSIZEREL     ${TBB_LIBRARY_RELEASE}
-        )
-    elseif(TBB_LIBRARIES_RELEASE)
-      set_target_properties(TBB::tbb PROPERTIES IMPORTED_LOCATION ${TBB_LIBRARY_RELEASE})
-    else()
-      set_target_properties(TBB::tbb PROPERTIES
-        INTERFACE_COMPILE_DEFINITIONS "${TBB_DEFINITIONS_DEBUG}"
-        IMPORTED_LOCATION              "${TBB_LIBRARY_DEBUG}"
-        )
-    endif()
-  endif()
+  _TBB_make_imported_target(tbb "")
+  foreach(_rcomp ${TBB_FIND_COMPONENTS})
+    _TBB_make_imported_target(${_rcomp} "${_rcomp}_")
+  endforeach()
 endif()
 
 
