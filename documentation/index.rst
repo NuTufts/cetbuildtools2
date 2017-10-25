@@ -23,6 +23,7 @@
 
    /find-modules/FindCppUnit
    /find-modules/FindSQLite
+   /find-modules/FindTBB
 
 .. toctree::
    :maxdepth: 2

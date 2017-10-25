@@ -119,6 +119,8 @@ add_test(
   )
 
 #-----------------------------------------------------------------------
+# FindXXX Modules
+#-----------------------------------------------------------------------
 # FindCppUnit test
 #
 add_test(
@@ -128,9 +130,19 @@ add_test(
           --build-generator ${CMAKE_GENERATOR}
           --build-makeprogram ${CMAKE_MAKE_PROGRAM}
           --build-config $<CONFIG>
-          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
   )
 
+# FindTBB test
+add_test(
+  NAME testFindTBB
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testFindTBB ${CMAKE_CURRENT_BINARY_DIR}/testFindTBB
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+  )
 
 #-----------------------------------------------------------------------
 # Cet_configure_cxx_standard test
