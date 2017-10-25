@@ -1,140 +1,147 @@
-# macros for building plugin libraries
+#.rst:
+# BasicPlugin
+# -----------
 #
-# The plugin type is expected to be service, source, or module,
-# but we do not enforce this.
+# .. code-block:: cmake
 #
-# USAGE:
-# basic_plugin( <name> <plugin type>
-#                [[NOP] <libraries>]
-#                [USE_BOOST_UNIT]
-#                [ALLOW_UNDERSCORES]
-#                [BASENAME_ONLY]
-#                [USE_PRODUCT_NAME]
-#                [NO_INSTALL]
-#                [SOURCE <sources>]
-#   )
+#   include(BasicPlugin)
 #
-# The plugin library's name is constructed from the specified name, its
-# specified plugin type (eg service, module, source), and (unless
+# Supplies a function for building ``cetlib`` compatible plugin libraries. Note that
+# this provides a slightly different API from the ``cetbuildtools`` version to
+# decouple the build/install steps and to remove UPS specifics.
+#
+# The following function for building plugin libraries is defined
+#
+# .. cmake:command:: basic_plugin
+#
+#  ..  code-block:: cmake
+#
+#    basic_plugin(<name>
+#                 <plugintype>
+#                 [[NOP] <libraries>]
+#                 [USE_BOOST_UNIT]
+#                 [ALLOW_UNDERSCORES]
+#                 [BASENAME_ONLY]
+#                 [USE_PRODUCT_NAME]
+#                 [SOURCE <sources>])
+#
+# The plugin library's name is constructed from the specified ``<name>``,
+# ``<plugintype>`` (eg service, module, source), and (unless
 # BASENAME_ONLY is specified) the package subdirectory path (replacing
-# "/" with "_").
+# "/" with "_"). The plugin type is expected to be ``service``, ``source``, or ``module``,
+# but this is not enforced.
 #
 # Options:
 #
 # ALLOW_UNDERSCORES
-#
-#    Allow underscores in subdirectory names. Discouraged, as it creates
-#    a possible ambiguity in the encoded plugin library name
-#    (art_test/XX is indistinguishable from art/test/XX).
+#   Allow underscores in subdirectory names. Discouraged, as it creates
+#   a possible ambiguity in the encoded plugin library name
+#   (e.g. ``foo_bar/baz`` is indistinguishable from ``foo/bar/baz``).
 #
 # BASENAME_ONLY
-#
-#    Omit the subdirectory path from the library name. Discouraged, as
-#    it creates an ambiguity between modules with the same source
-#    filename in different packages or different subdirectories within
-#    the same package. The latter case is not possible however, because
-#    CMake will throw an error because the two CMake targets will have
-#    the same name and that is not permitted. Mutually exclusive with
-#    USE_PRODUCT_NAME.
-#
-# NO_INSTALL
-#
-#    If specified, the plugin library will not be part of the installed
-#    product (use for test modules, etc.).
+#   Omit the subdirectory path from the library name. Discouraged, as
+#   it creates an ambiguity between modules with the same source
+#   filename in different packages or different subdirectories within
+#   the same package. The latter case is not possible however, because
+#   CMake will throw an error because the two CMake targets will have
+#   the same name and that is not permitted. Mutually exclusive with
+#   ``USE_PRODUCT_NAME``.
 #
 # NOP
-#
-#    Dummy option for the purpose of separating (say) multi-option
-#    arguments from non-option arguments.
+#   Dummy option for the purpose of separating (say) multi-option
+#   arguments from non-option arguments.
 #
 # SOURCE
-#
-#    If specified, the provided sources will be used to create the
-#    library. Otherwise, the generated name <name>_<plugin_type>.cc will
-#    be used and this will be expected to be found in
-#    ${CMAKE_CURRENT_SOURCE_DIR}.
+#   If specified, the provided sources will be used to create the
+#   library. Otherwise, the generated name ``<name>_<plugin_type>.cc`` will
+#   be used and this will be expected to be found in the current CMake
+#   source directory (``CMAKE_CURRENT_SOURCE_DIR``).
 #
 # USE_BOOST_UNIT
-#
-#    Allow the use of Boost Unit Test facilities.
+#   Build the plugin to allow its use in Boost.Unit tests
 #
 # USE_PRODUCT_NAME
+#    Prepend the product name (value of ``PROJECT_NAME`` in non-UPS) to the
+#    plugin library name. Mutually exclusive with ``BASENAME_ONLY``.
 #
-#    Prepend the product name to the plugin library name. Mutually
-#    exclusive with BASENAME_ONLY.
+# .. todo::
 #
-########################################################################
+#   It is likely that this module should be promoted to cetlib because
+#   the major functionality of the module is to enforce the cetlib plugin
+#   naming convention. If this convention changes, then it is most clearly communicated
+#   via changes to the cetlib API. Otherwise, all this module does is to use
+#   add_library/target_link_libraries that any user would be comfortable with.
+#
 
 include(CMakeParseArguments)
 include(CetCurrentSubdir)
+include(CetCMakeUtilities)
 
-macro (_bp_debug_message)
-  string(TOUPPER ${CMAKE_BUILD_TYPE} BTYPE_UC)
-  if (BTYPE_UC STREQUAL "DEBUG")
-    message(STATUS "BASIC_PLUGIN: " ${ARGN})
-  endif()
-endmacro()
 
 # Basic plugin libraries.
 function(basic_plugin name type)
   cmake_parse_arguments(BP
-    "USE_BOOST_UNIT;ALLOW_UNDERSCORES;BASENAME_ONLY;USE_PRODUCT_NAME;NO_INSTALL;NOINSTALL;NOP"
+    "USE_BOOST_UNIT;ALLOW_UNDERSCORES;BASENAME_ONLY;USE_PRODUCT_NAME;NOP;NO_INSTALL"
     ""
     "SOURCE"
     ${ARGN})
-  if (BP_NOINSTALL)
-    message(FATAL_ERROR "basic_plugin now requires NO_INSTALL instead of NOINSTALL")
-  endif()
-  if (BP_BASENAME_ONLY AND BP_USE_PRODUCT_NAME)
+  if(BP_BASENAME_ONLY AND BP_USE_PRODUCT_NAME)
     message(FATAL_ERROR "BASENAME_ONLY AND USE_PRODUCT_NAME are mutually exclusive")
   endif()
-  if (BP_BASENAME_ONLY)
+  if(BP_NO_INSTALL)
+    message(WARNING "basic_plugin no longer accepts the NO_INSTALL option")
+  endif()
+
+  if(BP_BASENAME_ONLY)
     set(plugin_name "${name}_${type}")
   else()
-    #message( STATUS "basic_plugin: PACKAGE_TOP_DIRECTORY is ${PACKAGE_TOP_DIRECTORY}")
     # base name on current subdirectory
-    _cet_current_subdir( CURRENT_SUBDIR2 )
+    _cet_current_subdir(CURRENT_SUBDIR2)
     # remove leading /
-    STRING( REGEX REPLACE "^/(.*)" "\\1" CURRENT_SUBDIR "${CURRENT_SUBDIR2}" )
-    if(NOT BP_ALLOW_UNDERSCORES )
+    string(REGEX REPLACE "^/(.*)" "\\1" CURRENT_SUBDIR "${CURRENT_SUBDIR2}")
+    if(NOT BP_ALLOW_UNDERSCORES)
       string(REGEX MATCH [_] has_underscore "${CURRENT_SUBDIR}")
-      if( has_underscore )
+      if(has_underscore)
         message(FATAL_ERROR  "found underscore in plugin subdirectory: ${CURRENT_SUBDIR}" )
-      endif( has_underscore )
+      endif()
+
       string(REGEX MATCH [_] has_underscore "${name}")
-      if( has_underscore )
+      if(has_underscore)
         message(FATAL_ERROR  "found underscore in plugin name: ${name}" )
-      endif( has_underscore )
+      endif()
     endif()
-    STRING( REGEX REPLACE "/" "_" plugname "${CURRENT_SUBDIR}" )
-    if (BP_USE_PRODUCT_NAME)
-      set( plugname ${product}_${plugname} )
+
+    string(REGEX REPLACE "/" "_" plugname "${CURRENT_SUBDIR}")
+    if(BP_USE_PRODUCT_NAME)
+      set(plugname ${PROJECT_NAME}_${plugname})
     endif()
     set(plugin_name "${plugname}_${name}_${type}")
   endif()
+
   if(NOT BP_SOURCE)
     set(BP_SOURCE "${name}_${type}.cc")
   endif()
-  #message(STATUS "BASIC_PLUGIN: generating ${plugin_name}")
-  add_library(${plugin_name} SHARED ${BP_SOURCE} )
+
+  add_library(${plugin_name} SHARED ${BP_SOURCE})
+
   # check the library list and substitute if appropriate
-  ##set(basic_plugin_liblist "${BP_UNPARSED_ARGUMENTS}")
+  # Probably not needed as would expect user to supply appropriate list
+  # without any transformation
   set(basic_plugin_liblist "")
-  foreach (lib ${BP_UNPARSED_ARGUMENTS})
+  foreach(lib ${BP_UNPARSED_ARGUMENTS})
     string(REGEX MATCH [/] has_path "${lib}")
-    if( has_path )
+    if(has_path)
       list(APPEND basic_plugin_liblist ${lib})
     else()
       string(TOUPPER  ${lib} ${lib}_UC )
-      #_bp_debug_message( "basic_plugin: check ${lib}" )
       if( ${${lib}_UC} )
-        _bp_debug_message( "changing ${lib} to ${${${lib}_UC}}")
-	list(APPEND basic_plugin_liblist ${${${lib}_UC}})
+        list(APPEND basic_plugin_liblist ${${${lib}_UC}})
       else()
-	list(APPEND basic_plugin_liblist ${lib})
+        list(APPEND basic_plugin_liblist ${lib})
       endif()
-    endif( has_path )
+    endif()
   endforeach()
+
   if(BP_USE_BOOST_UNIT)
     set_boost_unit_properties(${plugin_name})
   endif()
@@ -142,11 +149,7 @@ function(basic_plugin name type)
   set_tbb_offload_properties(${plugin_name})
 
   list(LENGTH basic_plugin_liblist liblist_length)
-  if( liblist_length GREATER 0 )
-    target_link_libraries( ${plugin_name} ${basic_plugin_liblist} )
-  endif( liblist_length GREATER 0 )
-  if( NOT BP_NO_INSTALL )
-    install( TARGETS ${plugin_name}  DESTINATION ${flavorqual_dir}/lib )
-    cet_add_to_library_list( ${plugin_name} )
+  if(liblist_length GREATER 0)
+    target_link_libraries(${plugin_name} ${basic_plugin_liblist})
   endif()
-endfunction(basic_plugin name type)
+endfunction()

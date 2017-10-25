@@ -10,17 +10,20 @@
    /users/CetCompilerSettings
    /users/CetInstallDirs
    /users/CetTest
+   /users/CetUPS
    /users/CetCMakeUtilities
    /users/CetUninstallTarget
    /users/CetWriteCXXVersionAPI
+   /users/BasicPlugin
 
 .. toctree::
    :maxdepth: 2
    :hidden:
    :caption: Additional Find Modules
 
-   /find-modules/FindBoost
+   /find-modules/FindCppUnit
    /find-modules/FindSQLite
+   /find-modules/FindTBB
 
 .. toctree::
    :maxdepth: 2

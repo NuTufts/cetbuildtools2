@@ -6,12 +6,12 @@
 #
 #   include(CetCompilerSettings)
 #
-# Sets CET Build Modes and Compiler Flags when included.
+# Sets CET Build Modes, Compiler Flags and Properties when included.
 #
 # Include this module to configure your project to use the CET standard
 # build modes and C/C++/Fortran compiler flags. CMake options and functions
-# are provided to manage warning levels, debugging format, symbol resolution
-# policy, architecture level optimization and assertion activation.
+# are provided to manage language standards, warning levels, debugging format,
+# symbol resolution policy, architecture level optimization and assertion activation.
 #
 
 #-----------------------------------------------------------------------
@@ -68,7 +68,164 @@ include(CetCMakeUtilities)
 #
 # When building for single mode generators like Make and Ninja,
 # the build type defaults to ``RelWithDebInfo`` if it is not already
-# set.
+# set. Note that the ``Release`` and ``MinSizeRel`` modes are identical
+# to the CET-defined ``OPT`` and ``PROF`` modes.
+
+#-----------------------------------------------------------------------
+#.rst:
+# Options for Controlling the Language Standard
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#
+# The following CMake variables are set by default when including this module
+# for general control of the C++ Standard:
+#
+# - :cmake:variable:`CMAKE_CXX_EXTENSIONS <cmake:variable:CMAKE_CXX_EXTENSIONS>`: OFF
+#
+#   - Prevent use of vendor specific language extensions. For example, when using the
+#     GNU compiler with C++14, the flag ``-std=c++14`` with be used rather than ``-std=gnu++14``.
+#
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+#.rst:
+# - :cmake:variable:`CMAKE_CXX_STANDARD_REQUIRED <cmake:variable:CMAKE_CXX_STANDARD_REQUIRED>`: ON
+#
+#   - Prevent decay to an earlier standard if the compiler in use does
+#     not support the requested standard.
+#
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#.rst:
+# To configure and select the C++ Standard used to compile the project,
+# the ``CMAKE_CXX_STANDARD`` variable is used... A project may specify
+# a minimum standard it requires for compilation, and users may select
+# from this or higher known standards to perform the actual build.
+
+#.rst:
+# .. todo::
+#
+#   Review usage of ``CMAKE_CXX_STANDARD`` vs compile features, as well
+#   as standard specification fo C/Fortran.
+#   In CMake, we have two builtin ways to specify the required standard,
+#   meaning that CMake will set the compile flags like ``-std=c++11`` for
+#   us automatically.
+#
+#   * Set the :cmake:variable:`CMAKE_CXX_STANDARD <cmake:variable:CMAKE_CXX_STANDARD>`
+#     and :cmake:variable:`CMAKE_CXX_STANDARD_REQUIRED <cmake:variable:CMAKE_CXX_STANDARD_REQUIRED>`
+#     variables to the required standard, e.g. ``11``, and ``ON`` to enforce that
+#     the compiler in use supports the standard. These variables provide the
+#     defaults for the :cmake:prop_tgt:`CXX_STANDARD <cmake:prop_tgt:CXX_STANDARD>`
+#     and :cmake:prop_tgt:`CXX_STANDARD_REQUIRED <cmake:prop_tgt:CXX_STANDARD_REQUIRED>` target
+#     properties, which may also be set on a per-target basis. Note that this
+#     method does *not* guarantee that the compiler supports *all* features of
+#     the specified standard.
+#   * Use the :cmake:command:`target_compile_features <cmake:command:target_compile_features>`
+#     command on a target, passing a list of specific features required (see
+#     :cmake:prop_gbl:`CMAKE_CXX_KNOWN_FEATURES <cmake:prop_gbl:CMAKE_CXX_KNOWN_FEATURES>`).
+#     This guarantees that the compiler supports the required language feature, provided
+#     that the compiler, version and standard are known to CMake.
+#
+#   In both cases, CMake automatically adds any needed flags needed to compile
+#   against the requested standard to the compile commands. The main difference is
+#   that ``target_compile_features`` is a `usage requirement` so the features are
+#   propagated to exported targets. Clients of those targets pick up the compile
+#   features, and so can be compiled against the same standard (mostly) automatically.
+#
+#   An advantage of using the plain project-scope variables is that we can easily add
+#   support for new standards quickly by setting the variables
+#   ``CMAKE_CXX<EPOCH>_STANDARD_COMPILE_OPTION`` and ``CMAKE_CXX<EPOCH>_EXTENSION_COMPILE_OPTION``
+#   variables based on the compiler ID and Version. For example ``-std=c++1z`` and ``-std=gnu++1z``
+#   if using GCC 5(?) and above.
+#   Means we cannot support compile features, because names for those need to be defined,
+#   ultimately, by upstream CMake based on the final features defined by ISO.
+#   Can define our own names of course, but at the potential cost of compatibility with
+#   mainline CMake and we'd also require clients of any package to depend on and use
+#   cetbuildtools2 (unless we exported the module setting the features into the package).
+#   `Generally` the names map to Clang ``__has_feature`` names and the similar _`SD-6` names.
+#
+#   We can also, given an epoch, get the list of features supported by the current
+#   compiler, so can also use this list later on if needed. Feature based configuration
+#   is probably most useful when a new standard is being gradually rolled out.
+#
+#   Side note: In UPS/cetbuildtools, standard is selected based on `UPS Qualifiers`_,
+#   and specifially the primary qualifier. This is mostly a specification of compiler
+#   vendor, version and C++ Standard. If we provide a UPS compatibility layer, then
+#   need to use this info, but it can be as a basic check/translation that things
+#   match up (see ``report_product_info`` program etc, though these still rely on
+#   setup_for_development writing files to buildir).
+#
+# .. _`UPS Qualifiers`: https://cdcvs.fnal.gov/redmine/projects/cet-is-public/wiki/AboutQualifiers
+# .. _`SD-6`: https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations
+#
+# TODO: Look at functionizing the below - at present, have to do
+#
+#  set(CET_COMPILER_CXX_STANDARD_MINIMUM 14)
+#  include(CetCompilerSettings)
+#
+# Review whether it's better to do
+#
+#  include(CetCompilerSettings)
+#  cet_compiler_cxx_standard_minimum(14)
+#
+# NB: trick here is that variable has sensible default (NULL),
+# but how to do a default function call? Could just set CXX_STANDARD
+# to sensible default in CetCompilerSettings, then if the function is
+# overidden, provides configuration?
+
+
+# Projects may need to define the minimum standard, so VALUES needs to
+# take that into account, and set DEFAULT to the first entry.
+# Because upcoming versions may be alphanumeric, this list should be ordered
+set(CET_SUPPORTED_CXX_STANDARDS 11 14 17 2a)
+set(CET_PROJECT_CXX_STANDARDS)
+
+if(CET_COMPILER_CXX_STANDARD_MINIMUM)
+  # Value must be in supported list
+  list(FIND CET_SUPPORTED_CXX_STANDARDS "${CET_COMPILER_CXX_STANDARD_MINIMUM}" _cxx_min_index)
+  if(_cxx_min_index LESS 0)
+    message(FATAL_ERROR
+"project has requested a minimum C++ Standard of `${CET_COMPILER_CXX_STANDARD_MINIMUM}`,
+but this is not in the list of known standards:\n"
+"${CET_SUPPORTED_CXX_STANDARDS}"
+    )
+  endif()
+
+  # must include all elements from index->end
+  list(LENGTH CET_SUPPORTED_CXX_STANDARDS __number_of_cxxstds)
+  math(EXPR __last "${__number_of_cxxstds} - 1")
+  foreach(_index RANGE ${_cxx_min_index} ${__last})
+    list(GET CET_SUPPORTED_CXX_STANDARDS ${_index} _tmp)
+    list(APPEND CET_PROJECT_CXX_STANDARDS ${_tmp})
+  endforeach()
+else()
+  set(CET_PROJECT_CXX_STANDARDS ${CET_SUPPORTED_CXX_STANDARDS})
+endif()
+
+enum_option(CET_COMPILER_CXX_STANDARD
+  VALUES ${CET_PROJECT_CXX_STANDARDS}
+  TYPE STRING
+  DOC "Set C++ Standard to compile against"
+  )
+mark_as_advanced(CET_COMPILER_CXX_STANDARD)
+
+# - Quick and dirty check of standard
+#   If the standard compile option is not defined, then CMake doesn't
+#   know about standard support of this compiler
+if(NOT DEFINED CMAKE_CXX${CET_COMPILER_CXX_STANDARD}_STANDARD_COMPILE_OPTION)
+  message(FATAL_ERROR
+"C++ Standard `${CET_COMPILER_CXX_STANDARD}` requested, but detected compiler
+${CMAKE_CXX_COMPILER_ID} v${CMAKE_CXX_COMPILER_VERSION}\n"
+"is not known to support it. If this is an error, you can add support by setting "
+"the variables CMAKE_CXX${CET_COMPILER_CXX_STANDARD}_STANDARD_COMPILE_OPTION to the "
+"flag required to be passed to the compiler to activate this standard. This setting "
+"must be done before inclusion of CetCompilerSettings"
+  )
+endif()
+
+# Set global standard to compile against
+set(CMAKE_CXX_STANDARD ${CET_COMPILER_CXX_STANDARD})
+
+# Could, for suitable CMake versions/compatibility, use the cxx_std_<EPOCH>
+# feature (from CMake 3.8 onwards?)...
 
 #-----------------------------------------------------------------------
 #.rst:
@@ -114,10 +271,20 @@ enum_option(CET_COMPILER_DIAGNOSTIC_LEVEL
   DOC "Set warning diagnostic level"
   )
 
-# - Treat warnings as errors
+#.rst:
+# .. cmake:variable:: CET_COMPILER_WARNINGS_ARE_ERRORS
+#
+#  Option to turn compiler warnings into hard errors. ``ON`` by default.
+#
 option(CET_COMPILER_WARNINGS_ARE_ERRORS "treat all warnings as errors" ON)
 
-# - Allow override for deprecations
+#.rst:
+# .. cmake:variable:: CET_COMPILER_ALLOW_DEPRECATIONS
+#
+#   Option to ignore deprecation warnings. ``ON`` by default.
+#   It only has an effect if ``CET_COMPILER_WARNINGS_ARE_ERRORS`` is
+#   activated (this matches upstream `cetbuildtools` behaviour.
+#
 option(CET_COMPILER_ALLOW_DEPRECATIONS "ignore deprecation warnings" ON)
 
 mark_as_advanced(
@@ -184,8 +351,21 @@ endif()
 # For compatible compilers, the version and strictness of DWARF
 # debugging output may be controlled
 #
+# .. cmake:variable:: CET_COMPILER_DWARF_STRICT
+#
+#   Option to only emit DWARF debugging info at the level set by
+#   ``CET_COMPILER_DWARF_VERSION``. ``ON`` by default.
+#
+# .. todo::
+#
+#   Current flags are GCC dependent. Review them for Clang and Intel
+#
 option(CET_COMPILER_DWARF_STRICT "only emit DWARF debugging info at defined level" ON)
-# NB: this is a number, so again an enum option
+
+# .. cmake:variable:: CET_COMPILER_DWARF_VERSION
+#
+#   Version of DWARF standard that should be emitted. Defaults to 2.
+#
 enum_option(CET_COMPILER_DWARF_VERSION
   VALUES 2 3 4
   TYPE STRING
@@ -219,6 +399,11 @@ endforeach()
 # Linkers may have different default policies for symbol resolution.
 # CET prefer to fully resolved symbols.
 #
+# .. cmake:variable:: CET_COMPILER_NO_UNDEFINED_SYMBOLS
+#
+#   Option to control whether the linker must fully resolve symbols for
+#   shared libraries. ``ON`` by default.
+#
 option(CET_COMPILER_NO_UNDEFINED_SYMBOLS "required full symbol resolution for shared libs" ON)
 mark_as_advanced(CET_COMPILER_NO_UNDEFINED_SYMBOLS)
 
@@ -238,7 +423,18 @@ endif()
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
 # Things like SSE/Vectorization...
-
+#
+# .. cmake:variable:: CET_COMPILER_ENABLE_SSE2
+#
+#   Enable specific optimizations for SSE2. ``OFF`` by default.
+#
+#   Note that this does not check that the system you are building
+#   for supports this instruction set.
+#
+# .. todo::
+#
+#   Review options here for further checks and/or arch-specific optimizations.
+#
 option(CET_COMPILER_ENABLE_SSE2 "enable SSE2 specific optimizations" OFF)
 mark_as_advanced(CET_COMPILER_ENABLE_SSE2)
 
@@ -396,8 +592,7 @@ set(CMAKE_CXX_FLAGS "${CET_COMPILER_CXX_DIAGFLAGS_${CET_COMPILER_DIAGNOSTIC_LEVE
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|(Apple)+Clang|Intel")
   set(CMAKE_C_FLAGS_RELEASE        "-O3 -g ${CET_COMPILER_C_DWARF_FLAGS}")
   set(CMAKE_C_FLAGS_DEBUG          "-O0 -g ${CET_COMPILER_C_DWARF_FLAGS}")
-  set(CMAKE_C_FLAGS_MINSIZEREL     "-O3 -g ${CET_COMPILER_C_DWARF_FLAGS} -fno-om
-it-frame-pointer")
+  set(CMAKE_C_FLAGS_MINSIZEREL     "-O3 -g ${CET_COMPILER_C_DWARF_FLAGS} -fno-omit-frame-pointer")
   set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
 endif()
 

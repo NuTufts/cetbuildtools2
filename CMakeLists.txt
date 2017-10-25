@@ -2,7 +2,7 @@
 #   Though a very simple project, it requires its own functionality
 #   to install natively or using the CET/UPS policy
 cmake_minimum_required(VERSION 3.0)
-project(cetbuildtools2 VERSION 0.1.0 LANGUAGES NONE)
+project(cetbuildtools2 VERSION 0.2.0)
 
 # - Install policy
 # Native only for now
@@ -17,6 +17,15 @@ enable_testing()
 add_subdirectory(testing)
 
 # - Install CMake files/modules
+# - Programs
+install(DIRECTORY bin/
+  DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  PATTERN "bin/*"
+  PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+              GROUP_EXECUTE GROUP_READ
+              WORLD_EXECUTE WORLD_READ
+  )
+
 # - Modules
 install(DIRECTORY Modules
   DESTINATION "${CMAKE_INSTALL_CMAKEDIR}"

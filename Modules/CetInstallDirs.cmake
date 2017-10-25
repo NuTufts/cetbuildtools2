@@ -99,7 +99,7 @@ include(GNUInstallDirs)
 # Assumed that CMake Package Configuration files are architecture dependent
 # Not *always* true, but gives a good default
 # TODO: See if this could be chosen..
-if(NOT DEFINED CMAKE_INSTALL_CMAKEDIR)
+if(NOT CMAKE_INSTALL_CMAKEDIR)
   set(CMAKE_INSTALL_CMAKEDIR "" CACHE PATH "CMake package configuration files (LIBDIR/cmake)")
   set(CMAKE_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake")
 endif()
@@ -107,7 +107,7 @@ endif()
 # FHICL files are always architecture independent
 # - Policy at present is to follow other man/doc style and use "fhicl/PROJECT_NAME"
 #   Could equally use PROJECT_NAME/fhicl as default if better fit
-if(NOT DEFINED CMAKE_INSTALL_FHICLDIR)
+if(NOT CMAKE_INSTALL_FHICLDIR)
   set(CMAKE_INSTALL_FHICLDIR "" CACHE PATH "FHICL configuration files (DATAROOTDIR/fhicl/PROJECT_NAME)")
   set(CMAKE_INSTALL_FHICLDIR "${CMAKE_INSTALL_DATAROOTDIR}/fhicl/${PROJECT_NAME}")
 endif()
@@ -115,7 +115,7 @@ endif()
 # GDML files are always architecture independent
 # - Policy at present is to follow other man/doc style and use "gdml/PROJECT_NAME"
 #   Could equally use PROJECT_NAME/gdml as default if better fit
-if(NOT DEFINED CMAKE_INSTALL_GDMLDIR)
+if(NOT CMAKE_INSTALL_GDMLDIR)
   set(CMAKE_INSTALL_GDMLDIR "" CACHE PATH "GDML configuration files (DATAROOTDIR/gdml/PROJECT_NAME)")
   set(CMAKE_INSTALL_GDMLDIR "${CMAKE_INSTALL_DATAROOTDIR}/gdml/${PROJECT_NAME}")
 endif()

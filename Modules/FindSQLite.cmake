@@ -24,6 +24,18 @@
 #  SQLite_EXECUTABLE   - Path to sqlite executable
 #  SQLite_VERSION      - The version of the found SQLite install
 #
+# Note
+# ^^^^
+#
+# Fermilab "UPS" installs of SQLite rename the sqlite3 library to
+# `libsqlite3_ups.EXT`. When using this module in a UPS environment
+# where sqlite has been "setup", `sqlite3_ups` is prepended to the list
+# of library names to be searched for by find_library.
+
+# This should not affect general usage as the name is only added when a
+# UPS-setup sqlite is detected (existence of a `SQLITE_FQ_DIR` environment
+# variable.
+#
 
 #=======================================================================
 # Copyright (c) 2016, Ben Morgan <Ben.Morgan@warwick.ac.uk>
@@ -42,7 +54,16 @@ include(FindPackageHandleStandardArgs)
 #-----------------------------------------------------------------------
 # Find SQLite paths only using defaults for now
 find_path(SQLite_INCLUDE_DIR sqlite3.h)
-find_library(SQLite_LIBRARY sqlite3)
+
+# - TEMP HACK TO MAKE THIS WORK IN UPS
+# Fermi UPS systems tag lib filename with `_ups`, so if we're in a UPS
+# environment with Sqlite "setup" prepend this name to find_library's list
+if(DEFINED ENV{SQLITE_FQ_DIR})
+  set(__SQLite_additional_names sqlite3_ups)
+endif()
+
+find_library(SQLite_LIBRARY NAMES ${__SQLite_additional_names} sqlite3)
+
 find_program(SQLite_EXECUTABLE sqlite3)
 
 # If we have the executable, use it to extract the version
@@ -64,7 +85,7 @@ find_package_handle_standard_args(SQLite
   FOUND_VAR
     SQLite_FOUND
   REQUIRED_VARS
-    SQLite_INCLUDE_DIRS
+    SQLite_INCLUDE_DIR
     SQLite_LIBRARY
   VERSION_VAR
     SQLite_VERSION

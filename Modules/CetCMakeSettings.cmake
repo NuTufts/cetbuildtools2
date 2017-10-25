@@ -35,6 +35,39 @@
 #
 set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
 
+
+# CET projects are (universally?) laid out so that the root source and
+# build directories are equivalent to the root of the include
+# directory.  If we want these to be in the build/install interfaces
+# automatically, can use directory property as listed below to do this
+# Could also provide a macro/function to add additional paths.
+#
+# - Set up so these are always added to the include directories
+#   property in the build interface, and that they always appear first
+#   to avoid clashes with any installed.
+#   Could also set the install interface using CMAKE_INSTALL_INCLUDEDIR
+#   though this would only account for a single use case (e.g. if
+#   a library installed both arch independent AND dependent headers)
+#   However, that's a special case and could be handled by additional
+#   calls to target_include_directories. Advantage of setting
+#   INSTALL_INTERFACE here is that it'll always appear FIRST in the
+#   interface include dirs, so avoiding one source of clashes (if
+#   INTERFACE_INCLUDE_DIRS has absolute paths relating to deps. may
+#   be resolved by going to fully imported targets)
+
+#set_directory_properties(PROPERTIES
+#  INCLUDE_DIRECTORIES
+#  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR};${PROJECT_BINARY_DIR}>;$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+#    )
+
+#.rst
+# - ``CMAKE_LINK_DEPENDS_NO_SHARED`` : ON
+#
+#   - Do not relink a target to any shared library dependencies when
+#     only the shared library implementation has changed.
+#
+set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
+
 #.rst:
 # - ``CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION`` : ON
 #

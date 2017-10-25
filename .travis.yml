@@ -1,0 +1,59 @@
+# Use cpp as language as tests rely on build small projects
+language: cpp
+
+# Test across Linux/macOS
+# - Add g++-6 and 7 from ppa
+# Only 1 cmake version (may need more as C++ standard support evolves)
+# This gives x4 rows in the matrix, three linux, two macOS
+matrix:
+  include:
+    - os: linux
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    - os: osx
+      osx_image: xcode9
+      compiler: clang
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+
+# Configure the CC/CXX values
+before_install:
+  - eval "${MATRIX_EVAL}"
+
+# At least on mac, should have suitable CMake via Homebrew
+# On Linux, can grab CMake bundle, or use Docker, or use pullProducts
+install:
+  - |
+    if [ "$TRAVIS_OS_NAME" == "osx" ] ; then
+      brew update
+      brew outdated cmake || brew upgrade cmake
+      brew install tbb
+    elif [ "$TRAVIS_OS_NAME" == "linux" ] ; then
+      wget https://cmake.org/files/v3.9/cmake-3.9.3-Linux-x86_64.tar.gz
+      tar -xf cmake-3.9.3-Linux-x86_64.tar.gz
+      export PATH=$(pwd)/cmake-3.9.3-Linux-x86_64/bin:$PATH
+    fi
+
+script:
+  - mkdir build
+  - cd build
+  - cmake ..
+  - ctest -VV
+

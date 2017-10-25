@@ -183,7 +183,8 @@ endfunction()
   set or no Boost Unit Test Framework library is supplied via the
   ``Boost::unit_test_framework`` imported target or ``Boost_UNIT_TEST_FRAMEWORK_LIBRARY`` variable, the function
   raises a FATAL_ERROR. At present, no checking of Release vs Debug
-  Boost libraries is performed.
+  Boost libraries is performed. All properties are marked as
+  ``PUBLIC`` usage requirements.
 
 #]]
 function(set_boost_unit_properties _target)
@@ -224,10 +225,10 @@ function(set_boost_unit_properties _target)
   # include directories - make private for now
   # libs to link - can't specify link rule here as others may use it.
   if(TARGET Boost::unit_test_framework)
-    target_link_libraries(${_target} Boost::unit_test_framework)
+    target_link_libraries(${_target} PUBLIC Boost::unit_test_framework)
   else()
-    target_include_directories(${_target} PRIVATE ${Boost_INCLUDE_DIRS})
-    target_link_libraries(${_target} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    target_include_directories(${_target} PUBLIC ${Boost_INCLUDE_DIRS})
+    target_link_libraries(${_target} PUBLIC ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
   endif()
 endfunction()
 

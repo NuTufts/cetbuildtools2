@@ -36,6 +36,9 @@ foreach(format ${sphinx_output_formats})
   set(doc_format_output  "doc_format_${format}")
   set(doc_format_log "build-${format}.log")
 
+  # Copy license to root format directory
+  configure_file("${PROJECT_SOURCE_DIR}/LICENSE" "${CMAKE_CURRENT_BINARY_DIR}/${format}/LICENSE" COPYONLY)
+
   add_custom_command(
     OUTPUT ${doc_format_output}
     COMMAND ${SPHINX_EXECUTABLE}
