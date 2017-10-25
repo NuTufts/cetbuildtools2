@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetCompilerSettings &mdash; cetbuildtools2 0.1.0 documentation</title>
+  <title>CetCompilerSettings &mdash; cetbuildtools2 0.2.0 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="cetbuildtools2 0.1.0 documentation" href="../index.html"/>
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
         <link rel="next" title="CetInstallDirs" href="CetInstallDirs.html"/>
         <link rel="prev" title="CetCMakeSettings" href="CetCMakeSettings.html"/> 
 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -60,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -81,12 +87,16 @@
           
             
             
-                <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to cetbuildtools2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetCMakeSettings.html">CetCMakeSettings</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">CetCompilerSettings</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CetCompilerSettings</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#cet-base-compiler-flags-and-build-types">CET Base Compiler Flags and Build Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#options-for-controlling-the-language-standard">Options for Controlling the Language Standard</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#options-for-controlling-compiler-warnings">Options for Controlling Compiler Warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#options-for-controlling-debugging-output">Options for Controlling Debugging Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#options-for-controlling-symbol-resolution">Options for Controlling Symbol Resolution</a></li>
@@ -104,8 +114,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindBoost.html">FindBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindCppUnit.html">FindCppUnit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../find-modules/FindSQLite.html">FindSQLite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindTBB.html">FindTBB</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
 <ul>
@@ -123,8 +134,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">cetbuildtools2</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cetbuildtools2</a>
+        
       </nav>
 
 
@@ -137,19 +150,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>CetCompilerSettings</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CetCompilerSettings</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/users/CetCompilerSettings.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/users/CetCompilerSettings.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -160,11 +190,11 @@
 <div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">include</span><span class="p">(</span><span class="s">CetCompilerSettings</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Sets CET Build Modes and Compiler Flags when included.</p>
+<p>Sets CET Build Modes, Compiler Flags and Properties when included.</p>
 <p>Include this module to configure your project to use the CET standard
 build modes and C/C++/Fortran compiler flags. CMake options and functions
-are provided to manage warning levels, debugging format, symbol resolution
-policy, architecture level optimization and assertion activation.</p>
+are provided to manage language standards, warning levels, debugging format,
+symbol resolution policy, architecture level optimization and assertion activation.</p>
 <div class="section" id="cet-base-compiler-flags-and-build-types">
 <h2>CET Base Compiler Flags and Build Types<a class="headerlink" href="#cet-base-compiler-flags-and-build-types" title="Permalink to this headline">¶</a></h2>
 <p>Base flags for a language, that is <code class="docutils literal"><span class="pre">CMAKE_&lt;LANG&gt;_FLAGS</span></code> are always
@@ -191,7 +221,90 @@ flags for optimization and debugging of:</p>
 </ul>
 <p>When building for single mode generators like Make and Ninja,
 the build type defaults to <code class="docutils literal"><span class="pre">RelWithDebInfo</span></code> if it is not already
-set.</p>
+set. Note that the <code class="docutils literal"><span class="pre">Release</span></code> and <code class="docutils literal"><span class="pre">MinSizeRel</span></code> modes are identical
+to the CET-defined <code class="docutils literal"><span class="pre">OPT</span></code> and <code class="docutils literal"><span class="pre">PROF</span></code> modes.</p>
+</div>
+<div class="section" id="options-for-controlling-the-language-standard">
+<h2>Options for Controlling the Language Standard<a class="headerlink" href="#options-for-controlling-the-language-standard" title="Permalink to this headline">¶</a></h2>
+<p>The following CMake variables are set by default when including this module
+for general control of the C++ Standard:</p>
+<ul class="simple">
+<li><span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_EXTENSIONS"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_EXTENSIONS.html#variable:CMAKE_CXX_EXTENSIONS" title="(in CMake v3.10.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_EXTENSIONS</span></code></a>: OFF<ul>
+<li>Prevent use of vendor specific language extensions. For example, when using the
+GNU compiler with C++14, the flag <code class="docutils literal"><span class="pre">-std=c++14</span></code> with be used rather than <code class="docutils literal"><span class="pre">-std=gnu++14</span></code>.</li>
+</ul>
+</li>
+<li><span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD_REQUIRED.html#variable:CMAKE_CXX_STANDARD_REQUIRED" title="(in CMake v3.10.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD_REQUIRED</span></code></a>: ON<ul>
+<li>Prevent decay to an earlier standard if the compiler in use does
+not support the requested standard.</li>
+</ul>
+</li>
+</ul>
+<p>To configure and select the C++ Standard used to compile the project,
+the <code class="docutils literal"><span class="pre">CMAKE_CXX_STANDARD</span></code> variable is used… A project may specify
+a minimum standard it requires for compilation, and users may select
+from this or higher known standards to perform the actual build.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p>Review usage of <code class="docutils literal"><span class="pre">CMAKE_CXX_STANDARD</span></code> vs compile features, as well
+as standard specification fo C/Fortran.
+In CMake, we have two builtin ways to specify the required standard,
+meaning that CMake will set the compile flags like <code class="docutils literal"><span class="pre">-std=c++11</span></code> for
+us automatically.</p>
+<ul class="simple">
+<li>Set the <span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_STANDARD"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD.html#variable:CMAKE_CXX_STANDARD" title="(in CMake v3.10.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD</span></code></a>
+and <span class="target" id="index-1-variable:cmake:variable:CMAKE_CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD_REQUIRED.html#variable:CMAKE_CXX_STANDARD_REQUIRED" title="(in CMake v3.10.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD_REQUIRED</span></code></a>
+variables to the required standard, e.g. <code class="docutils literal"><span class="pre">11</span></code>, and <code class="docutils literal"><span class="pre">ON</span></code> to enforce that
+the compiler in use supports the standard. These variables provide the
+defaults for the <span class="target" id="index-0-prop_tgt:cmake:prop_tgt:CXX_STANDARD"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD.html#prop_tgt:CXX_STANDARD" title="(in CMake v3.10.0)"><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">CXX_STANDARD</span></code></a>
+and <span class="target" id="index-0-prop_tgt:cmake:prop_tgt:CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD_REQUIRED.html#prop_tgt:CXX_STANDARD_REQUIRED" title="(in CMake v3.10.0)"><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">CXX_STANDARD_REQUIRED</span></code></a> target
+properties, which may also be set on a per-target basis. Note that this
+method does <em>not</em> guarantee that the compiler supports <em>all</em> features of
+the specified standard.</li>
+<li>Use the <span class="target" id="index-0-command:cmake:command:target_compile_features"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/target_compile_features.html#command:target_compile_features" title="(in CMake v3.10.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">target_compile_features</span></code></a>
+command on a target, passing a list of specific features required (see
+<span class="target" id="index-0-prop_gbl:cmake:prop_gbl:CMAKE_CXX_KNOWN_FEATURES"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html#prop_gbl:CMAKE_CXX_KNOWN_FEATURES" title="(in CMake v3.10.0)"><code class="xref cmake cmake-prop_gbl docutils literal"><span class="pre">CMAKE_CXX_KNOWN_FEATURES</span></code></a>).
+This guarantees that the compiler supports the required language feature, provided
+that the compiler, version and standard are known to CMake.</li>
+</ul>
+<p>In both cases, CMake automatically adds any needed flags needed to compile
+against the requested standard to the compile commands. The main difference is
+that <code class="docutils literal"><span class="pre">target_compile_features</span></code> is a <cite>usage requirement</cite> so the features are
+propagated to exported targets. Clients of those targets pick up the compile
+features, and so can be compiled against the same standard (mostly) automatically.</p>
+<p>An advantage of using the plain project-scope variables is that we can easily add
+support for new standards quickly by setting the variables
+<code class="docutils literal"><span class="pre">CMAKE_CXX&lt;EPOCH&gt;_STANDARD_COMPILE_OPTION</span></code> and <code class="docutils literal"><span class="pre">CMAKE_CXX&lt;EPOCH&gt;_EXTENSION_COMPILE_OPTION</span></code>
+variables based on the compiler ID and Version. For example <code class="docutils literal"><span class="pre">-std=c++1z</span></code> and <code class="docutils literal"><span class="pre">-std=gnu++1z</span></code>
+if using GCC 5(?) and above.
+Means we cannot support compile features, because names for those need to be defined,
+ultimately, by upstream CMake based on the final features defined by ISO.
+Can define our own names of course, but at the potential cost of compatibility with
+mainline CMake and we’d also require clients of any package to depend on and use
+cetbuildtools2 (unless we exported the module setting the features into the package).
+<cite>Generally</cite> the names map to Clang <code class="docutils literal"><span class="pre">__has_feature</span></code> names and the similar <span class="target" id="sd-6">SD-6</span> names.</p>
+<p>We can also, given an epoch, get the list of features supported by the current
+compiler, so can also use this list later on if needed. Feature based configuration
+is probably most useful when a new standard is being gradually rolled out.</p>
+<p class="last">Side note: In UPS/cetbuildtools, standard is selected based on <a class="reference external" href="https://cdcvs.fnal.gov/redmine/projects/cet-is-public/wiki/AboutQualifiers">UPS Qualifiers</a>,
+and specifially the primary qualifier. This is mostly a specification of compiler
+vendor, version and C++ Standard. If we provide a UPS compatibility layer, then
+need to use this info, but it can be as a basic check/translation that things
+match up (see <code class="docutils literal"><span class="pre">report_product_info</span></code> program etc, though these still rely on
+setup_for_development writing files to buildir).</p>
+</div>
+<p>TODO: Look at functionizing the below - at present, have to do</p>
+<blockquote>
+<div>set(CET_COMPILER_CXX_STANDARD_MINIMUM 14)
+include(CetCompilerSettings)</div></blockquote>
+<p>Review whether it’s better to do</p>
+<blockquote>
+<div>include(CetCompilerSettings)
+cet_compiler_cxx_standard_minimum(14)</div></blockquote>
+<p>NB: trick here is that variable has sensible default (NULL),
+but how to do a default function call? Could just set CXX_STANDARD
+to sensible default in CetCompilerSettings, then if the function is
+overidden, provides configuration?</p>
 </div>
 <div class="section" id="options-for-controlling-compiler-warnings">
 <h2>Options for Controlling Compiler Warnings<a class="headerlink" href="#options-for-controlling-compiler-warnings" title="Permalink to this headline">¶</a></h2>
@@ -257,7 +370,7 @@ debugging output may be controlled</p>
 <code class="docutils literal"><span class="pre">CET_COMPILER_DWARF_VERSION</span></code>. <code class="docutils literal"><span class="pre">ON</span></code> by default.</p>
 </dd></dl>
 
-<div class="admonition-todo admonition" id="index-0">
+<div class="admonition-todo admonition" id="index-1">
 <p class="first admonition-title">Todo</p>
 <p class="last">Current flags are GCC dependent. Review them for Clang and Intel</p>
 </div>
@@ -276,7 +389,7 @@ shared libraries. <code class="docutils literal"><span class="pre">ON</span></co
 </div>
 <div class="section" id="architecture-level-optimizations">
 <h2>Architecture Level Optimizations<a class="headerlink" href="#architecture-level-optimizations" title="Permalink to this headline">¶</a></h2>
-<p>Things like SSE/Vectorization...</p>
+<p>Things like SSE/Vectorization…</p>
 <dl class="variable">
 <dt id="variable:CET_COMPILER_ENABLE_SSE2">
 <code class="descname">CET_COMPILER_ENABLE_SSE2</code><a class="headerlink" href="#variable:CET_COMPILER_ENABLE_SSE2" title="Permalink to this definition">¶</a></dt>
@@ -285,7 +398,7 @@ shared libraries. <code class="docutils literal"><span class="pre">ON</span></co
 for supports this instruction set.</p>
 </dd></dl>
 
-<div class="admonition-todo admonition" id="index-1">
+<div class="admonition-todo admonition" id="index-2">
 <p class="first admonition-title">Todo</p>
 <p class="last">Review options here for further checks and/or arch-specific optimizations.</p>
 </div>
@@ -297,7 +410,7 @@ deactivation (passing <code class="docutils literal"><span class="pre">NDEBUG</s
 directory-by-directory basis.</p>
 <p>The default policy is to only disable assertions in the Release and
 MinSizeRel build types.</p>
-<div class="admonition-todo admonition" id="index-2">
+<div class="admonition-todo admonition" id="index-3">
 <p class="first admonition-title">Todo</p>
 <p class="last">Describe directory property behaviour</p>
 </div>
@@ -345,15 +458,18 @@ and all its children.</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="CetInstallDirs.html" class="btn btn-neutral float-right" title="CetInstallDirs" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="CetInstallDirs.html" class="btn btn-neutral float-right" title="CetInstallDirs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="CetCMakeSettings.html" class="btn btn-neutral" title="CetCMakeSettings" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="CetCMakeSettings.html" class="btn btn-neutral" title="CetCMakeSettings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -384,10 +500,11 @@ and all its children.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.0',
+            VERSION:'0.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

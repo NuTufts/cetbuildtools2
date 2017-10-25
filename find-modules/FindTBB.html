@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FindTBB &mdash; cetbuildtools2 0.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
+        <link rel="next" title="CMake Coding Conventions for cetbuildtools2" href="../developers/cmakeguide.html"/>
+        <link rel="prev" title="FindSQLite" href="FindSQLite.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> cetbuildtools2
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users/introduction.html">Introduction to cetbuildtools2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/CetCMakeSettings.html">CetCMakeSettings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/CetCompilerSettings.html">CetCompilerSettings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/CetInstallDirs.html">CetInstallDirs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/CetTest.html">CetTest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/CetUPS.html">CetUPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/CetCMakeUtilities.html">CetCMakeUtilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/CetUninstallTarget.html">CetUninstallTarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/CetWriteCXXVersionAPI.html">CetWriteCXXVersionAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users/BasicPlugin.html">BasicPlugin</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Find Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="FindCppUnit.html">FindCppUnit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FindSQLite.html">FindSQLite</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FindTBB</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#imported-targets">Imported Targets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#result-variables">Result Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hints">Hints</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers/cmakeguide.html">CMake Coding Conventions for cetbuildtools2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/cmakedocs.html">Documenting CMake Modules and other Constructs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cetbuildtools2</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>FindTBB</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/find-modules/FindTBB.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="findtbb">
+<h1>FindTBB<a class="headerlink" href="#findtbb" title="Permalink to this headline">¶</a></h1>
+<p>Find the TBB include directories and libraries.</p>
+<p>Use this module by invoking find_package with the form:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">find_package</span><span class="p">(</span><span class="n">TBB</span>
+  <span class="p">[</span><span class="n">version</span><span class="p">]</span> <span class="p">[</span><span class="n">EXACT</span><span class="p">]</span>      <span class="c1"># Minimum or EXACT version, e.g 2017.7</span>
+  <span class="p">[</span><span class="n">REQUIRED</span><span class="p">]</span>             <span class="c1"># Fail with error if TBB is not found</span>
+  <span class="p">[</span><span class="n">COMPONENTS</span> <span class="o">&lt;</span><span class="n">libs</span><span class="o">&gt;...</span><span class="p">]</span> <span class="c1"># Additional TBB libraries by their</span>
+  <span class="p">)</span>                      <span class="c1"># name, e.g. &quot;tbbmalloc&quot; for &quot;libtbbmalloc&quot;</span>
+</pre></div>
+</div>
+<p>Supported arguments to <code class="docutils literal"><span class="pre">COMPONENTS</span></code> are <code class="docutils literal"><span class="pre">tbbmalloc</span></code>, <code class="docutils literal"><span class="pre">tbbmalloc_proxy</span></code>
+and <code class="docutils literal"><span class="pre">tbb_preview</span></code>.</p>
+<div class="section" id="imported-targets">
+<h2>Imported Targets<a class="headerlink" href="#imported-targets" title="Permalink to this headline">¶</a></h2>
+<p>This module defines the following <span class="target" id="index-0-prop_tgt:IMPORTED"></span><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">IMPORTED</span></code> target if
+TBB has been found:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>TBB::tbb - Target for main TBB library.
+TBB::&lt;C&gt; - Target for TBB component ``&lt;C&gt;`` library, if requested in
+           ``COMPONENTS`` argument.
+</pre></div>
+</div>
+<p>Valid arguments to <code class="docutils literal"><span class="pre">COMPONENTS</span></code> are <code class="docutils literal"><span class="pre">tbbmalloc</span></code>, <code class="docutils literal"><span class="pre">tbbmalloc_proxy</span></code>
+and <code class="docutils literal"><span class="pre">tbb_preview</span></code>.</p>
+</div>
+<div class="section" id="result-variables">
+<h2>Result Variables<a class="headerlink" href="#result-variables" title="Permalink to this headline">¶</a></h2>
+<p>This module will set the following variables in your project:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">TBB_FOUND</span>               <span class="o">-</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">TBB</span> <span class="n">found</span><span class="o">.</span>
+<span class="n">TBB_INCLUDE_DIRS</span>        <span class="o">-</span> <span class="n">The</span> <span class="n">include</span> <span class="n">directory</span> <span class="k">for</span> <span class="n">TBB</span> <span class="n">headers</span><span class="o">.</span>
+<span class="n">TBB_LIBRARIES</span>           <span class="o">-</span> <span class="n">The</span> <span class="n">libraries</span> <span class="n">to</span> <span class="n">link</span> <span class="n">against</span> <span class="n">to</span> <span class="n">use</span> <span class="n">TBB</span><span class="o">.</span>
+<span class="n">TBB_LIBRARIES_RELEASE</span>   <span class="o">-</span> <span class="n">The</span> <span class="n">release</span> <span class="n">libraries</span> <span class="n">to</span> <span class="n">link</span> <span class="n">against</span> <span class="n">to</span> <span class="n">use</span> <span class="n">TBB</span><span class="o">.</span>
+<span class="n">TBB_LIBRARIES_DEBUG</span>     <span class="o">-</span> <span class="n">The</span> <span class="n">debug</span> <span class="n">libraries</span> <span class="n">to</span> <span class="n">link</span> <span class="n">against</span> <span class="n">to</span> <span class="n">use</span> <span class="n">TBB</span><span class="o">.</span>
+                          <span class="n">TBB</span><span class="o">.</span>
+<span class="n">TBB_DEFINITIONS</span>         <span class="o">-</span> <span class="n">Definitions</span> <span class="n">to</span> <span class="n">use</span> <span class="n">when</span> <span class="n">compiling</span> <span class="n">code</span> <span class="n">that</span> <span class="n">uses</span>
+                          <span class="n">TBB</span>
+<span class="n">TBB_DEFINITIONS_RELEASE</span> <span class="o">-</span> <span class="n">Definitions</span> <span class="n">to</span> <span class="n">use</span> <span class="n">when</span> <span class="n">compiling</span> <span class="n">code</span> <span class="n">that</span> <span class="n">uses</span>
+                          <span class="n">the</span> <span class="n">TBB</span> <span class="n">release</span> <span class="n">library</span><span class="o">.</span>
+<span class="n">TBB_DEFINITIONS_DEBUG</span>   <span class="o">-</span> <span class="n">Definitions</span> <span class="n">to</span> <span class="n">use</span> <span class="n">when</span> <span class="n">compiling</span> <span class="n">code</span> <span class="n">that</span> <span class="n">uses</span>
+                          <span class="n">the</span> <span class="n">TBB</span> <span class="n">debug</span> <span class="n">library</span><span class="o">.</span>
+<span class="n">TBB_VERSION</span>             <span class="o">-</span> <span class="n">The</span> <span class="n">full</span> <span class="n">version</span> <span class="n">string</span> <span class="n">of</span> <span class="n">the</span> <span class="n">found</span> <span class="n">TBB</span><span class="o">.</span>
+<span class="n">TBB_VERSION_MAJOR</span>       <span class="o">-</span> <span class="n">The</span> <span class="n">major</span> <span class="n">version</span>
+<span class="n">TBB_VERSION_MINOR</span>       <span class="o">-</span> <span class="n">The</span> <span class="n">minor</span> <span class="n">version</span>
+<span class="n">TBB_INTERFACE_VERSION</span>   <span class="o">-</span> <span class="n">The</span> <span class="n">interface</span> <span class="n">version</span> <span class="n">number</span> <span class="n">defined</span> <span class="ow">in</span>
+                          <span class="n">tbb</span><span class="o">/</span><span class="n">tbb_stddef</span><span class="o">.</span><span class="n">h</span><span class="o">.</span>
+<span class="n">TBB_</span><span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span><span class="n">_FOUND</span>           <span class="o">-</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">optional</span> <span class="n">component</span> <span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span> <span class="n">of</span> <span class="n">TBB</span> <span class="ow">is</span> <span class="n">found</span><span class="o">.</span>
+<span class="n">TBB_</span><span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span><span class="n">_LIBRARY_RELEASE</span> <span class="o">-</span> <span class="n">The</span> <span class="n">release</span> <span class="n">library</span> <span class="k">for</span> <span class="n">component</span> <span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span> <span class="n">TBB</span> <span class="n">library</span><span class="o">.</span>
+<span class="n">TBB_</span><span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span><span class="n">_LIBRARY_DEBUG</span>   <span class="o">-</span> <span class="n">The</span> <span class="n">debug</span> <span class="n">library</span> <span class="k">for</span> <span class="n">component</span> <span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span> <span class="n">TBB</span> <span class="n">library</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Valid values for <code class="docutils literal"><span class="pre">&lt;C&gt;</span></code> are as described above for the Imported Targets.</p>
+</div>
+<div class="section" id="hints">
+<h2>Hints<a class="headerlink" href="#hints" title="Permalink to this headline">¶</a></h2>
+<p>A user may set the the CMake variable <code class="docutils literal"><span class="pre">TBB_ROOT_DIR</span></code> to a TBB installation
+root to tell this module where to look.</p>
+<p>A user may set the environment variables <code class="docutils literal"><span class="pre">TBB_INSTALL_DIR</span></code> or <code class="docutils literal"><span class="pre">TBBROOT</span></code>
+to a TBB installation root to tell this module where to look.</p>
+<p>If a combination of these variables are set, they are used in the order
+of preference <code class="docutils literal"><span class="pre">TBB_ROOT_DIR</span></code>, then <code class="docutils literal"><span class="pre">TBB_INSTALL_DIR</span></code>, then <code class="docutils literal"><span class="pre">TBBROOT</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../developers/cmakeguide.html" class="btn btn-neutral float-right" title="CMake Coding Conventions for cetbuildtools2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="FindSQLite.html" class="btn btn-neutral" title="FindSQLite" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ben Morgan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetCMakeSettings &mdash; cetbuildtools2 0.1.0 documentation</title>
+  <title>CetCMakeSettings &mdash; cetbuildtools2 0.2.0 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="cetbuildtools2 0.1.0 documentation" href="../index.html"/>
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
         <link rel="next" title="CetCompilerSettings" href="CetCompilerSettings.html"/>
         <link rel="prev" title="Introduction to cetbuildtools2" href="introduction.html"/> 
 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -60,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -81,10 +87,13 @@
           
             
             
-                <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to cetbuildtools2</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">CetCMakeSettings</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CetCMakeSettings</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#general-build-settings">General Build Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ctest-testing-settings">CTest/Testing Settings</a></li>
 </ul>
@@ -100,8 +109,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindBoost.html">FindBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindCppUnit.html">FindCppUnit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../find-modules/FindSQLite.html">FindSQLite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindTBB.html">FindTBB</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
 <ul>
@@ -119,8 +129,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">cetbuildtools2</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cetbuildtools2</a>
+        
       </nav>
 
 
@@ -133,19 +145,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>CetCMakeSettings</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CetCMakeSettings</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/users/CetCMakeSettings.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/users/CetCMakeSettings.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -182,7 +211,7 @@ that a package <em>is</em> relocatable.</li>
 <li><code class="docutils literal"><span class="pre">CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY</span></code> : ON<ul>
 <li>These variables are set to ensure that a project never creates or searches
 for config files in any package registry. This prevents the
-<span class="target" id="index-0-command:cmake:command:find_package"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/find_package.html#command:find_package" title="(in CMake v3.6.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">find_package</span></code></a>
+<span class="target" id="index-0-command:cmake:command:find_package"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/find_package.html#command:find_package" title="(in CMake v3.10.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">find_package</span></code></a>
 command from locating potentially spurious config files.</li>
 </ul>
 </li>
@@ -213,7 +242,7 @@ After inclusion of this module, use CMake conditionals on <code class="docutils 
 </div>
 <p>to only build/define tests when the variable is set.</p>
 <p>At present, enabling testing only supports direct testing rather than
-use of the <span class="target" id="index-0-module:cmake:module:CTest"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/module/CTest.html#module:CTest" title="(in CMake v3.6.0)"><code class="xref cmake cmake-module docutils literal"><span class="pre">CTest</span></code></a> module.</p>
+use of the <span class="target" id="index-0-module:cmake:module:CTest"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/module/CTest.html#module:CTest" title="(in CMake v3.10.0)"><code class="xref cmake cmake-module docutils literal"><span class="pre">CTest</span></code></a> module.</p>
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
 <p class="last">Add support for CTest. Should be matter of checking for
@@ -226,15 +255,18 @@ a <cite>CTestConfig.cmake</cite> file in the project source dir.</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="CetCompilerSettings.html" class="btn btn-neutral float-right" title="CetCompilerSettings" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="CetCompilerSettings.html" class="btn btn-neutral float-right" title="CetCompilerSettings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="introduction.html" class="btn btn-neutral" title="Introduction to cetbuildtools2" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="introduction.html" class="btn btn-neutral" title="Introduction to cetbuildtools2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -265,10 +297,11 @@ a <cite>CTestConfig.cmake</cite> file in the project source dir.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.0',
+            VERSION:'0.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>FindSQLite &mdash; cetbuildtools2 0.2.0 documentation</title>
+  <title>FindCppUnit &mdash; cetbuildtools2 0.2.0 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
-        <link rel="next" title="FindTBB" href="FindTBB.html"/>
-        <link rel="prev" title="FindCppUnit" href="FindCppUnit.html"/> 
+        <link rel="next" title="FindSQLite" href="FindSQLite.html"/>
+        <link rel="prev" title="BasicPlugin" href="../users/BasicPlugin.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -105,13 +105,12 @@
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="FindCppUnit.html">FindCppUnit</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">FindSQLite</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FindCppUnit</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#imported-targets">Imported Targets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#result-variables">Result Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#note">Note</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="FindSQLite.html">FindSQLite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FindTBB.html">FindTBB</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
@@ -162,13 +161,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>FindSQLite</li>
+      <li>FindCppUnit</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/find-modules/FindSQLite.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/find-modules/FindCppUnit.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -181,35 +180,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="findsqlite">
-<h1>FindSQLite<a class="headerlink" href="#findsqlite" title="Permalink to this headline">¶</a></h1>
-<p>Find the native SQLite includes and libraries</p>
+  <div class="section" id="findcppunit">
+<h1>FindCppUnit<a class="headerlink" href="#findcppunit" title="Permalink to this headline">¶</a></h1>
+<p>Find the native CppUnit includes and libraries</p>
 <div class="section" id="imported-targets">
 <h2>Imported Targets<a class="headerlink" href="#imported-targets" title="Permalink to this headline">¶</a></h2>
-<p>If SQLite is found, this module defines the following <span class="target" id="index-0-prop_tgt:IMPORTED"></span><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">IMPORTED</span></code>
+<p>If CppUnit is found, this module defines the following <span class="target" id="index-0-prop_tgt:IMPORTED"></span><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">IMPORTED</span></code>
 targets:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SQLite</span><span class="p">::</span><span class="n">SQLite</span>           <span class="o">-</span> <span class="n">The</span> <span class="n">main</span> <span class="n">SQLite</span> <span class="n">library</span>
-<span class="n">SQLite</span><span class="p">::</span><span class="n">SQLiteExecutable</span> <span class="o">-</span> <span class="n">The</span> <span class="n">main</span> <span class="n">SQlite</span> <span class="n">program</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">CppUnit</span><span class="p">::</span><span class="n">CppUnit</span> <span class="o">-</span> <span class="n">The</span> <span class="n">main</span> <span class="n">CppUnit</span> <span class="n">library</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="result-variables">
 <h2>Result Variables<a class="headerlink" href="#result-variables" title="Permalink to this headline">¶</a></h2>
 <p>This module wil set the following variables in your project:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SQLite_FOUND</span>        <span class="o">-</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">an</span> <span class="n">install</span> <span class="n">of</span> <span class="n">SQLite</span> <span class="ow">is</span> <span class="n">found</span>
-<span class="n">SQLite_INCLUDE_DIRS</span> <span class="o">-</span> <span class="n">Location</span> <span class="n">of</span> <span class="n">SQLite</span> <span class="n">header</span> <span class="n">files</span>
-<span class="n">SQLite_LIBRARIES</span>    <span class="o">-</span> <span class="n">The</span> <span class="n">SQLite</span> <span class="n">libraries</span>
-<span class="n">SQLite_EXECUTABLE</span>   <span class="o">-</span> <span class="n">Path</span> <span class="n">to</span> <span class="n">sqlite</span> <span class="n">executable</span>
-<span class="n">SQLite_VERSION</span>      <span class="o">-</span> <span class="n">The</span> <span class="n">version</span> <span class="n">of</span> <span class="n">the</span> <span class="n">found</span> <span class="n">SQLite</span> <span class="n">install</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">CPPUNIT_FOUND</span>        <span class="o">-</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">an</span> <span class="n">install</span> <span class="n">of</span> <span class="n">SQLite</span> <span class="ow">is</span> <span class="n">found</span>
+<span class="n">CPPUNIT_INCLUDE_DIRS</span> <span class="o">-</span> <span class="n">Location</span> <span class="n">of</span> <span class="n">SQLite</span> <span class="n">header</span> <span class="n">files</span>
+<span class="n">CPPUNIT_LIBRARIES</span>    <span class="o">-</span> <span class="n">The</span> <span class="n">SQLite</span> <span class="n">libraries</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="note">
-<h2>Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h2>
-<p>Fermilab “UPS” installs of SQLite rename the sqlite3 library to
-<cite>libsqlite3_ups.EXT</cite>. When using this module in a UPS environment
-where sqlite has been “setup”, <cite>sqlite3_ups</cite> is prepended to the list
-of library names to be searched for by find_library.</p>
 </div>
 </div>
 
@@ -223,10 +212,10 @@ of library names to be searched for by find_library.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="FindTBB.html" class="btn btn-neutral float-right" title="FindTBB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="FindSQLite.html" class="btn btn-neutral float-right" title="FindSQLite" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="FindCppUnit.html" class="btn btn-neutral" title="FindCppUnit" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../users/BasicPlugin.html" class="btn btn-neutral" title="BasicPlugin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

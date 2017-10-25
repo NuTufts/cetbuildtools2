@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetWriteCXXVersionAPI &mdash; cetbuildtools2 0.1.0 documentation</title>
+  <title>CetWriteCXXVersionAPI &mdash; cetbuildtools2 0.2.0 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="cetbuildtools2 0.1.0 documentation" href="../index.html"/>
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
         <link rel="next" title="BasicPlugin" href="BasicPlugin.html"/>
         <link rel="prev" title="CetUninstallTarget" href="CetUninstallTarget.html"/> 
 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -60,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -81,7 +87,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to cetbuildtools2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetCMakeSettings.html">CetCMakeSettings</a></li>
@@ -91,13 +100,14 @@
 <li class="toctree-l1"><a class="reference internal" href="CetUPS.html">CetUPS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetCMakeUtilities.html">CetCMakeUtilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetUninstallTarget.html">CetUninstallTarget</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">CetWriteCXXVersionAPI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CetWriteCXXVersionAPI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="BasicPlugin.html">BasicPlugin</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindBoost.html">FindBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindCppUnit.html">FindCppUnit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../find-modules/FindSQLite.html">FindSQLite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindTBB.html">FindTBB</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
 <ul>
@@ -115,8 +125,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">cetbuildtools2</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cetbuildtools2</a>
+        
       </nav>
 
 
@@ -129,19 +141,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>CetWriteCXXVersionAPI</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CetWriteCXXVersionAPI</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/users/CetWriteCXXVersionAPI.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/users/CetWriteCXXVersionAPI.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -163,8 +192,8 @@ MAJOR.MINOR.PATCH style versioning.</p>
 <p>Identifiers for the C++ namespace and struct holding the API as member
 functions must be specified using the <code class="docutils literal"><span class="pre">NAMESPACE</span></code> and <code class="docutils literal"><span class="pre">TYPENAME</span></code>
 arguments. <code class="docutils literal"><span class="pre">NAMESPACE</span></code> may be as many levels deep as you require.
-For example, setting <code class="docutils literal"><span class="pre">NAMESPACE</span></code> to &#8220;Foo::Bar&#8221; and <code class="docutils literal"><span class="pre">TYPENAME</span></code>
-to &#8220;Version&#8221; constructs a forward declaration and struct definition:</p>
+For example, setting <code class="docutils literal"><span class="pre">NAMESPACE</span></code> to “Foo::Bar” and <code class="docutils literal"><span class="pre">TYPENAME</span></code>
+to “Version” constructs a forward declaration and struct definition:</p>
 <div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">Foo</span> <span class="p">{</span>
   <span class="k">namespace</span> <span class="n">Bar</span> <span class="p">{</span>
     <span class="k">struct</span> <span class="n">Version</span><span class="p">;</span>
@@ -177,7 +206,7 @@ to &#8220;Version&#8221; constructs a forward declaration and struct definition:
 </pre></div>
 </div>
 <p>By default the header and source file are output in the current binary
-directory and named &#8220;<code class="docutils literal"><span class="pre">&lt;type&gt;.h</span></code>&#8221; and &#8220;<code class="docutils literal"><span class="pre">&lt;type&gt;.cc</span></code>&#8221;. This may be modified
+directory and named “<code class="docutils literal"><span class="pre">&lt;type&gt;.h</span></code>” and “<code class="docutils literal"><span class="pre">&lt;type&gt;.cc</span></code>”. This may be modified
 using the <code class="docutils literal"><span class="pre">HEADER_FILE</span></code> argument, supplying <code class="docutils literal"><span class="pre">&lt;path&gt;</span></code> as the required
 output location and name (including extension) of the header. The resultant
 source file will be output alongside the header with the same name plus
@@ -199,15 +228,18 @@ of include directories of compile definitions.</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="BasicPlugin.html" class="btn btn-neutral float-right" title="BasicPlugin" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="BasicPlugin.html" class="btn btn-neutral float-right" title="BasicPlugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="CetUninstallTarget.html" class="btn btn-neutral" title="CetUninstallTarget" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="CetUninstallTarget.html" class="btn btn-neutral" title="CetUninstallTarget" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -238,10 +270,11 @@ of include directories of compile definitions.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.0',
+            VERSION:'0.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

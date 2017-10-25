@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetTest &mdash; cetbuildtools2 0.1.0 documentation</title>
+  <title>CetTest &mdash; cetbuildtools2 0.2.0 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="cetbuildtools2 0.1.0 documentation" href="../index.html"/>
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
         <link rel="next" title="CetUPS" href="CetUPS.html"/>
         <link rel="prev" title="CetInstallDirs" href="CetInstallDirs.html"/> 
 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -60,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -81,13 +87,16 @@
           
             
             
-                <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to cetbuildtools2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetCMakeSettings.html">CetCMakeSettings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetCompilerSettings.html">CetCompilerSettings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetInstallDirs.html">CetInstallDirs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">CetTest</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CetTest</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetUPS.html">CetUPS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetCMakeUtilities.html">CetCMakeUtilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetUninstallTarget.html">CetUninstallTarget</a></li>
@@ -96,8 +105,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindBoost.html">FindBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindCppUnit.html">FindCppUnit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../find-modules/FindSQLite.html">FindSQLite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindTBB.html">FindTBB</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
 <ul>
@@ -115,8 +125,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">cetbuildtools2</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cetbuildtools2</a>
+        
       </nav>
 
 
@@ -129,19 +141,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>CetTest</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CetTest</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/users/CetTest.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/users/CetTest.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -153,7 +182,7 @@
 </pre></div>
 </div>
 <p>Declare and define tests compatible with CET testing policies.</p>
-<p>Include this module at the root of your project&#8217;s testing tree or
+<p>Include this module at the root of your project’s testing tree or
 wherever you need to specify a test.</p>
 <p>The following functions are provided to help in declaring tests and
 defining their properties</p>
@@ -170,27 +199,49 @@ defining their properties</p>
 <p>Options:</p>
 <dl class="docutils">
 <dt>HANDBUILT</dt>
-<dd>Do not build the target &#8211; it will be provided. This option is
+<dd>Do not build the target – it will be provided. This option is
 mutually exclusive with the PREBUILT option.</dd>
 <dt>PREBUILT</dt>
-<dd>Do not build the target &#8211; pick it up from the source dir (eg
+<dd>Do not build the target – pick it up from the source dir (eg
 scripts).  This option is mutually exclusive with the HANDBUILT
 option and simply calls the cet_script() function with appropriate
 options.</dd>
-<dt>NO_AUTO</dt>
-<dd>Do not add the target to the auto test list.</dd>
 <dt>USE_BOOST_UNIT</dt>
 <dd>This test uses the Boost Unit Test Framework.</dd>
+<dt>USE_CATCH_MAIN</dt>
+<dd><p class="first">This test will use the Catch test framework
+(<a class="reference external" href="https://github.com/philsquared/Catch">https://github.com/philsquared/Catch</a>). The specified target will be
+built from a precompiled main program to run tests described in the
+files specified by SOURCES.</p>
+<p>N.B.: if you wish to use the ParseAndAddCatchTests() facility
+contributed to the Catch system, you should specify NO_AUTO to avoid
+generating a, “standard” test. Note also that you may have your own
+test executables using Catch without using USE_CATCH_MAIN. However,
+be aware that the compilation of a Catch main is quite expensive,
+and any tests that <em>do</em> use this option will all share the same
+compiled main.</p>
+<dl class="docutils">
+<dt>TODO: Supply Catch directly so versions consistent? Same for</dt>
+<dd>Parse and add?</dd>
+</dl>
+<p>Note also that client packages are responsible for making sure Catch
+is available, such as with:</p>
+<blockquote>
+<div>catch             &lt;version&gt;               -nq-    only_for_build</div></blockquote>
+<p class="last">in product_deps.</p>
+</dd>
+<dt>NO_AUTO</dt>
+<dd>Do not add the target to the auto test list.</dd>
 <dt>INSTALL_BIN</dt>
-<dd>Install this test&#8217;s script / exec in the product&#8217;s binary directory
+<dd>Install this test’s script / exec in the product’s binary directory
 (ignored for HANDBUILT).</dd>
 <dt>INSTALL_EXAMPLE</dt>
 <dd>Install this test and all its data files into the examples area of the
 product.</dd>
 <dt>INSTALL_SOURCE</dt>
-<dd>Install this test&#8217;s source in the source area of the product.</dd>
+<dd>Install this test’s source in the source area of the product.</dd>
 </dl>
-<p>Args:</p>
+<p>Arguments:</p>
 <dl class="docutils">
 <dt>CONFIGURATIONS</dt>
 <dd>Configurations (Debug, etc, etc) under which the test shall be executed.</dd>
@@ -212,8 +263,9 @@ command line) and there is overlap between the two lists, execute
 the test. The CET_TEST_GROUPS cache variable may additionally
 contain the optional values ALL or NONE.</dd>
 <dt>REF</dt>
-<dd><p class="first">The standard output of the test will be captured and compared against
-the specified reference file. It is an error to specify this
+<dd><dl class="first last docutils">
+<dt>The standard output of the test will be captured and compared against</dt>
+<dd>the specified reference file. It is an error to specify this
 argument and either the PASS_REGULAR_EXPRESSION or
 FAIL_REGULAR_EXPRESSION test properties to the TEST_PROPERTIES
 argument: success is the logical AND of the exit code from execution
@@ -221,15 +273,29 @@ of the test as originally specified, and the success of the
 filtering and subsequent comparison of the output (and optionally,
 the error stream). Optionally, a second element may be specified
 representing a reference for the error stream; otherwise, standard
-error will be ignored.</p>
-<p class="last">If REF is specified, then OUTPUT_FILTER and OUTPUT_FILTER_ARGS may
-also be specified. OUTPUT_FILTER must be a program which expects an
-input filename as argument and puts the filtered output on STDOUT.</p>
+error will be ignored.</dd>
+<dt>If REF is specified, then OUTPUT_FILTERS may also be specified</dt>
+<dd><p class="first">(OUTPUT_FILTER and optionally OUTPUT_FILTER_ARGS will be accepted in
+the alternative for historical reasons). OUTPUT_FILTER must be a
+program which expects input on STDIN and puts the filtered output on
+STDOUT. OUTPUT_FILTERS should be a list of filters expecting input
+on STDIN and putting output on STDOUT. If DEFAULT is specified as a
+filter, it will be replaced at that point in the list of filters by
+appropriate defaults. Examples:</p>
+<blockquote class="last">
+<div><p>OUTPUT_FILTERS “filterA -x -y “arg with spaces”” filterB</p>
+<p>OUTPUT_FILTERS filterA DEFAULT filterB</p>
+</div></blockquote>
+</dd>
+</dl>
 </dd>
 <dt>REQUIRED_FILES</dt>
 <dd>These files are required to be present before the test will be
 executed. If any are missing, ctest will record NOT RUN for this
 test.</dd>
+<dt>SCOPED</dt>
+<dd>Test target (but not script nor compiled executable) names will
+be scoped by project name (&lt;PROJECT_NAME&gt;:…)</dd>
 <dt>SOURCES</dt>
 <dd>Sources to use to build the target (default is ${target}.cc).</dd>
 <dt>TEST_ARGS</dt>
@@ -239,17 +305,17 @@ test.</dd>
 be specified in conjunction with this option.</dd>
 <dt>TEST_PROPERTIES</dt>
 <dd>Properties to be added to the test. See documentation of the cmake
-command, &#8220;set_tests_properties.&#8221;</dd>
+command, “set_tests_properties.”</dd>
 </dl>
 <p>Cache variables</p>
 <dl class="docutils">
 <dt>CET_TEST_GROUPS</dt>
 <dd>Test group names specified using the OPTIONAL_GROUPS list option are
 compared against this list to determine whether to configure the
-test. Default value is the special value &#8220;NONE,&#8221; meaning no
+test. Default value is the special value “NONE,” meaning no
 optional tests are to be configured. Optionally CET_TEST_GROUPS may
-contain the special value &#8220;ALL.&#8221; Specify multiple values separated
-by &#8221;;&#8221; (escape or protect with quotes) or &#8221;,&#8221; See explanation of
+contain the special value “ALL.” Specify multiple values separated
+by “;” (escape or protect with quotes) or “,” See explanation of
 the OPTIONAL_GROUPS variable above for more details.</dd>
 <dt>CET_DEFINED_TEST_GROUPS</dt>
 <dd>Any test group names CMake sees will be added to this list.</dd>
@@ -259,12 +325,12 @@ the OPTIONAL_GROUPS variable above for more details.</dd>
 <li>cet_make_exec() and art_make_exec() are more flexible than building
 the test exec with cet_test(), and are to be preferred (use the
 NO_INSTALL option to same as appropriate). Use
-cet_test(... HANDBUILT TEST_EXEC ...) to use test execs built this
+cet_test(… HANDBUILT TEST_EXEC …) to use test execs built this
 way.</li>
 <li>The CMake properties PASS_REGULAR_EXPRESSION and
 FAIL_REGULAR_EXPRESSION are incompatible with the REF option, but we
-cannot check for them if you use CMake&#8217;s add_tests_properties()
-rather than cet_test(CET_TEST_PROPERTIES ...).</li>
+cannot check for them if you use CMake’s add_tests_properties()
+rather than cet_test(CET_TEST_PROPERTIES …).</li>
 <li>If you intend to set the property SKIP_RETURN_CODE, you should use
 CET_TEST_PROPERTIES to set it rather than add_tests_properties(), as
 cet_test() needs to take account of your preference.</li>
@@ -288,7 +354,7 @@ cet_test_env()) before setting &lt;env&gt;.</dd>
 then cet_test_env() is a NOP.</li>
 <li>If cet_test_env() is called in a directory to set the environment
 for tests then that will be propagated to tests defined in
-subdirectories unless include(CetTest) or cet_test_env(CLEAR ...) is
+subdirectories unless include(CetTest) or cet_test_env(CLEAR …) is
 invoked in that directory.</li>
 </ul>
 <dl class="command">
@@ -297,29 +363,32 @@ invoked in that directory.</li>
 <dd></dd></dl>
 
 <p>require assertion failure on given condition</p>
-<p>Usage: cet_test_assertion(CONDITION TARGET...)</p>
+<p>Usage: cet_test_assertion(CONDITION TARGET…)</p>
 <p>Notes:</p>
 <ul class="simple">
 <li>CONDITION should be a CMake regex which should have any escaped
 items doubly-escaped due to being passed as a string argument
-(e.g. &#8220;\\(&#8221; for a literal open-parenthesis, &#8220;\\.&#8221; for a literal
+(e.g. “\(” for a literal open-parenthesis, “\.” for a literal
 period).</li>
-<li>TARGET...: the name(s) of the test target(s) as specified to
-cet_test() or add_test() &#8211; require at least one.</li>
+<li>TARGET…: the name(s) of the test target(s) as specified to
+cet_test() or add_test() – require at least one.</li>
 </ul>
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="CetUPS.html" class="btn btn-neutral float-right" title="CetUPS" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="CetUPS.html" class="btn btn-neutral float-right" title="CetUPS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="CetInstallDirs.html" class="btn btn-neutral" title="CetInstallDirs" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="CetInstallDirs.html" class="btn btn-neutral" title="CetInstallDirs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -350,10 +419,11 @@ cet_test() or add_test() &#8211; require at least one.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.0',
+            VERSION:'0.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

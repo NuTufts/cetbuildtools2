@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Documenting CMake Modules and other Constructs &mdash; cetbuildtools2 0.1.0 documentation</title>
+  <title>Documenting CMake Modules and other Constructs &mdash; cetbuildtools2 0.2.0 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="cetbuildtools2 0.1.0 documentation" href="../index.html"/>
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
         <link rel="prev" title="CMake Coding Conventions for cetbuildtools2" href="cmakeguide.html"/> 
 
   
@@ -40,6 +45,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -59,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -80,7 +86,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../users/introduction.html">Introduction to cetbuildtools2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../users/CetCMakeSettings.html">CetCMakeSettings</a></li>
@@ -95,13 +104,14 @@
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindBoost.html">FindBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindCppUnit.html">FindCppUnit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../find-modules/FindSQLite.html">FindSQLite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindTBB.html">FindTBB</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="cmakeguide.html">CMake Coding Conventions for cetbuildtools2</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Documenting CMake Modules and other Constructs</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Documenting CMake Modules and other Constructs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#documenting-a-module">Documenting a Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#keeping-section-levels-consistent">Keeping Section Levels Consistent</a></li>
 </ul>
@@ -118,8 +128,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">cetbuildtools2</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cetbuildtools2</a>
+        
       </nav>
 
 
@@ -132,19 +144,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>Documenting CMake Modules and other Constructs</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Documenting CMake Modules and other Constructs</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/developers/cmakedocs.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/developers/cmakedocs.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -152,11 +181,11 @@
             
   <div class="section" id="documenting-cmake-modules-and-other-constructs">
 <h1>Documenting CMake Modules and other Constructs<a class="headerlink" href="#documenting-cmake-modules-and-other-constructs" title="Permalink to this headline">¶</a></h1>
-<p>cetbuildtools2 provides a vendored copy of CMake&#8217;s Sphinx extension to parse
+<p>cetbuildtools2 provides a vendored copy of CMake’s Sphinx extension to parse
 and generate documentation for CMake modules. <a class="reference external" href="http://www.sphinx-doc.org/en/stable/ext/intersphinx.html">Intersphinx</a> is used to
 cross-reference to the upstream CMake documentation where required.
-It&#8217;s therefore recommended to document modules and their functionality using the
-domain and style guides outlined in the <span class="target" id="index-0-manual:cmake:manual:cmake-developer(7)"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/manual/cmake-developer.7.html#manual:cmake-developer(7)" title="(in CMake v3.6.0)"><code class="xref cmake cmake-manual docutils literal"><span class="pre">CMake</span> <span class="pre">Developer</span> <span class="pre">Guide</span></code></a>.</p>
+It’s therefore recommended to document modules and their functionality using the
+domain and style guides outlined in the <span class="target" id="index-0-manual:cmake:manual:cmake-developer(7)"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/manual/cmake-developer.7.html#manual:cmake-developer(7)" title="(in CMake v3.10.0)"><code class="xref cmake cmake-manual docutils literal"><span class="pre">CMake</span> <span class="pre">Developer</span> <span class="pre">Guide</span></code></a>.</p>
 <div class="section" id="documenting-a-module">
 <h2>Documenting a Module<a class="headerlink" href="#documenting-a-module" title="Permalink to this headline">¶</a></h2>
 <p>To integrate a module <code class="docutils literal"><span class="pre">&lt;module-name&gt;</span></code> into the cetbuildtools2 documentation, create a
@@ -166,7 +195,7 @@ file only needs to contain the single line:</p>
 </pre></div>
 </div>
 <p>To add this document in the build, simply add it in the <code class="docutils literal"><span class="pre">documentation/index.rst</span></code>
-under the &#8220;Using cetbuildtools2&#8221; toctree, keeping the entries in alphabetical order.
+under the “Using cetbuildtools2” toctree, keeping the entries in alphabetical order.
 For example, adding a new module <code class="docutils literal"><span class="pre">bar</span></code>:</p>
 <div class="highlight-rest"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
    <span class="nc">:maxdepth:</span> <span class="nf">2</span>
@@ -198,13 +227,16 @@ use the following characters for marking sections (underlines etc):</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="cmakeguide.html" class="btn btn-neutral" title="CMake Coding Conventions for cetbuildtools2" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="cmakeguide.html" class="btn btn-neutral" title="CMake Coding Conventions for cetbuildtools2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -235,10 +267,11 @@ use the following characters for marking sections (underlines etc):</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.0',
+            VERSION:'0.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

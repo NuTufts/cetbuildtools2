@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cetbuildtools2: CMake Modules for FNAL CET Projects &mdash; cetbuildtools2 0.1.0 documentation</title>
+  <title>cetbuildtools2: CMake Modules for FNAL CET Projects &mdash; cetbuildtools2 0.2.0 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="cetbuildtools2 0.1.0 documentation" href="#"/>
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="#"/>
         <link rel="next" title="Introduction to cetbuildtools2" href="users/introduction.html"/> 
 
   
@@ -40,6 +45,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -59,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -80,7 +86,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="users/introduction.html">Introduction to cetbuildtools2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users/CetCMakeSettings.html">CetCMakeSettings</a></li>
@@ -95,8 +104,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="find-modules/FindBoost.html">FindBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="find-modules/FindCppUnit.html">FindCppUnit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="find-modules/FindSQLite.html">FindSQLite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="find-modules/FindTBB.html">FindTBB</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
 <ul>
@@ -114,8 +124,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">cetbuildtools2</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">cetbuildtools2</a>
+        
       </nav>
 
 
@@ -128,19 +140,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
-      
-    <li>cetbuildtools2: CMake Modules for FNAL CET Projects</li>
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>cetbuildtools2: CMake Modules for FNAL CET Projects</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -148,6 +177,7 @@
             
   <div class="section" id="cetbuildtools2-cmake-modules-for-fnal-cet-projects">
 <h1>cetbuildtools2: CMake Modules for FNAL CET Projects<a class="headerlink" href="#cetbuildtools2-cmake-modules-for-fnal-cet-projects" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://travis-ci.org/drbenmorgan/cetbuildtools2"><img alt="https://travis-ci.org/drbenmorgan/cetbuildtools2.svg?branch=develop" src="https://travis-ci.org/drbenmorgan/cetbuildtools2.svg?branch=develop" /></a>
 <p>A rewrite of the <a class="reference external" href="https://cdcvs.fnal.gov/redmine/projects/cetbuildtools">FNAL cetbuildtools</a> <a class="reference external" href="https://www.cmake.org">CMake</a> modules to</p>
 <ol class="arabic simple">
 <li>Decouple the functionality from the <a class="reference external" href="https://cdcvs.fnal.gov/redmine/projects/ups">FNAL UPS</a> configuration management system</li>
@@ -196,7 +226,7 @@ arguments as follows:</p>
 </div>
 <div class="section" id="using-cetbuildtools2">
 <h2>Using <code class="docutils literal"><span class="pre">cetbuildtools2</span></code><a class="headerlink" href="#using-cetbuildtools2" title="Permalink to this headline">¶</a></h2>
-<p>Like any other package, <code class="docutils literal"><span class="pre">cetbuildtools2</span></code> may be located by CMake-based projects using CMake&#8217;s <code class="docutils literal"><span class="pre">find_package</span></code> command:</p>
+<p>Like any other package, <code class="docutils literal"><span class="pre">cetbuildtools2</span></code> may be located by CMake-based projects using CMake’s <code class="docutils literal"><span class="pre">find_package</span></code> command:</p>
 <div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
 <span class="nb">project</span><span class="p">(</span><span class="s">foo</span> <span class="s">VERSION</span> <span class="s">1.2.3</span><span class="p">)</span>
 
@@ -215,7 +245,7 @@ using:</p>
 <li><p class="first">(Recommended) Use the <code class="docutils literal"><span class="pre">CMAKE_PREFIX_PATH</span></code> variable as a command line argument to CMake (or set as a Path-style
 variable in the environment) to point CMake to the installation prefix under which <code class="docutils literal"><span class="pre">cetbuildtools2</span></code> is installed. For
 example, if it was installed under <code class="docutils literal"><span class="pre">/another/install/dir</span></code>, then the example project could be configured as:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ cmake -DCMAKE_PREFIX_PATH=/another/install/dir &lt;otherargs&gt;
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ cmake -DCMAKE_PREFIX_PATH=/another/install/dir &lt;otherargs&gt;
 </pre></div>
 </div>
 <p>See also the <a class="reference external" href="https://cmake.org/cmake/help/v3.0/command/find_package.html">documentation for the find_package command</a></p>
@@ -229,23 +259,26 @@ example, if it was installed under <code class="docutils literal"><span class="p
 <p>CMake modules can be documented using RST, and processed via CMake itself and/or
 <a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a> to generate command-line, manual and webpage docs. Might as well
 get this in place from the start!</p>
-<div class="toctree-wrapper compound" id="id2">
+<div class="toctree-wrapper compound">
 </div>
-<div class="toctree-wrapper compound" id="additional-find-modules">
+<div class="toctree-wrapper compound">
 </div>
-<div class="toctree-wrapper compound" id="developing-cetbuildtools2">
+<div class="toctree-wrapper compound">
 </div>
 </div>
 </div>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="users/introduction.html" class="btn btn-neutral float-right" title="Introduction to cetbuildtools2" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="users/introduction.html" class="btn btn-neutral float-right" title="Introduction to cetbuildtools2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -277,10 +310,11 @@ get this in place from the start!</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.0',
+            VERSION:'0.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

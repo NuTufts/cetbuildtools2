@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetCMakeUtilities &mdash; cetbuildtools2 0.1.0 documentation</title>
+  <title>CetCMakeUtilities &mdash; cetbuildtools2 0.2.0 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="cetbuildtools2 0.1.0 documentation" href="../index.html"/>
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
         <link rel="next" title="CetUninstallTarget" href="CetUninstallTarget.html"/>
         <link rel="prev" title="CetUPS" href="CetUPS.html"/> 
 
@@ -41,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -60,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -81,7 +87,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using cetbuildtools2</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to cetbuildtools2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetCMakeSettings.html">CetCMakeSettings</a></li>
@@ -89,15 +98,16 @@
 <li class="toctree-l1"><a class="reference internal" href="CetInstallDirs.html">CetInstallDirs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetTest.html">CetTest</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetUPS.html">CetUPS</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">CetCMakeUtilities</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CetCMakeUtilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetUninstallTarget.html">CetUninstallTarget</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetWriteCXXVersionAPI.html">CetWriteCXXVersionAPI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="BasicPlugin.html">BasicPlugin</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindBoost.html">FindBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindCppUnit.html">FindCppUnit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../find-modules/FindSQLite.html">FindSQLite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../find-modules/FindTBB.html">FindTBB</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developing cetbuildtools2</span></p>
 <ul>
@@ -115,8 +125,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">cetbuildtools2</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cetbuildtools2</a>
+        
       </nav>
 
 
@@ -129,19 +141,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>CetCMakeUtilities</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CetCMakeUtilities</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/users/CetCMakeUtilities.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/users/CetCMakeUtilities.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -156,7 +185,7 @@
 <dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">set_ifnot</span><span class="p">(</span><span class="s">&lt;varname&gt;</span> <span class="s">&lt;value&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><span class="target" id="index-0-command:cmake:command:macro"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/macro.html#command:macro" title="(in CMake v3.6.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Macro</span></code></a> that sets the value of the variable <code class="docutils literal"><span class="pre">&lt;varname&gt;</span></code> to
+<p><span class="target" id="index-0-command:cmake:command:macro"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/macro.html#command:macro" title="(in CMake v3.10.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Macro</span></code></a> that sets the value of the variable <code class="docutils literal"><span class="pre">&lt;varname&gt;</span></code> to
 the given <code class="docutils literal"><span class="pre">&lt;value&gt;</span></code> if <code class="docutils literal"><span class="pre">&lt;varname&gt;</span></code> evaluates to FALSE. For example,</p>
 <div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="p">(</span><span class="s">MYVARIABLE</span> <span class="p">)</span> <span class="c"># empty variable</span>
 <span class="nb">set_ifnot</span><span class="p">(</span><span class="s">MYVARIABLE</span> <span class="s2">&quot;newvalue&quot;</span><span class="p">)</span>
@@ -176,11 +205,11 @@ the given <code class="docutils literal"><span class="pre">&lt;value&gt;</span><
             <span class="s">[CASE_INSENSITIVE]</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><span class="target" id="index-0-command:cmake:command:function"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/function.html#command:function" title="(in CMake v3.6.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Function</span></code></a> Declaring a cache
+<p><span class="target" id="index-0-command:cmake:command:function"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/function.html#command:function" title="(in CMake v3.10.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Function</span></code></a> Declaring a cache
 variable <code class="docutils literal"><span class="pre">&lt;option&gt;</span></code> that can only take values in the <code class="docutils literal"><span class="pre">VALUES</span></code> list.
 If the <code class="docutils literal"><span class="pre">&lt;option&gt;</span></code> variable is set to a value other than one of these
 values, a fatal error is emitted.</p>
-<p><code class="docutils literal"><span class="pre">TYPE</span></code> may be set to &#8220;FILEPATH&#8221;, &#8220;PATH&#8221; or &#8220;STRING&#8221;.</p>
+<p><code class="docutils literal"><span class="pre">TYPE</span></code> may be set to “FILEPATH”, “PATH” or “STRING”.</p>
 <p><code class="docutils literal"><span class="pre">&lt;docstring&gt;</span></code> should describe the option, and will appear in
 the interactive CMake interfaces.</p>
 <p>If <code class="docutils literal"><span class="pre">DEFAULT</span></code> is provided, its <code class="docutils literal"><span class="pre">&lt;value&gt;</span></code> argument will be used as
@@ -200,7 +229,7 @@ performing string comparison. All values are converted to lowercase.</p>
 </pre></div>
 </div>
 <p>Would create a cache variable named <code class="docutils literal"><span class="pre">CXX_STANDARD</span></code> with a default
-value of &#8220;c++14&#8221; that could be set to &#8220;c++11&#8221;, &#8220;c++14&#8221; or &#8220;c++17&#8221;.
+value of “c++14” that could be set to “c++11”, “c++14” or “c++17”.
 With <code class="docutils literal"><span class="pre">CASE_INSENSITIVE</span></code></p>
 <div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">enum_option</span><span class="p">(</span><span class="s">CXX_STANDARD</span>
             <span class="s">VALUES</span>    <span class="s2">&quot;c++11&quot;</span> <span class="s2">&quot;c++14&quot;</span> <span class="s2">&quot;c++17&quot;</span>
@@ -212,7 +241,7 @@ With <code class="docutils literal"><span class="pre">CASE_INSENSITIVE</span></c
 </pre></div>
 </div>
 <p>the behaviour and values that <code class="docutils literal"><span class="pre">CXX_STANDARD</span></code> can take are identical,
-but the user could set the value as &#8220;C++11&#8221;, &#8220;C++14&#8221; or &#8220;C++17&#8221; in
+but the user could set the value as “C++11”, “C++14” or “C++17” in
 addition the lowercase equivalents. This is intended to provide a
 little more freedom to the user whilst maintaining a clear internal
 set of values.</p>
@@ -224,7 +253,7 @@ set of values.</p>
 <dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">set_boost_unit_properties</span><span class="p">(</span><span class="s">&lt;target&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><span class="target" id="index-1-command:cmake:command:function"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/function.html#command:function" title="(in CMake v3.6.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Function</span></code></a> to apply compile
+<p><span class="target" id="index-1-command:cmake:command:function"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/function.html#command:function" title="(in CMake v3.10.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Function</span></code></a> to apply compile
 definitions, include directories and link libraries to build target
 <code class="docutils literal"><span class="pre">&lt;target&gt;</span></code> as a Boost.Unit test. If <code class="docutils literal"><span class="pre">&lt;target&gt;</span></code> is not a valid
 CMake target (executable or library), a FATAL_ERROR is raised.</p>
@@ -236,13 +265,14 @@ appended.</li>
 <li><code class="docutils literal"><span class="pre">INCLUDE_DIRECTORIES</span></code>: value of <code class="docutils literal"><span class="pre">Boost_INCLUDE_DIRS</span></code></li>
 <li><code class="docutils literal"><span class="pre">LINK_LIBRARIES</span></code>: value of <code class="docutils literal"><span class="pre">Boost_UNIT_TEST_FRAMEWORK_LIBRARY</span></code></li>
 </ul>
-<p>These settings assume that Boost has been located using CMake&#8217;s
-builtin <span class="target" id="index-0-module:cmake:module:FindBoost"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/module/FindBoost.html#module:FindBoost" title="(in CMake v3.6.0)"><code class="xref cmake cmake-module docutils literal"><span class="pre">FindBoost</span></code></a> module
+<p>These settings assume that Boost has been located using CMake’s
+builtin <span class="target" id="index-0-module:cmake:module:FindBoost"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/module/FindBoost.html#module:FindBoost" title="(in CMake v3.10.0)"><code class="xref cmake cmake-module docutils literal"><span class="pre">FindBoost</span></code></a> module
 before being called. If the CMake variable <code class="docutils literal"><span class="pre">Boost_FOUND</span></code> is not
 set or no Boost Unit Test Framework library is supplied via the
 <code class="docutils literal"><span class="pre">Boost::unit_test_framework</span></code> imported target or <code class="docutils literal"><span class="pre">Boost_UNIT_TEST_FRAMEWORK_LIBRARY</span></code> variable, the function
 raises a FATAL_ERROR. At present, no checking of Release vs Debug
-Boost libraries is performed.</p>
+Boost libraries is performed. All properties are marked as
+<code class="docutils literal"><span class="pre">PUBLIC</span></code> usage requirements.</p>
 </dd></dl>
 
 <dl class="command">
@@ -251,7 +281,7 @@ Boost libraries is performed.</p>
 <dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">set_tbb_offload_properties</span><span class="p">(</span><span class="s">&lt;target&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><span class="target" id="index-2-command:cmake:command:function"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/function.html#command:function" title="(in CMake v3.6.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Function</span></code></a> to apply properties
+<p><span class="target" id="index-2-command:cmake:command:function"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/function.html#command:function" title="(in CMake v3.10.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">Function</span></code></a> to apply properties
 needed to compile target <code class="docutils literal"><span class="pre">&lt;target&gt;</span></code> with support for TBB offloads.</p>
 <p>Currently unimplemented (see below) but will not emit a warning about
 its usage.</p>
@@ -259,24 +289,27 @@ its usage.</p>
 
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
-<p class="last">Needs <code class="docutils literal"><span class="pre">find_tbb_offloads</span></code> command which doesn&#8217;t appear to exist
+<p class="last">Needs <code class="docutils literal"><span class="pre">find_tbb_offloads</span></code> command which doesn’t appear to exist
 anywhere yet. Assumed that this scans source files for usage of
 offload specific calls, returning true if so. The needed compile flag
-is then added...</p>
+is then added…</p>
 </div>
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="CetUninstallTarget.html" class="btn btn-neutral float-right" title="CetUninstallTarget" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="CetUninstallTarget.html" class="btn btn-neutral float-right" title="CetUninstallTarget" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="CetUPS.html" class="btn btn-neutral" title="CetUPS" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="CetUPS.html" class="btn btn-neutral" title="CetUPS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -307,10 +340,11 @@ is then added...</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.0',
+            VERSION:'0.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
