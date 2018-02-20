@@ -204,7 +204,7 @@ function(set_boost_unit_properties _target)
   if((NOT TARGET Boost::unit_test_framework)
      OR (NOT Boost_UNIT_TEST_FRAMEWORK_LIBRARY))
     message(FATAL_ERROR
-      "set_boost_unit_properties: No Target of Variable found for Boost's Unite Test Framework\n"
+      "set_boost_unit_properties: No Target of Variable found for Boost's Unit Test Framework\n"
       "Ensure the project calls\n"
       "find_package(Boost REQUIRED unit_test_framework)\n"
       "before using this function"
@@ -221,9 +221,10 @@ function(set_boost_unit_properties _target)
         $<$<STREQUAL:$<TARGET_PROPERTY:${_target},TYPE>,EXECUTABLE>:BOOST_TEST_MAIN>
     )
 
-  # PRIVATE incs/libs for now as is assumed tests will not be installed
-  # include directories - make private for now
-  # libs to link - can't specify link rule here as others may use it.
+  # PUBLIC incs/libs for now as some libraries *may* be integrated, especially
+  # in Art. This is a minor change and only affects things that are installed
+  # which will not be the case generally. Could also add a scope argument to
+  # the function.
   if(TARGET Boost::unit_test_framework)
     target_link_libraries(${_target} PUBLIC Boost::unit_test_framework)
   else()

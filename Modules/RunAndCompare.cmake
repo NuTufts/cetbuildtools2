@@ -41,7 +41,7 @@ endif()
 # Utility function.
 function(filter_and_compare FILE REF)
   set(filtered_file "${FILE}-filtered")
-  #NB: COMMANDS is set at calling scope...
+  # NB: COMMANDS is set at calling scope
   execute_process(${COMMANDS}
     INPUT_FILE "${FILE}"
     OUTPUT_FILE "${filtered_file}"
@@ -54,7 +54,7 @@ function(filter_and_compare FILE REF)
     message(FATAL_ERROR "Production of filtered output from ${FILE} failed with result ${FILTER_FAILED}")
   endif()
 
-  # - ?? Assumes diff, but any particular flavour?
+  # Assumes standard diff
   execute_process(COMMAND diff -u "${REF}" "${filtered_file}"
     OUTPUT_VARIABLE DIFF_OUTPUT
     ERROR_VARIABLE DIFF_ERROR
@@ -93,8 +93,9 @@ if(TEST_REF_ERR)
   set(TEST_REF_ERR_CMD "ERROR_FILE")
 endif()
 
-# - Build commands to apply the filter
+# - Build up commands to apply the filter
 set(COMMANDS)
+
 if(NOT OUTPUT_FILTER AND NOT OUTPUT_FILTERS)
   set(OUTPUT_FILTERS ${DEFAULT_FILTERS})
 endif()
@@ -117,7 +118,6 @@ if(OUTPUT_FILTERS)
       list(INSERT OUTPUT_FILTERS ${found_default} ${DEFAULT_FILTERS})
     endif()
   endif()
-
   foreach(filter ${OUTPUT_FILTERS})
     separate_arguments(args UNIX_COMMAND "${filter}")
     list(APPEND COMMANDS COMMAND ${args})

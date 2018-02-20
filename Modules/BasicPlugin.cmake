@@ -124,23 +124,11 @@ function(basic_plugin name type)
 
   add_library(${plugin_name} SHARED ${BP_SOURCE})
 
-  # check the library list and substitute if appropriate
-  # Probably not needed as would expect user to supply appropriate list
-  # without any transformation
-  set(basic_plugin_liblist "")
-  foreach(lib ${BP_UNPARSED_ARGUMENTS})
-    string(REGEX MATCH [/] has_path "${lib}")
-    if(has_path)
-      list(APPEND basic_plugin_liblist ${lib})
-    else()
-      string(TOUPPER  ${lib} ${lib}_UC )
-      if( ${${lib}_UC} )
-        list(APPEND basic_plugin_liblist ${${${lib}_UC}})
-      else()
-        list(APPEND basic_plugin_liblist ${lib})
-      endif()
-    endif()
-  endforeach()
+  # "check the library list and substitute if appropriate"
+  # Appears to be a UPS artifact, which may define external
+  # libs as variables such as "CLHEP", so just pass through
+  # unparsed args
+  set(basic_plugin_liblist ${BP_UNPARSED_ARGUMENTS})
 
   if(BP_USE_BOOST_UNIT)
     set_boost_unit_properties(${plugin_name})
@@ -150,6 +138,7 @@ function(basic_plugin name type)
 
   list(LENGTH basic_plugin_liblist liblist_length)
   if(liblist_length GREATER 0)
-    target_link_libraries(${plugin_name} ${basic_plugin_liblist})
+    # Assume that the plugin always exposes deps publically
+    target_link_libraries(${plugin_name} PUBLIC ${basic_plugin_liblist})
   endif()
 endfunction()

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 ########################################################################
 # filter-output-art-compat.
 #
@@ -9,6 +9,7 @@
 #
 # 2014/12/16 CHG.
 ########################################################################
+use warnings;
 use strict;
 
 my ($in_tt, $in_mm, $mm_format, $final_mm_clause, $in_ev_list);
