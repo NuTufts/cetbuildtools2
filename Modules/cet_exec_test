@@ -1,10 +1,36 @@
-#!/usr/bin/env bash
+#!/bin/bash
 ########################################################################
 # cet_test
 #
 # Test wrapper to ensure clean working directory.
 #
 ########################################################################
+
+#-----------------------------------------------------------------------
+# - BEGIN SHIM
+# Shim to pass through dynamic loader settings for test programs across
+# Linux and macOS platforms. Primarily for Darwin in cases where the test
+# relies on DYLD_LIBRARY_PATH, which would otherwise be stripped by SIP.
+# NB, only works if the exec'd test program is outside SIP. In cases where
+# this program is a script, it'll only work if the intepreter is outside
+# SIP
+__CET_LIBRARY_PATH_NAME="LD_LIBRARY_PATH"
+if [[ $(uname) == 'Darwin' ]]; then
+  __CET_LIBRARY_PATH_NAME="DYLD_LIBRARY_PATH"
+fi
+
+# Build up new path
+CETD_LIBRARY_PATH=${CETD_LIBRARY_PATH:+${CETD_LIBRARY_PATH}:}${!__CET_LIBRARY_PATH_NAME}
+if [ ! -z "$CETD_LIBRARY_PATH" ]; then
+  export ${__CET_LIBRARY_PATH_NAME}=${CETD_LIBRARY_PATH}
+fi
+
+echo "CETD_LIBRARY_PATH = ${CETD_LIBRARY_PATH}"
+echo "${__CET_LIBRARY_PATH_NAME} = ${!__CET_LIBRARY_PATH_NAME}"
+# - END SHIM
+#-----------------------------------------------------------------------
+
+
 
 function realdir() {
   local dir="${1:-.}"

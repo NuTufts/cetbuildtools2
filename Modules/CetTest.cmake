@@ -18,7 +18,7 @@
 #
 #   .. code-block:: cmake
 #
-#     cet_test(<target> [<options>] [<args>]
+#     cet_test(<target> [<options>] [<args>])
 #
 # Specify tests in a concise and transparent way (see also
 # ``cet_test_env()`` and ``cet_test_assertion()``, below).
@@ -51,15 +51,6 @@
 #   be aware that the compilation of a Catch main is quite expensive,
 #   and any tests that *do* use this option will all share the same
 #   compiled main.
-#
-#   TODO: Supply Catch directly so versions consistent? Same for
-#         Parse and add?
-#   Note also that client packages are responsible for making sure Catch
-#   is available, such as with:
-#
-#     catch             <version>               -nq-    only_for_build
-#
-#   in product_deps.
 #
 # NO_AUTO
 #   Do not add the target to the auto test list.
@@ -183,25 +174,32 @@
 #
 # .. cmake:command:: cet_test_env
 #
-# set environment for all tests here specified.
+#   .. code-block:: cmake
 #
-# Usage: cet_test_env([<options] [<env>])
+#     cet_test_env([CLEAR] [<env>])
 #
-# Options:
+# Configure environment in which all subsequently defined tests will run.
+# If ``<env>`` is set to a list of environment variables and values in the form ``MYVAR=value``
+# those environment variables will be defined while running the test.
 #
-# CLEAR
-#   Clear the global test environment (ie anything previously set with
-#   cet_test_env()) before setting <env>.
+# The set environment is propagated to all subsequent tests, including
+# subdirectories of the call location. The currently defined environment
+# can be reset using the ``CLEAR`` option, or by ``include(CetTest)``.
 #
-# Notes:
+# If test-specific environment settings are required, the ``TEST_PROPERTIES``
+# argument to ``cet_test`` should be preferred, using the CTest ``ENVIRONMENT``
+# property. For example:
 #
-# * <env> may be omitted. If so and the CLEAR option is not specified,
-#   then cet_test_env() is a NOP.
+# .. code-block:: cmake
 #
-# * If cet_test_env() is called in a directory to set the environment
-#   for tests then that will be propagated to tests defined in
-#   subdirectories unless include(CetTest) or cet_test_env(CLEAR ...) is
-#   invoked in that directory.
+#   cet_test(MyTest TEST_PROPERTIES ENVIRONMENT "A=one;B=two")
+#
+# Note that System Integrity Protection on macOS will
+# `strip certain variables from the environment <https://developer.apple.com/library/content/documentation/Security/Conceptual/System_Integrity_Protection_Guide/RuntimeProtections/RuntimeProtections.html>`_
+# when the test is launched as a child process of a SIP-protected process.
+# In particular, ``DYLD_LIBRARY_PATH`` is stripped and this may affect the running
+# of tests that rely on this (such as plugins loaded at runtime).
+#
 #
 # .. cmake:command:: cet_test_assertion
 #
@@ -217,7 +215,7 @@
 #   period).
 #
 # * TARGET...: the name(s) of the test target(s) as specified to
-#   cet_test() or add_test() -- require at least one.
+#   cet_test() or add_test(). At least one name must be supplied.
 #
 
 #-----------------------------------------------------------------------
@@ -278,6 +276,25 @@ set(CET_TEST_GROUPS "NONE"
   )
 mark_as_advanced(CET_TEST_GROUPS)
 string(TOUPPER "${CET_TEST_GROUPS}" CET_TEST_GROUPS_UC)
+
+# Cache (DY)LD_LIBRARY_PATH on first run to avoid blanking
+# path if re-cmakes run in SIP process.
+if(NOT DEFINED __CETD_LIBRARY_PATH)
+  # System-actual path name
+  set(__CETD_LIBRARY_PATH_NAME "LD_LIBRARY_PATH")
+  if(APPLE)
+    set(__CETD_LIBRARY_PATH_NAME "DYLD_LIBRARY_PATH")
+  endif()
+
+  # Cache only once
+  set(__CETD_LIBRARY_PATH "$ENV{${__CETD_LIBRARY_PATH_NAME}}"
+    CACHE INTERNAL "Initial CMake-time Dynamic Loader Path"
+    FORCE)
+endif()
+# Set internal, non-SIP, dynamic loader path for passthrough to
+# tests. Note this is only set in the *CMake Process*, so can
+# be accessed, used by Cmake scripts.
+set(ENV{CETD_LIBRARY_PATH} ${__CETD_LIBRARY_PATH})
 
 # Test environment variables
 set(CET_TEST_ENV ""
@@ -343,7 +360,7 @@ macro(cet_test_env)
     )
 
   if(CET_TEST_CLEAR)
-    set(CET_TEST_ENV "")
+    set(CET_TEST_ENV "${CET_TEST_ENV_DEFAULT}")
   endif()
   list(APPEND CET_TEST_ENV ${CET_TEST_UNPARSED_ARGUMENTS})
 endmacro()
@@ -458,26 +475,6 @@ Check for missing keyword(s) in the definition of test ${CET_TARGET} in your CMa
 
     # Link to any required libs
     if(CET_LIBRARIES)
-      # Gonna ignore this section for now and see if it makes any difference
-      # In any case, LIBRARIES should always be a list of valid things
-      # CMake can link - full paths or target names
-      #set(link_lib_list "")
-      #foreach(lib ${CET_LIBRARIES})
-      #  # ?? What is the intent of this path matching or uppercasing ??
-      #  string(REGEX MATCH [/] has_path "${lib}")
-      #  if(has_path)
-      #    list(APPEND link_lib_list ${lib})
-      #  else()
-      #    string(TOUPPER ${lib} ${lib}_UC)
-      #
-      #    if(${${lib}_UC})
-      #      _cet_debug_message( "changing ${lib} to ${${${lib}_UC}}")
-      #      list(APPEND link_lib_list ${${${lib}_UC}})
-      #    else()
-      #      list(APPEND link_lib_list ${lib})
-      #    endif()
-      #  endif()
-      #endforeach()
       target_link_libraries(${CET_TARGET} PRIVATE ${CET_LIBRARIES})
     endif()
   endif()
