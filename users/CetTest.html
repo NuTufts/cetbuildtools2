@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetTest &mdash; cetbuildtools2 0.2.0 documentation</title>
+  <title>CetTest &mdash; cetbuildtools2 0.3.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
+    <link rel="top" title="cetbuildtools2 0.3.0 documentation" href="../index.html"/>
         <link rel="next" title="CetUPS" href="CetUPS.html"/>
         <link rel="prev" title="CetInstallDirs" href="CetInstallDirs.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.3.0
               </div>
             
           
@@ -189,7 +189,7 @@ defining their properties</p>
 <dl class="command">
 <dt id="command:cet_test">
 <code class="descname">cet_test</code><a class="headerlink" href="#command:cet_test" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">cet_test</span><span class="p">(</span><span class="s">&lt;target&gt;</span> <span class="s">[&lt;options&gt;]</span> <span class="s">[&lt;args&gt;]</span>
+<dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">cet_test</span><span class="p">(</span><span class="s">&lt;target&gt;</span> <span class="s">[&lt;options&gt;]</span> <span class="s">[&lt;args&gt;]</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -213,22 +213,13 @@ options.</dd>
 (<a class="reference external" href="https://github.com/philsquared/Catch">https://github.com/philsquared/Catch</a>). The specified target will be
 built from a precompiled main program to run tests described in the
 files specified by SOURCES.</p>
-<p>N.B.: if you wish to use the ParseAndAddCatchTests() facility
+<p class="last">N.B.: if you wish to use the ParseAndAddCatchTests() facility
 contributed to the Catch system, you should specify NO_AUTO to avoid
 generating a, “standard” test. Note also that you may have your own
 test executables using Catch without using USE_CATCH_MAIN. However,
 be aware that the compilation of a Catch main is quite expensive,
 and any tests that <em>do</em> use this option will all share the same
 compiled main.</p>
-<dl class="docutils">
-<dt>TODO: Supply Catch directly so versions consistent? Same for</dt>
-<dd>Parse and add?</dd>
-</dl>
-<p>Note also that client packages are responsible for making sure Catch
-is available, such as with:</p>
-<blockquote>
-<div>catch             &lt;version&gt;               -nq-    only_for_build</div></blockquote>
-<p class="last">in product_deps.</p>
 </dd>
 <dt>NO_AUTO</dt>
 <dd>Do not add the target to the auto test list.</dd>
@@ -338,25 +329,28 @@ cet_test() needs to take account of your preference.</li>
 <dl class="command">
 <dt id="command:cet_test_env">
 <code class="descname">cet_test_env</code><a class="headerlink" href="#command:cet_test_env" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">cet_test_env</span><span class="p">(</span><span class="s">[CLEAR]</span> <span class="s">[&lt;env&gt;]</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
-<p>set environment for all tests here specified.</p>
-<p>Usage: cet_test_env([&lt;options] [&lt;env&gt;])</p>
-<p>Options:</p>
-<dl class="docutils">
-<dt>CLEAR</dt>
-<dd>Clear the global test environment (ie anything previously set with
-cet_test_env()) before setting &lt;env&gt;.</dd>
-</dl>
-<p>Notes:</p>
-<ul class="simple">
-<li>&lt;env&gt; may be omitted. If so and the CLEAR option is not specified,
-then cet_test_env() is a NOP.</li>
-<li>If cet_test_env() is called in a directory to set the environment
-for tests then that will be propagated to tests defined in
-subdirectories unless include(CetTest) or cet_test_env(CLEAR …) is
-invoked in that directory.</li>
-</ul>
+<p>Configure environment in which all subsequently defined tests will run.
+If <code class="docutils literal"><span class="pre">&lt;env&gt;</span></code> is set to a list of environment variables and values in the form <code class="docutils literal"><span class="pre">MYVAR=value</span></code>
+those environment variables will be defined while running the test.</p>
+<p>The set environment is propagated to all subsequent tests, including
+subdirectories of the call location. The currently defined environment
+can be reset using the <code class="docutils literal"><span class="pre">CLEAR</span></code> option, or by <code class="docutils literal"><span class="pre">include(CetTest)</span></code>.</p>
+<p>If test-specific environment settings are required, the <code class="docutils literal"><span class="pre">TEST_PROPERTIES</span></code>
+argument to <code class="docutils literal"><span class="pre">cet_test</span></code> should be preferred, using the CTest <code class="docutils literal"><span class="pre">ENVIRONMENT</span></code>
+property. For example:</p>
+<div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">cet_test</span><span class="p">(</span><span class="s">MyTest</span> <span class="s">TEST_PROPERTIES</span> <span class="s">ENVIRONMENT</span> <span class="s2">&quot;A=one;B=two&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that System Integrity Protection on macOS will
+<a class="reference external" href="https://developer.apple.com/library/content/documentation/Security/Conceptual/System_Integrity_Protection_Guide/RuntimeProtections/RuntimeProtections.html">strip certain variables from the environment</a>
+when the test is launched as a child process of a SIP-protected process.
+In particular, <code class="docutils literal"><span class="pre">DYLD_LIBRARY_PATH</span></code> is stripped and this may affect the running
+of tests that rely on this (such as plugins loaded at runtime).</p>
 <dl class="command">
 <dt id="command:cet_test_assertion">
 <code class="descname">cet_test_assertion</code><a class="headerlink" href="#command:cet_test_assertion" title="Permalink to this definition">¶</a></dt>
@@ -371,7 +365,7 @@ items doubly-escaped due to being passed as a string argument
 (e.g. “\(” for a literal open-parenthesis, “\.” for a literal
 period).</li>
 <li>TARGET…: the name(s) of the test target(s) as specified to
-cet_test() or add_test() – require at least one.</li>
+cet_test() or add_test(). At least one name must be supplied.</li>
 </ul>
 </div>
 
@@ -419,7 +413,7 @@ cet_test() or add_test() – require at least one.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.2.0',
+            VERSION:'0.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

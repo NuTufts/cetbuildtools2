@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetCompilerSettings &mdash; cetbuildtools2 0.2.0 documentation</title>
+  <title>CetCompilerSettings &mdash; cetbuildtools2 0.3.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="cetbuildtools2 0.2.0 documentation" href="../index.html"/>
+    <link rel="top" title="cetbuildtools2 0.3.0 documentation" href="../index.html"/>
         <link rel="next" title="CetInstallDirs" href="CetInstallDirs.html"/>
         <link rel="prev" title="CetCMakeSettings" href="CetCMakeSettings.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.3.0
               </div>
             
           
@@ -229,12 +229,12 @@ to the CET-defined <code class="docutils literal"><span class="pre">OPT</span></
 <p>The following CMake variables are set by default when including this module
 for general control of the C++ Standard:</p>
 <ul class="simple">
-<li><span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_EXTENSIONS"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_EXTENSIONS.html#variable:CMAKE_CXX_EXTENSIONS" title="(in CMake v3.10.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_EXTENSIONS</span></code></a>: OFF<ul>
+<li><span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_EXTENSIONS"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_EXTENSIONS.html#variable:CMAKE_CXX_EXTENSIONS" title="(in CMake v3.11.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_EXTENSIONS</span></code></a>: OFF<ul>
 <li>Prevent use of vendor specific language extensions. For example, when using the
 GNU compiler with C++14, the flag <code class="docutils literal"><span class="pre">-std=c++14</span></code> with be used rather than <code class="docutils literal"><span class="pre">-std=gnu++14</span></code>.</li>
 </ul>
 </li>
-<li><span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD_REQUIRED.html#variable:CMAKE_CXX_STANDARD_REQUIRED" title="(in CMake v3.10.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD_REQUIRED</span></code></a>: ON<ul>
+<li><span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD_REQUIRED.html#variable:CMAKE_CXX_STANDARD_REQUIRED" title="(in CMake v3.11.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD_REQUIRED</span></code></a>: ON<ul>
 <li>Prevent decay to an earlier standard if the compiler in use does
 not support the requested standard.</li>
 </ul>
@@ -252,18 +252,18 @@ In CMake, we have two builtin ways to specify the required standard,
 meaning that CMake will set the compile flags like <code class="docutils literal"><span class="pre">-std=c++11</span></code> for
 us automatically.</p>
 <ul class="simple">
-<li>Set the <span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_STANDARD"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD.html#variable:CMAKE_CXX_STANDARD" title="(in CMake v3.10.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD</span></code></a>
-and <span class="target" id="index-1-variable:cmake:variable:CMAKE_CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD_REQUIRED.html#variable:CMAKE_CXX_STANDARD_REQUIRED" title="(in CMake v3.10.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD_REQUIRED</span></code></a>
+<li>Set the <span class="target" id="index-0-variable:cmake:variable:CMAKE_CXX_STANDARD"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD.html#variable:CMAKE_CXX_STANDARD" title="(in CMake v3.11.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD</span></code></a>
+and <span class="target" id="index-1-variable:cmake:variable:CMAKE_CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_STANDARD_REQUIRED.html#variable:CMAKE_CXX_STANDARD_REQUIRED" title="(in CMake v3.11.0)"><code class="xref cmake cmake-variable docutils literal"><span class="pre">CMAKE_CXX_STANDARD_REQUIRED</span></code></a>
 variables to the required standard, e.g. <code class="docutils literal"><span class="pre">11</span></code>, and <code class="docutils literal"><span class="pre">ON</span></code> to enforce that
 the compiler in use supports the standard. These variables provide the
-defaults for the <span class="target" id="index-0-prop_tgt:cmake:prop_tgt:CXX_STANDARD"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD.html#prop_tgt:CXX_STANDARD" title="(in CMake v3.10.0)"><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">CXX_STANDARD</span></code></a>
-and <span class="target" id="index-0-prop_tgt:cmake:prop_tgt:CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD_REQUIRED.html#prop_tgt:CXX_STANDARD_REQUIRED" title="(in CMake v3.10.0)"><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">CXX_STANDARD_REQUIRED</span></code></a> target
+defaults for the <span class="target" id="index-0-prop_tgt:cmake:prop_tgt:CXX_STANDARD"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD.html#prop_tgt:CXX_STANDARD" title="(in CMake v3.11.0)"><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">CXX_STANDARD</span></code></a>
+and <span class="target" id="index-0-prop_tgt:cmake:prop_tgt:CXX_STANDARD_REQUIRED"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD_REQUIRED.html#prop_tgt:CXX_STANDARD_REQUIRED" title="(in CMake v3.11.0)"><code class="xref cmake cmake-prop_tgt docutils literal"><span class="pre">CXX_STANDARD_REQUIRED</span></code></a> target
 properties, which may also be set on a per-target basis. Note that this
 method does <em>not</em> guarantee that the compiler supports <em>all</em> features of
 the specified standard.</li>
-<li>Use the <span class="target" id="index-0-command:cmake:command:target_compile_features"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/target_compile_features.html#command:target_compile_features" title="(in CMake v3.10.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">target_compile_features</span></code></a>
+<li>Use the <span class="target" id="index-0-command:cmake:command:target_compile_features"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/command/target_compile_features.html#command:target_compile_features" title="(in CMake v3.11.0)"><code class="xref cmake cmake-command docutils literal"><span class="pre">target_compile_features</span></code></a>
 command on a target, passing a list of specific features required (see
-<span class="target" id="index-0-prop_gbl:cmake:prop_gbl:CMAKE_CXX_KNOWN_FEATURES"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html#prop_gbl:CMAKE_CXX_KNOWN_FEATURES" title="(in CMake v3.10.0)"><code class="xref cmake cmake-prop_gbl docutils literal"><span class="pre">CMAKE_CXX_KNOWN_FEATURES</span></code></a>).
+<span class="target" id="index-0-prop_gbl:cmake:prop_gbl:CMAKE_CXX_KNOWN_FEATURES"></span><a class="reference external" href="https://cmake.org/cmake/help/latest/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html#prop_gbl:CMAKE_CXX_KNOWN_FEATURES" title="(in CMake v3.11.0)"><code class="xref cmake cmake-prop_gbl docutils literal"><span class="pre">CMAKE_CXX_KNOWN_FEATURES</span></code></a>).
 This guarantees that the compiler supports the required language feature, provided
 that the compiler, version and standard are known to CMake.</li>
 </ul>
@@ -367,12 +367,13 @@ debugging output may be controlled</p>
 <dt id="variable:CET_COMPILER_DWARF_STRICT">
 <code class="descname">CET_COMPILER_DWARF_STRICT</code><a class="headerlink" href="#variable:CET_COMPILER_DWARF_STRICT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Option to only emit DWARF debugging info at the level set by
-<code class="docutils literal"><span class="pre">CET_COMPILER_DWARF_VERSION</span></code>. <code class="docutils literal"><span class="pre">ON</span></code> by default.</p>
+<code class="docutils literal"><span class="pre">CET_COMPILER_DWARF_VERSION</span></code>. <code class="docutils literal"><span class="pre">ON</span></code> by default, but currently
+only supported for GCC compiler.</p>
 </dd></dl>
 
 <div class="admonition-todo admonition" id="index-1">
 <p class="first admonition-title">Todo</p>
-<p class="last">Current flags are GCC dependent. Review them for Clang and Intel</p>
+<p class="last">Current flags are GCC dependent.</p>
 </div>
 </div>
 <div class="section" id="options-for-controlling-symbol-resolution">
@@ -500,7 +501,7 @@ and all its children.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.2.0',
+            VERSION:'0.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
