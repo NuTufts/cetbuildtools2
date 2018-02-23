@@ -354,11 +354,12 @@ endif()
 # .. cmake:variable:: CET_COMPILER_DWARF_STRICT
 #
 #   Option to only emit DWARF debugging info at the level set by
-#   ``CET_COMPILER_DWARF_VERSION``. ``ON`` by default.
+#   ``CET_COMPILER_DWARF_VERSION``. ``ON`` by default, but currently
+#   only supported for GCC compiler.
 #
 # .. todo::
 #
-#   Current flags are GCC dependent. Review them for Clang and Intel
+#   Current flags are GCC dependent.
 #
 option(CET_COMPILER_DWARF_STRICT "only emit DWARF debugging info at defined level" ON)
 
@@ -383,7 +384,7 @@ mark_as_advanced(
 # such as tuning output for gdb, lldb, sce.
 # Dwarf version may also not be needed here.
 foreach(_lang "C" "CXX")
-  if(CMAKE_${_lang}_COMPILER_ID MATCHES "GNU|(Apple)+Clang|Intel")
+  if(CMAKE_${_lang}_COMPILER_ID MATCHES "GNU")
     set(CET_COMPILER_${_lang}_DWARF_FLAGS "-gdwarf-${CET_COMPILER_DWARF_VERSION}")
     if(CET_COMPILER_DWARF_STRICT)
       set(CET_COMPILER_${_lang}_DWARF_FLAGS "${CET_COMPILER_${_lang}_DWARF_FLAGS} -gstrict-dwarf")
