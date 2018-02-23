@@ -226,28 +226,15 @@ foreach(_cettestfailcase UNPARSED TEST_EXEC_NO_HANDBUILT EXECUTABLE_COMBINATION_
   add_test(
     NAME testCetTest_${_cettestfailcase}
     COMMAND ${CMAKE_CTEST_COMMAND}
-    --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTest ${CMAKE_CURRENT_BINARY_DIR}/testCetTest_${_cettestfailcase}
-    --build-generator ${CMAKE_GENERATOR}
-    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-    --build-config $<CONFIG>
-    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-D__CT_FAILURE_${_cettestfailcase}=1"
-    --test-command ${CMAKE_CTEST_COMMAND} -VV
+            --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTest ${CMAKE_CURRENT_BINARY_DIR}/testCetTest_${_cettestfailcase}
+            --build-generator ${CMAKE_GENERATOR}
+            --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+            --build-config $<CONFIG>
+            --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-D__CT_FAILURE_${_cettestfailcase}=1"
+            --test-command ${CMAKE_CTEST_COMMAND} -VV
     )
   set_tests_properties(testCetTest_${_cettestfailcase} PROPERTIES WILL_FAIL TRUE)
 endforeach()
-
-# Test use of internal catchmain
-add_test(
-  NAME testCetTestCatchMain
-  COMMAND ${CMAKE_CTEST_COMMAND}
-  --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTestCatchMain ${CMAKE_CURRENT_BINARY_DIR}/testCetTestCatchMain
-          --build-generator ${CMAKE_GENERATOR}
-          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-          --build-config $<CONFIG>
-          --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
-          --test-command ${CMAKE_CTEST_COMMAND} -VV
-  )
-
 
 # Test boost.unit
 find_package(Boost QUIET)
@@ -255,11 +242,11 @@ if(Boost_FOUND)
   add_test(
     NAME testBoostUnitProperties
     COMMAND ${CMAKE_CTEST_COMMAND}
-    --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testBoostUnitProperties ${CMAKE_CURRENT_BINARY_DIR}/testBoostUnitProperties
-    --build-generator ${CMAKE_GENERATOR}
-    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-    --build-config $<CONFIG>
-    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}" "-DBOOST_ROOT=${BOOST_ROOT}"
+            --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testBoostUnitProperties ${CMAKE_CURRENT_BINARY_DIR}/testBoostUnitProperties
+            --build-generator ${CMAKE_GENERATOR}
+            --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+            --build-config $<CONFIG>
+            --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}" "-DBOOST_ROOT=${BOOST_ROOT}"
     )
 else()
   message(STATUS "System Boost install not found, disabling testBoostUnitProperties")
@@ -269,11 +256,11 @@ endif()
 add_test(
   NAME testBoostUnitProperties_FailCase
   COMMAND ${CMAKE_CTEST_COMMAND}
-  --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testBoostUnitProperties ${CMAKE_CURRENT_BINARY_DIR}/testBoostUnitProperties_FailCase
-  --build-generator ${CMAKE_GENERATOR}
-  --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-  --build-config $<CONFIG>
-  --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DTEST_FAILCASE=ON"
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testBoostUnitProperties ${CMAKE_CURRENT_BINARY_DIR}/testBoostUnitProperties_FailCase
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DTEST_FAILCASE=ON"
   )
 # Test will fail to configure, PASS condition is that this failure output matches error
 # message expected from set_boost_unit_properties
@@ -283,3 +270,31 @@ set_tests_properties(testBoostUnitProperties_FailCase
   )
 
 # Test catch tests
+# Test use of internal catchmain
+# Test modes explicitly because we strip the library so confirm this works
+# in non-Debug and Debug modes
+foreach(_catchmode Release Debug)
+  add_test(
+    NAME testCetTestCatchMain-${_catchmode}
+    COMMAND ${CMAKE_CTEST_COMMAND}
+            --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTestCatchMain ${CMAKE_CURRENT_BINARY_DIR}/testCetTestCatchMain-${_catchmode}
+            --build-generator ${CMAKE_GENERATOR}
+            --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+            --build-config ${_catchmode}
+            --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+            --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+endforeach()
+
+# Test use of ParseAndAddCatchTests
+add_test(
+  NAME testCetTestParseAndAddCatchTests
+  COMMAND ${CMAKE_CTEST_COMMAND}
+    --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTestParseAndAddCatchTests ${CMAKE_CURRENT_BINARY_DIR}/testCetTestParseAndAddCatchTests
+    --build-generator ${CMAKE_GENERATOR}
+    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+    --build-config ${_catchmode}
+    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+    --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+

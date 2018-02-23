@@ -625,5 +625,9 @@ function(add_catch_main_library _target_name)
     target_include_directories(${_target_name}
       PUBLIC "${CET_CATCH_INCLUDE_DIRS}"
       )
+    # Always strip to minimize space (we don't need to debug catch!)
+    add_custom_command(TARGET ${_target_name}
+      POST_BUILD COMMAND strip -S $<TARGET_FILE:${_target_name}>
+      )
   endif()
 endfunction()
