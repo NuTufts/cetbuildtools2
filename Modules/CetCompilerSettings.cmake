@@ -15,8 +15,8 @@
 #
 
 #-----------------------------------------------------------------------
-# Copyright 2016 Ben Morgan <Ben.Morgan@warwick.ac.uk>
-# Copyright 2016 University of Warwick
+# Copyright 2016-2018 Ben Morgan <Ben.Morgan@warwick.ac.uk>
+# Copyright 2016-2018 University of Warwick
 #
 # Distributed under the OSI-approved BSD 3-Clause License (the "License");
 # see accompanying file License.txt for details.
@@ -324,7 +324,7 @@ foreach(_lang "C" "CXX")
 
     # Additional CXX option for VIGILANT
     if(${_lang} STREQUAL "CXX")
-      set(CET_COMPILER_CXX_DIAGFLAGS_VIGILANT "${CET_COMPILER_CXX_DIAGFLAGS_VIGILANT} -Woverloaded-virtual")
+      set(CET_COMPILER_CXX_DIAGFLAGS_VIGILANT "${CET_COMPILER_CXX_DIAGFLAGS_VIGILANT} -Woverloaded-virtual -Wnon-virtual-dtor -Wdelete-non-virtual-dtor")
     endif()
 
     # - Paranoid
@@ -365,10 +365,11 @@ option(CET_COMPILER_DWARF_STRICT "only emit DWARF debugging info at defined leve
 
 # .. cmake:variable:: CET_COMPILER_DWARF_VERSION
 #
-#   Version of DWARF standard that should be emitted. Defaults to 2.
+#   Version of DWARF standard that should be emitted. Defaults to 4.
 #
 enum_option(CET_COMPILER_DWARF_VERSION
-  VALUES 2 3 4
+  VALUES 2 3 4 5
+  DEFAULT 4
   TYPE STRING
   DOC "Set version of DWARF standard to emit"
   )
@@ -382,13 +383,11 @@ mark_as_advanced(
 # NOTE: Clang doesn't provide -gstrict-dwarf flag (simply ignores it and
 # warns it's unused), but has further options for emitting debugging
 # such as tuning output for gdb, lldb, sce.
-# Dwarf version may also not be needed here.
 foreach(_lang "C" "CXX")
-  if(CMAKE_${_lang}_COMPILER_ID MATCHES "GNU")
-    set(CET_COMPILER_${_lang}_DWARF_FLAGS "-gdwarf-${CET_COMPILER_DWARF_VERSION}")
-    if(CET_COMPILER_DWARF_STRICT)
-      set(CET_COMPILER_${_lang}_DWARF_FLAGS "${CET_COMPILER_${_lang}_DWARF_FLAGS} -gstrict-dwarf")
-    endif()
+  set(CET_COMPILER_${_lang}_DWARF_FLAGS "-gdwarf-${CET_COMPILER_DWARF_VERSION}")
+
+  if(CET_COMPILER_DWARF_STRICT AND (CMAKE_${_lang}_COMPILER_ID MATCHES "GNU"))
+    set(CET_COMPILER_${_lang}_DWARF_FLAGS "${CET_COMPILER_${_lang}_DWARF_FLAGS} -gstrict-dwarf")
   endif()
 endforeach()
 
