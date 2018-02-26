@@ -298,3 +298,16 @@ add_test(
     --test-command ${CMAKE_CTEST_COMMAND} -VV
   )
 
+#-----------------------------------------------------------------------
+# Test CetScript
+add_test(
+  NAME testCetScript
+  COMMAND ${CMAKE_CTEST_COMMAND}
+  --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetScript ${CMAKE_CURRENT_BINARY_DIR}/testCetScript
+    --build-generator ${CMAKE_GENERATOR}
+    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+    --build-config $<CONFIG>
+    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+    --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+

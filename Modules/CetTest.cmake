@@ -447,6 +447,8 @@ Check for missing keyword(s) in the definition of test ${CET_TARGET} in your CMa
       ${CET_NO_INSTALL}
       DEPENDENCIES ${CET_DEPENDENCIES}
       )
+    # In this case, expect that...
+    set(CET_TEST_EXEC ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CET_TARGET})
   elseif(NOT CET_HANDBUILT)
     # Normal build
     # Build the executable
