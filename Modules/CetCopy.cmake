@@ -41,30 +41,45 @@
 # program changes if one lists the script in the DEPENDS list of the
 # custom command.
 ########################################################################
-include (CMakeParseArguments)
-function (cet_copy)
-  cmake_parse_arguments(CETC "PROGRAMS;NAME_AS_TARGET"
+include(CMakeParseArguments)
+
+function(cet_copy)
+  cmake_parse_arguments(CETC
+    "PROGRAMS;NAME_AS_TARGET"
     "DESTINATION;NAME;WORKING_DIRECTORY"
     "DEPENDENCIES"
     ${ARGN})
-  if (NOT CETC_DESTINATION)
+
+  if(NOT CETC_DESTINATION)
     message(FATAL_ERROR "Missing required option argument DESTINATION")
   endif()
-  if (NOT CETC_WORKING_DIRECTORY)
+
+  if(NOT CETC_WORKING_DIRECTORY)
     set(CETC_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
   endif()
-  foreach (source ${CETC_UNPARSED_ARGUMENTS})
-    if (CETC_NAME)
+
+  foreach(source ${CETC_UNPARSED_ARGUMENTS})
+    if(CETC_NAME)
       set(dest_path "${CETC_DESTINATION}/${CETC_NAME}")
     else()
       get_filename_component(source_base "${source}" NAME)
       set(dest_path "${CETC_DESTINATION}/${source_base}")
     endif()
-    if (CETC_NAME_AS_TARGET)
+
+    if(CETC_NAME_AS_TARGET)
       get_filename_component(target ${dest_path} NAME)
     else()
-      string(REPLACE "/" "+" target "${dest_path}")
+      string(FIND "${dest_path}" "${PROJECT_BINARY_DIR}" abs_build_found)
+      if(abs_build_found EQUAL 0)
+        string(LENGTH "${PROJECT_BINARY_DIR}" abs_build_len)
+        string(SUBSTRING "${dest_path}" ${abs_build_len} -1 dest_path_target)
+        string(REPLACE "/" "+" target "${dest_path_target}")
+      else()
+        string(REPLACE "/" "+" target "${dest_path}")
     endif()
+
+    string(REGEX REPLACE "[: ]" "+" target "${target}")
+
     add_custom_command(OUTPUT "${dest_path}"
       WORKING_DIRECTORY "${CETC_WORKING_DIRECTORY}"
       COMMAND ${CMAKE_COMMAND} -E make_directory "${CETC_DESTINATION}"
@@ -72,7 +87,9 @@ function (cet_copy)
       COMMENT "Copying ${source} to ${dest_path}"
       DEPENDS "${source}" ${CETC_DEPENDENCIES}
       )
-    if (CETC_PROGRAMS)
+
+    # If it's pure copy, then file should probably be executable already.
+    if(CETC_PROGRAMS)
       add_custom_command(OUTPUT "${dest_path}"
         COMMAND chmod +x "${dest_path}"
         APPEND
