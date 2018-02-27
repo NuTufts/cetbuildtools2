@@ -24,9 +24,6 @@ CETD_LIBRARY_PATH=${CETD_LIBRARY_PATH:+${CETD_LIBRARY_PATH}:}${!__CET_LIBRARY_PA
 if [ ! -z "$CETD_LIBRARY_PATH" ]; then
   export ${__CET_LIBRARY_PATH_NAME}=${CETD_LIBRARY_PATH}
 fi
-
-echo "CETD_LIBRARY_PATH = ${CETD_LIBRARY_PATH}"
-echo "${__CET_LIBRARY_PATH_NAME} = ${!__CET_LIBRARY_PATH_NAME}"
 # - END SHIM
 #-----------------------------------------------------------------------
 
