@@ -12,7 +12,7 @@ set(_path "/dev/null:/should_not_exist")
 if(APPLE)
   set(ENV{DYLD_LIBRARY_PATH} "${_path}")
 else()
-  set(ENV{LD_LIBRARY_PATH "${_path}")
+  set(ENV{LD_LIBRARY_PATH} "${_path}")
 endif()
 
 include(CetTest)
