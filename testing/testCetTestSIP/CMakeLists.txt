@@ -34,6 +34,15 @@ cet_test(sip_test TEST_PROPERTIES PASS_REGULAR_EXPRESSION "^${_path}\:")
 # This should also work for a HANDBUILT executable
 cet_test(sip_test_by_hand HANDBUILT TEST_EXEC $<TARGET_FILE:sip_test>)
 
+# A PREBUILT script will fail on Darwin because whilst the cet_exec_test
+# forwards the dynamic loader path, script takes us back to square one
+# At present, we don't do anything other than confirm running. Check the
+# printout to confirm behaviour
+cet_test(sip_test_script.sh PREBUILT)
+
+# We should be able to set the environment in the running executable
+# Again just a check that things work.
+cet_test(set_ldpath)
 
 # Reinclusion should not reset env bar CETD_LIBRARY_PATH
 include(CetTest)
@@ -51,7 +60,7 @@ endif()
 cet_test_env("CETD_LIBRARY_PATH=/foo/bar")
 cet_test(sip_test_change_value HANDBUILT TEST_EXEC $<TARGET_FILE:sip_test> TEST_PROPERTIES PASS_REGULAR_EXPRESSION "^/foo/bar\:")
 
-# Should be able to extend path via ENV
+# Should be able to extend path via existing ENV
 cet_test_env("CETD_LIBRARY_PATH=/baz:$ENV{CETD_LIBRARY_PATH}")
 cet_test(sip_test_extend_value HANDBUILT TEST_EXEC $<TARGET_FILE:sip_test> TEST_PROPERTIES PASS_REGULAR_EXPRESSION "^/baz:${_path}\:")
 
