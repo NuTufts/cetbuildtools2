@@ -10,7 +10,12 @@ int main() {
 #endif
 
   const char* cetLDPathValue = getenv("CETD_LIBRARY_PATH");
-  int res = setenv("DYLD_LIBRARY_PATH", cetLDPathValue, 1);
+  int res = setenv(name, cetLDPathValue, 1);
+
+  if (res != 0) {
+    std::cerr << "could not set " << name << std::endl;
+    return 1;
+  }
 
   const char* localLDPathValue = getenv(name);
 
