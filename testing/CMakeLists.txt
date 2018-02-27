@@ -318,6 +318,29 @@ add_test(
     --test-command ${CMAKE_CTEST_COMMAND} -VV
   )
 
+# Test pass through of dynamic loader path via CETD_LIBRARY_PATH
+# NB: on MacOS, assumes that CMake is in a non-SIP area
+add_test(
+  NAME testCetTestSIP
+  COMMAND ${CMAKE_CTEST_COMMAND}
+    --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTestSIP ${CMAKE_CURRENT_BINARY_DIR}/testCetTestSIP
+    --build-generator ${CMAKE_GENERATOR}
+    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+    --build-two-config # Because re-cmakeing shouldn't change things
+    --build-config $<CONFIG>
+    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+    --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+
+# Test use of a multimode generator, only Xcode for now, but should
+# be generic enough.
+# Check that tests run appropriate executable and set paths correctly
+# for multimode outputs without needing to know details
+#if(APPLE AND EXISTS "/usr/bin/xcodebuild")
+#  add_test(...)
+# how to build-and-test all configs?
+#endif()
+
 #-----------------------------------------------------------------------
 # Test CetScript
 add_test(
