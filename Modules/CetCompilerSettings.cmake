@@ -15,8 +15,8 @@
 #
 
 #-----------------------------------------------------------------------
-# Copyright 2016 Ben Morgan <Ben.Morgan@warwick.ac.uk>
-# Copyright 2016 University of Warwick
+# Copyright 2016-2018 Ben Morgan <Ben.Morgan@warwick.ac.uk>
+# Copyright 2016-2018 University of Warwick
 #
 # Distributed under the OSI-approved BSD 3-Clause License (the "License");
 # see accompanying file License.txt for details.
@@ -77,15 +77,8 @@ include(CetCMakeUtilities)
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
 # The following CMake variables are set by default when including this module
-# for general control of the C++ Standard:
+# to enforce availability and uniformity of the requested C++ Standard:
 #
-# - :cmake:variable:`CMAKE_CXX_EXTENSIONS <cmake:variable:CMAKE_CXX_EXTENSIONS>`: OFF
-#
-#   - Prevent use of vendor specific language extensions. For example, when using the
-#     GNU compiler with C++14, the flag ``-std=c++14`` with be used rather than ``-std=gnu++14``.
-#
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 #.rst:
 # - :cmake:variable:`CMAKE_CXX_STANDARD_REQUIRED <cmake:variable:CMAKE_CXX_STANDARD_REQUIRED>`: ON
 #
@@ -95,86 +88,47 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #.rst:
-# To configure and select the C++ Standard used to compile the project,
-# the ``CMAKE_CXX_STANDARD`` variable is used... A project may specify
-# a minimum standard it requires for compilation, and users may select
-# from this or higher known standards to perform the actual build.
+# - :cmake:variable:`CMAKE_CXX_EXTENSIONS <cmake:variable:CMAKE_CXX_EXTENSIONS>`: OFF
+#
+#   - Prevent use of vendor specific language extensions. For example, when using the
+#     GNU compiler with C++14, the flag ``-std=c++14`` with be used rather than ``-std=gnu++14``.
+#
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 #.rst:
-# .. todo::
+# To configure the specific C++ standard against which the project will be built,
+# the following variables and options are available:
 #
-#   Review usage of ``CMAKE_CXX_STANDARD`` vs compile features, as well
-#   as standard specification fo C/Fortran.
-#   In CMake, we have two builtin ways to specify the required standard,
-#   meaning that CMake will set the compile flags like ``-std=c++11`` for
-#   us automatically.
+# .. cmake:variable:: CET_COMPILER_CXX_STANDARD_MINIMUM
 #
-#   * Set the :cmake:variable:`CMAKE_CXX_STANDARD <cmake:variable:CMAKE_CXX_STANDARD>`
-#     and :cmake:variable:`CMAKE_CXX_STANDARD_REQUIRED <cmake:variable:CMAKE_CXX_STANDARD_REQUIRED>`
-#     variables to the required standard, e.g. ``11``, and ``ON`` to enforce that
-#     the compiler in use supports the standard. These variables provide the
-#     defaults for the :cmake:prop_tgt:`CXX_STANDARD <cmake:prop_tgt:CXX_STANDARD>`
-#     and :cmake:prop_tgt:`CXX_STANDARD_REQUIRED <cmake:prop_tgt:CXX_STANDARD_REQUIRED>` target
-#     properties, which may also be set on a per-target basis. Note that this
-#     method does *not* guarantee that the compiler supports *all* features of
-#     the specified standard.
-#   * Use the :cmake:command:`target_compile_features <cmake:command:target_compile_features>`
-#     command on a target, passing a list of specific features required (see
-#     :cmake:prop_gbl:`CMAKE_CXX_KNOWN_FEATURES <cmake:prop_gbl:CMAKE_CXX_KNOWN_FEATURES>`).
-#     This guarantees that the compiler supports the required language feature, provided
-#     that the compiler, version and standard are known to CMake.
+#   Internal variable that should be set by the project before inclusion
+#   of this module to specify the minimum C++ Standard (11, 14, 17, 2a) required
+#   by the project's source code. For example
 #
-#   In both cases, CMake automatically adds any needed flags needed to compile
-#   against the requested standard to the compile commands. The main difference is
-#   that ``target_compile_features`` is a `usage requirement` so the features are
-#   propagated to exported targets. Clients of those targets pick up the compile
-#   features, and so can be compiled against the same standard (mostly) automatically.
+#   .. code-block:: cmake
 #
-#   An advantage of using the plain project-scope variables is that we can easily add
-#   support for new standards quickly by setting the variables
-#   ``CMAKE_CXX<EPOCH>_STANDARD_COMPILE_OPTION`` and ``CMAKE_CXX<EPOCH>_EXTENSION_COMPILE_OPTION``
-#   variables based on the compiler ID and Version. For example ``-std=c++1z`` and ``-std=gnu++1z``
-#   if using GCC 5(?) and above.
-#   Means we cannot support compile features, because names for those need to be defined,
-#   ultimately, by upstream CMake based on the final features defined by ISO.
-#   Can define our own names of course, but at the potential cost of compatibility with
-#   mainline CMake and we'd also require clients of any package to depend on and use
-#   cetbuildtools2 (unless we exported the module setting the features into the package).
-#   `Generally` the names map to Clang ``__has_feature`` names and the similar _`SD-6` names.
+#     set(CET_COMPILER_CXX_STANDARD_MINIMUM 14)
+#     include(CetCompilerSettings)
 #
-#   We can also, given an epoch, get the list of features supported by the current
-#   compiler, so can also use this list later on if needed. Feature based configuration
-#   is probably most useful when a new standard is being gradually rolled out.
+#   .. todo::
 #
-#   Side note: In UPS/cetbuildtools, standard is selected based on `UPS Qualifiers`_,
-#   and specifially the primary qualifier. This is mostly a specification of compiler
-#   vendor, version and C++ Standard. If we provide a UPS compatibility layer, then
-#   need to use this info, but it can be as a basic check/translation that things
-#   match up (see ``report_product_info`` program etc, though these still rely on
-#   setup_for_development writing files to buildir).
+#     Review this pattern of use, and whether the minimum can be set after inclusion,
+#     e.g. via a function to configure the ``enum_option`` used to select the standard.
 #
-# .. _`UPS Qualifiers`: https://cdcvs.fnal.gov/redmine/projects/cet-is-public/wiki/AboutQualifiers
-# .. _`SD-6`: https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations
+#     In UPS/cetbuildtools, standard is selected based on `UPS Qualifiers`_,
+#     and specifially the primary qualifier. This is mostly a specification of compiler
+#     vendor, version and C++ Standard. If we provide a UPS compatibility layer, then
+#     need to use this info, but it can be as a basic check/translation that things
+#     match up (see ``report_product_info`` program etc, though these still rely on
+#     setup_for_development writing files to buildir).
 #
-# TODO: Look at functionizing the below - at present, have to do
-#
-#  set(CET_COMPILER_CXX_STANDARD_MINIMUM 14)
-#  include(CetCompilerSettings)
-#
-# Review whether it's better to do
-#
-#  include(CetCompilerSettings)
-#  cet_compiler_cxx_standard_minimum(14)
-#
-# NB: trick here is that variable has sensible default (NULL),
-# but how to do a default function call? Could just set CXX_STANDARD
-# to sensible default in CetCompilerSettings, then if the function is
-# overidden, provides configuration?
+#     .. _`UPS Qualifiers`: https://cdcvs.fnal.gov/redmine/projects/cet-is-public/wiki/AboutQualifiers
+#     .. _`SD-6`: https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations
 
 
 # Projects may need to define the minimum standard, so VALUES needs to
-# take that into account, and set DEFAULT to the first entry.
-# Because upcoming versions may be alphanumeric, this list should be ordered
+# filter out earlier epochs. Because upcoming versions may be alphanumeric, this list should be
+# manually ordered until the official numeric epoch is known
 set(CET_SUPPORTED_CXX_STANDARDS 11 14 17 2a)
 set(CET_PROJECT_CXX_STANDARDS)
 
@@ -183,7 +137,7 @@ if(CET_COMPILER_CXX_STANDARD_MINIMUM)
   list(FIND CET_SUPPORTED_CXX_STANDARDS "${CET_COMPILER_CXX_STANDARD_MINIMUM}" _cxx_min_index)
   if(_cxx_min_index LESS 0)
     message(FATAL_ERROR
-"project has requested a minimum C++ Standard of `${CET_COMPILER_CXX_STANDARD_MINIMUM}`,
+      "Project `${PROJECT_NAME}` has requested a minimum C++ Standard of `${CET_COMPILER_CXX_STANDARD_MINIMUM}`,
 but this is not in the list of known standards:\n"
 "${CET_SUPPORTED_CXX_STANDARDS}"
     )
@@ -200,6 +154,22 @@ else()
   set(CET_PROJECT_CXX_STANDARDS ${CET_SUPPORTED_CXX_STANDARDS})
 endif()
 
+#.rst:
+# .. cmake:variable:: CET_COMPILER_CXX_STANDARD
+#
+#   Option to select the actual C++ Standard to compile the project against.
+#   The default is ``11``, or the value of ``CET_COMPILER_CXX_STANDARD_MINIMUM``
+#   if the project has set that. The set of possible valid values are ``11``, ``14``
+#   ``17`` and ``2a``.
+#
+#   If the configured Compiler/CMake version does not know how to set up this
+#   version of the standard, a ``FATAL_ERROR`` will be emitted.
+#
+#   .. todo::
+#
+#     Document how to add support for a new compiler/version not known to
+#     CMake via the compile features/options functionality.
+#
 enum_option(CET_COMPILER_CXX_STANDARD
   VALUES ${CET_PROJECT_CXX_STANDARDS}
   TYPE STRING
@@ -214,9 +184,10 @@ if(NOT DEFINED CMAKE_CXX${CET_COMPILER_CXX_STANDARD}_STANDARD_COMPILE_OPTION)
   message(FATAL_ERROR
 "C++ Standard `${CET_COMPILER_CXX_STANDARD}` requested, but detected compiler
 ${CMAKE_CXX_COMPILER_ID} v${CMAKE_CXX_COMPILER_VERSION}\n"
-"is not known to support it. If this is an error, you can add support by setting "
-"the variables CMAKE_CXX${CET_COMPILER_CXX_STANDARD}_STANDARD_COMPILE_OPTION to the "
-"flag required to be passed to the compiler to activate this standard. This setting "
+"is not known to support it, at least by this CMake version (v${CMAKE_VERSION})."
+"If this is an error, you can add support by setting the variables "
+"CMAKE_CXX${CET_COMPILER_CXX_STANDARD}_STANDARD_COMPILE_OPTION to the flag(s) "
+"required to be passed to the compiler to activate this standard. This setting "
 "must be done before inclusion of CetCompilerSettings"
   )
 endif()
@@ -238,7 +209,8 @@ set(CMAKE_CXX_STANDARD ${CET_COMPILER_CXX_STANDARD})
 #   The warnings checked for by the compiler are defined in CET by four
 #   levels, with the following flags prepended to ``CMAKE_C_FLAGS`` and ``CMAKE_CXX_FLAGS``.
 #   At present, diagnostic selection is only enabled for C and C++ languages
-#   and when using the GNU, Clang or Intel compilers.
+#   and when using the GNU, Clang or Intel compilers. The following values
+#   may be selected:
 #
 #   * ``CAVALIER``
 #
@@ -324,7 +296,7 @@ foreach(_lang "C" "CXX")
 
     # Additional CXX option for VIGILANT
     if(${_lang} STREQUAL "CXX")
-      set(CET_COMPILER_CXX_DIAGFLAGS_VIGILANT "${CET_COMPILER_CXX_DIAGFLAGS_VIGILANT} -Woverloaded-virtual")
+      set(CET_COMPILER_CXX_DIAGFLAGS_VIGILANT "${CET_COMPILER_CXX_DIAGFLAGS_VIGILANT} -Woverloaded-virtual -Wnon-virtual-dtor -Wdelete-non-virtual-dtor")
     endif()
 
     # - Paranoid
@@ -365,10 +337,11 @@ option(CET_COMPILER_DWARF_STRICT "only emit DWARF debugging info at defined leve
 
 # .. cmake:variable:: CET_COMPILER_DWARF_VERSION
 #
-#   Version of DWARF standard that should be emitted. Defaults to 2.
+#   Version of DWARF standard that should be emitted. Defaults to 4.
 #
 enum_option(CET_COMPILER_DWARF_VERSION
-  VALUES 2 3 4
+  VALUES 2 3 4 5
+  DEFAULT 4
   TYPE STRING
   DOC "Set version of DWARF standard to emit"
   )
@@ -382,13 +355,11 @@ mark_as_advanced(
 # NOTE: Clang doesn't provide -gstrict-dwarf flag (simply ignores it and
 # warns it's unused), but has further options for emitting debugging
 # such as tuning output for gdb, lldb, sce.
-# Dwarf version may also not be needed here.
 foreach(_lang "C" "CXX")
-  if(CMAKE_${_lang}_COMPILER_ID MATCHES "GNU")
-    set(CET_COMPILER_${_lang}_DWARF_FLAGS "-gdwarf-${CET_COMPILER_DWARF_VERSION}")
-    if(CET_COMPILER_DWARF_STRICT)
-      set(CET_COMPILER_${_lang}_DWARF_FLAGS "${CET_COMPILER_${_lang}_DWARF_FLAGS} -gstrict-dwarf")
-    endif()
+  set(CET_COMPILER_${_lang}_DWARF_FLAGS "-gdwarf-${CET_COMPILER_DWARF_VERSION}")
+
+  if(CET_COMPILER_DWARF_STRICT AND (CMAKE_${_lang}_COMPILER_ID MATCHES "GNU"))
+    set(CET_COMPILER_${_lang}_DWARF_FLAGS "${CET_COMPILER_${_lang}_DWARF_FLAGS} -gstrict-dwarf")
   endif()
 endforeach()
 

@@ -106,43 +106,23 @@ add_test(
   )
 
 #-----------------------------------------------------------------------
-# BasicPlugin test
+# CetCompilerSettings test
+# - Simply a smoke test for now
+#   1. Enable up to VIGILANT we can to check all flags are valid across tested
+#      platforms (PARANOID known to be GNU specific at present)
+#   2. Run once for each build mode
 #
-add_test(
-  NAME testCetBasicPlugin
-  COMMAND ${CMAKE_CTEST_COMMAND}
-          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetBasicPlugin ${CMAKE_CURRENT_BINARY_DIR}/testCetBasicPlugin
-          --build-generator ${CMAKE_GENERATOR}
-          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-          --build-config $<CONFIG>
-          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
-  )
-
-#-----------------------------------------------------------------------
-# FindXXX Modules
-#-----------------------------------------------------------------------
-# FindCppUnit test
-#
-add_test(
-  NAME testFindCppUnit
-  COMMAND ${CMAKE_CTEST_COMMAND}
-          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testFindCppUnit ${CMAKE_CURRENT_BINARY_DIR}/testFindCppUnit
-          --build-generator ${CMAKE_GENERATOR}
-          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-          --build-config $<CONFIG>
-          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
-  )
-
-# FindTBB test
-add_test(
-  NAME testFindTBB
-  COMMAND ${CMAKE_CTEST_COMMAND}
-          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testFindTBB ${CMAKE_CURRENT_BINARY_DIR}/testFindTBB
-          --build-generator ${CMAKE_GENERATOR}
-          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-          --build-config $<CONFIG>
-          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
-  )
+foreach(_mode "" Release Debug MinSizeRel RelWithDebInfo)
+  add_test(
+    NAME testCetCompilerSettings_${_mode}
+    COMMAND ${CMAKE_CTEST_COMMAND}
+            --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetCompilerSettings ${CMAKE_CURRENT_BINARY_DIR}/testCetCompilerSettings_${_mode}
+            --build-generator ${CMAKE_GENERATOR}
+            --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+            --build-config ${_mode}
+            --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_COMPILER_DIAGNOSTIC_LEVEL=VIGILANT"
+    )
+endforeach()
 
 #-----------------------------------------------------------------------
 # Cet_configure_cxx_standard test
@@ -207,6 +187,46 @@ add_test(
 if(CMAKE_COMPILER_IS_GNUCXX AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9))
   set_tests_properties(testCetConfigureCXXStandard_minimumisdefault PROPERTIES WILL_FAIL TRUE)
 endif()
+
+
+#-----------------------------------------------------------------------
+# BasicPlugin test
+#
+add_test(
+  NAME testCetBasicPlugin
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetBasicPlugin ${CMAKE_CURRENT_BINARY_DIR}/testCetBasicPlugin
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+  )
+
+#-----------------------------------------------------------------------
+# FindXXX Modules
+#-----------------------------------------------------------------------
+# FindCppUnit test
+#
+add_test(
+  NAME testFindCppUnit
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testFindCppUnit ${CMAKE_CURRENT_BINARY_DIR}/testFindCppUnit
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+  )
+
+# FindTBB test
+add_test(
+  NAME testFindTBB
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testFindTBB ${CMAKE_CURRENT_BINARY_DIR}/testFindTBB
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+  )
 
 #-----------------------------------------------------------------------
 # Tests of cet_test
@@ -294,6 +314,42 @@ add_test(
     --build-generator ${CMAKE_GENERATOR}
     --build-makeprogram ${CMAKE_MAKE_PROGRAM}
     --build-config ${_catchmode}
+    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+    --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+
+# Test pass through of dynamic loader path via CETD_LIBRARY_PATH
+# NB: on MacOS, assumes that CMake is in a non-SIP area
+add_test(
+  NAME testCetTestSIP
+  COMMAND ${CMAKE_CTEST_COMMAND}
+    --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTestSIP ${CMAKE_CURRENT_BINARY_DIR}/testCetTestSIP
+    --build-generator ${CMAKE_GENERATOR}
+    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+    --build-two-config # Because re-cmakeing shouldn't change things
+    --build-config $<CONFIG>
+    --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
+    --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+
+# Test use of a multimode generator, only Xcode for now, but should
+# be generic enough.
+# Check that tests run appropriate executable and set paths correctly
+# for multimode outputs without needing to know details
+#if(APPLE AND EXISTS "/usr/bin/xcodebuild")
+#  add_test(...)
+# how to build-and-test all configs?
+#endif()
+
+#-----------------------------------------------------------------------
+# Test CetScript
+add_test(
+  NAME testCetScript
+  COMMAND ${CMAKE_CTEST_COMMAND}
+  --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetScript ${CMAKE_CURRENT_BINARY_DIR}/testCetScript
+    --build-generator ${CMAKE_GENERATOR}
+    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+    --build-config $<CONFIG>
     --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
     --test-command ${CMAKE_CTEST_COMMAND} -VV
   )
