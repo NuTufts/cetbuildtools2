@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetUninstallTarget &mdash; cetbuildtools2 0.4.0 documentation</title>
+  <title>CetMake &mdash; cetbuildtools2 0.4.0 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="cetbuildtools2 0.4.0 documentation" href="../index.html"/>
-        <link rel="next" title="CetWriteCXXVersionAPI" href="CetWriteCXXVersionAPI.html"/>
-        <link rel="prev" title="CetCMakeUtilities" href="CetCMakeUtilities.html"/> 
+        <link rel="next" title="FindCppUnit" href="../find-modules/FindCppUnit.html"/>
+        <link rel="prev" title="BasicPlugin" href="BasicPlugin.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -99,10 +99,10 @@
 <li class="toctree-l1"><a class="reference internal" href="CetTest.html">CetTest</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetUPS.html">CetUPS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetCMakeUtilities.html">CetCMakeUtilities</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">CetUninstallTarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetUninstallTarget.html">CetUninstallTarget</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetWriteCXXVersionAPI.html">CetWriteCXXVersionAPI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="BasicPlugin.html">BasicPlugin</a></li>
-<li class="toctree-l1"><a class="reference internal" href="CetMake.html">CetMake</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CetMake</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
@@ -158,13 +158,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>CetUninstallTarget</li>
+      <li>CetMake</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/users/CetUninstallTarget.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/users/CetMake.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -177,34 +177,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="cetuninstalltarget">
-<h1>CetUninstallTarget<a class="headerlink" href="#cetuninstalltarget" title="Permalink to this headline">¶</a></h1>
-<p>Add an <code class="docutils literal"><span class="pre">uninstall</span></code> target.</p>
-<p>By including this module, an <code class="docutils literal"><span class="pre">uninstall</span></code> target will be added to your CMake
-project. This will remove all files installed (or updated) by a previous
-invocation of the <code class="docutils literal"><span class="pre">install</span></code> target. It will not remove files created or
-modified by an <code class="docutils literal"><span class="pre">install(SCRIPT)</span></code> or <code class="docutils literal"><span class="pre">install(CODE)</span></code> command; you should
-create a custom uninstallation target for these and use <code class="docutils literal"><span class="pre">add_dependency</span></code> to
-make the <code class="docutils literal"><span class="pre">uninstall</span></code> target depend on it:</p>
-<div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">include</span><span class="p">(</span><span class="s">CetUninstallTarget</span><span class="p">)</span>
-<span class="nb">install</span><span class="p">(</span><span class="s">SCRIPT</span> <span class="s">install-foo.cmake</span><span class="p">)</span>
-<span class="nb">add_custom_target</span><span class="p">(</span><span class="s">uninstall_foo</span> <span class="s">COMMAND</span> <span class="o">${</span><span class="nv">CMAKE_COMMAND</span><span class="o">}</span> <span class="s">-P</span> <span class="s">uninstall-foo.cmake</span><span class="p">)</span>
-<span class="nb">add_dependency</span><span class="p">(</span><span class="s">uninstall</span> <span class="s">uninstall_foo</span><span class="p">)</span>
+  <div class="section" id="cetmake">
+<h1>CetMake<a class="headerlink" href="#cetmake" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">include</span><span class="p">(</span><span class="s">CetMake</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The target will fail if the <code class="docutils literal"><span class="pre">install</span></code> target has not yet been run (so it is
-not possible to run CMake on the project and then immediately run the
-<code class="docutils literal"><span class="pre">uninstall</span></code> target).</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">CMake deliberately does not provide an <code class="docutils literal"><span class="pre">uninstall</span></code> target by default on
-the basis that such a target has the potential to remove important files
-from a user’s computer. Use with caution.</p>
+<p>Legacy Cetbuildtools/UPS module, retained temporarily for provision of
+the <code class="docutils literal"><span class="pre">cet_script</span></code> function used under the hood by CetTest.</p>
+<p>Use of scripts (e.g. Shell, Python, Perl) for testing of the package or
+by its clients should prefer explicit use under the following guidelines</p>
+<ul class="simple">
+<li>If the script is not generated (e.g. via <code class="docutils literal"><span class="pre">configure_file</span></code>), then it
+should have at least user execute permissions. Tests may run the script
+by passing the full path, e.g. <code class="docutils literal"><span class="pre">${PROJECT_SOURCE_DIR}/scripts/myscript.sh</span></code>.
+If the script is required by runtime clients, use the <code class="docutils literal"><span class="pre">install(PROGRAMS</span> <span class="pre">...)</span></code>
+form of the CMake command to install it in the appropriate location with
+needed execute permissions.</li>
+<li>If the script is generated, either via <code class="docutils literal"><span class="pre">configure_file</span></code> or otherwise,
+then the preceeding guide can be followed post-generation. In this case, the only
+change is to refer to the script in tests and install commands via its
+configured path, e.g. <code class="docutils literal"><span class="pre">${PROJECT_BINARY_DIR}/scripts/myscript.sh</span></code>.</li>
+</ul>
+<dl class="command">
+<dt id="command:cet_script">
+<code class="descname">cet_script</code><a class="headerlink" href="#command:cet_script" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">cet_script</span><span class="p">(</span><span class="s">&lt;script-names&gt;</span> <span class="s">...</span>
+           <span class="s">[DEPENDENCIES</span> <span class="s">&lt;deps&gt;]</span>
+           <span class="s">[GENERATED]</span>
+           <span class="s">[REMOVE_EXTENSIONS]</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This module was adapted from original code in the KDE <a class="reference external" href="https://projects.kde.org/projects/kdesupport/extra-cmake-modules">Extra CMake Modules</a> project, distributed under the OSI-Approved BSD License.</p>
-</div>
+<p>Copy the named scripts to <code class="docutils literal"><span class="pre">CMAKE_RUNTIME_OUTPUT_DIRECTORY</span></code> for the build.</p>
+<p>If the <code class="docutils literal"><span class="pre">GENERATED</span></code> option is used, the script will be copied from
+<code class="docutils literal"><span class="pre">CMAKE_CURRENT_BINARY_DIR</span></code> (after being made by a <code class="docutils literal"><span class="pre">configure_file</span></code>
+command, for example); otherwise it will be copied from
+<code class="docutils literal"><span class="pre">CMAKE_CURRENT_SOURCE_DIR</span></code>.</p>
+<p>If REMOVE_EXTENSIONS is specified, extensions will be removed from script names
+when they are installed.</p>
+<p>NOTE: If you wish to use one of these scripts in a CUSTOM_COMMAND,
+list its name in the DEPENDS clause of the CUSTOM_COMMAND to ensure
+it gets re-run if the script chagees.</p>
+</dd></dl>
+
 </div>
 
 
@@ -217,10 +231,10 @@ from a user’s computer. Use with caution.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="CetWriteCXXVersionAPI.html" class="btn btn-neutral float-right" title="CetWriteCXXVersionAPI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../find-modules/FindCppUnit.html" class="btn btn-neutral float-right" title="FindCppUnit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="CetCMakeUtilities.html" class="btn btn-neutral" title="CetCMakeUtilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="BasicPlugin.html" class="btn btn-neutral" title="BasicPlugin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetTest &mdash; cetbuildtools2 0.3.0 documentation</title>
+  <title>CetTest &mdash; cetbuildtools2 0.4.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="cetbuildtools2 0.3.0 documentation" href="../index.html"/>
+    <link rel="top" title="cetbuildtools2 0.4.0 documentation" href="../index.html"/>
         <link rel="next" title="CetUPS" href="CetUPS.html"/>
         <link rel="prev" title="CetInstallDirs" href="CetInstallDirs.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
             
           
@@ -102,6 +102,7 @@
 <li class="toctree-l1"><a class="reference internal" href="CetUninstallTarget.html">CetUninstallTarget</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CetWriteCXXVersionAPI.html">CetWriteCXXVersionAPI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="BasicPlugin.html">BasicPlugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CetMake.html">CetMake</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Additional Find Modules</span></p>
 <ul>
@@ -223,14 +224,6 @@ compiled main.</p>
 </dd>
 <dt>NO_AUTO</dt>
 <dd>Do not add the target to the auto test list.</dd>
-<dt>INSTALL_BIN</dt>
-<dd>Install this test’s script / exec in the product’s binary directory
-(ignored for HANDBUILT).</dd>
-<dt>INSTALL_EXAMPLE</dt>
-<dd>Install this test and all its data files into the examples area of the
-product.</dd>
-<dt>INSTALL_SOURCE</dt>
-<dd>Install this test’s source in the source area of the product.</dd>
 </dl>
 <p>Arguments:</p>
 <dl class="docutils">
@@ -253,10 +246,30 @@ list variable CET_TEST_GROUPS is set (e.g. with -D on the CMake
 command line) and there is overlap between the two lists, execute
 the test. The CET_TEST_GROUPS cache variable may additionally
 contain the optional values ALL or NONE.</dd>
-<dt>REF</dt>
-<dd><dl class="first last docutils">
-<dt>The standard output of the test will be captured and compared against</dt>
-<dd>the specified reference file. It is an error to specify this
+<dt>PARG_&lt;label&gt; &lt;opt&gt;[=] &lt;args&gt;+</dt>
+<dd><p class="first">Specify a permuted argument (multiple permitted with different
+&lt;label&gt;). This allows the creation of multiple tests with arguments
+from a set of permutations.</p>
+<p>Labels must be unique, valid CMake identifiers. Duplicated labels
+will cause an error.</p>
+<p>If multiple PARG_XXX arguments are specified, then they are combined
+linearly, with shorter permutation lists being repeated cyclically.</p>
+<p>If the ‘=’ is specified, then the argument lists for successive test
+iterations will get &lt;opt&gt;=v1, &lt;opt&gt;=v2, etc., otherwise it will be
+&lt;opt&gt; v1, &lt;opt&gt; v2, …</p>
+<p>Target names will have _&lt;num&gt; appended, where num is zero-padded to
+give the same number of digits for each target within the set.</p>
+<p>Permuted arguments will be placed before any specifed TEST_ARGS in
+the order the PARG_&lt;label&gt; arguments were specified to cet_test().</p>
+<p class="last">There is no support for non-option argument toggling as yet, but
+addition of such support should be straightforward should the use
+case arise.</p>
+</dd>
+</dl>
+<p>REF &lt;file</p>
+<blockquote>
+<div><p>The standard output of the test will be captured and compared against
+the specified reference file. It is an error to specify this
 argument and either the PASS_REGULAR_EXPRESSION or
 FAIL_REGULAR_EXPRESSION test properties to the TEST_PROPERTIES
 argument: success is the logical AND of the exit code from execution
@@ -264,60 +277,53 @@ of the test as originally specified, and the success of the
 filtering and subsequent comparison of the output (and optionally,
 the error stream). Optionally, a second element may be specified
 representing a reference for the error stream; otherwise, standard
-error will be ignored.</dd>
-<dt>If REF is specified, then OUTPUT_FILTERS may also be specified</dt>
-<dd><p class="first">(OUTPUT_FILTER and optionally OUTPUT_FILTER_ARGS will be accepted in
+error will be ignored.</p>
+<p>If REF is specified, then OUTPUT_FILTERS may also be specified
+(OUTPUT_FILTER and optionally OUTPUT_FILTER_ARGS will be accepted in
 the alternative for historical reasons). OUTPUT_FILTER must be a
 program which expects input on STDIN and puts the filtered output on
 STDOUT. OUTPUT_FILTERS should be a list of filters expecting input
 on STDIN and putting output on STDOUT. If DEFAULT is specified as a
 filter, it will be replaced at that point in the list of filters by
 appropriate defaults. Examples:</p>
-<blockquote class="last">
+<blockquote>
 <div><p>OUTPUT_FILTERS “filterA -x -y “arg with spaces”” filterB</p>
 <p>OUTPUT_FILTERS filterA DEFAULT filterB</p>
 </div></blockquote>
-</dd>
-</dl>
-</dd>
-<dt>REQUIRED_FILES</dt>
+</div></blockquote>
+<dl class="docutils">
+<dt>REQUIRED_FILES &lt;file&gt;+</dt>
 <dd>These files are required to be present before the test will be
 executed. If any are missing, ctest will record NOT RUN for this
 test.</dd>
+</dl>
+<p><a href="#id1"><span class="problematic" id="id2">*</span></a>SAN_OPTIONS (NOT IMPLEMENTED YET)</p>
+<blockquote>
+<div>Option representing the desired value of the corresponding sanitizer
+control environment variable for the test.</div></blockquote>
+<dl class="docutils">
 <dt>SCOPED</dt>
-<dd>Test target (but not script nor compiled executable) names will
+<dd>Test target (but not PREBUILT not HANDBUILT executable) names will
 be scoped by project name (&lt;PROJECT_NAME&gt;:…)</dd>
-<dt>SOURCES</dt>
+<dt>SOURCE[S] &lt;file&gt;+</dt>
 <dd>Sources to use to build the target (default is ${target}.cc).</dd>
-<dt>TEST_ARGS</dt>
+<dt>TEST_ARGS &lt;arg&gt;+</dt>
 <dd>Any arguments to the test to be run.</dd>
-<dt>TEST_EXEC</dt>
-<dd>The exec to run (if not the target). The HANDBUILT option must
-be specified in conjunction with this option.</dd>
-<dt>TEST_PROPERTIES</dt>
+<dt>TEST_EXEC &lt;program&gt;</dt>
+<dd>The executable to run (if not the target). The HANDBUILT option must
+be specified in conjunction with this option. It should be supplied
+as a full path to the executable or cet_test will fall back to the PATH
+environment to find it. Generator expressions may be used, e.g. $&lt;TARGET_FILE:name&gt;.</dd>
+<dt>TEST_PROPERTIES &lt;PROPERTY value&gt;+</dt>
 <dd>Properties to be added to the test. See documentation of the cmake
 command, “set_tests_properties.”</dd>
 </dl>
 <p>Cache variables</p>
 <dl class="docutils">
-<dt>CET_TEST_GROUPS</dt>
-<dd>Test group names specified using the OPTIONAL_GROUPS list option are
-compared against this list to determine whether to configure the
-test. Default value is the special value “NONE,” meaning no
-optional tests are to be configured. Optionally CET_TEST_GROUPS may
-contain the special value “ALL.” Specify multiple values separated
-by “;” (escape or protect with quotes) or “,” See explanation of
-the OPTIONAL_GROUPS variable above for more details.</dd>
 <dt>CET_DEFINED_TEST_GROUPS</dt>
 <dd>Any test group names CMake sees will be added to this list.</dd>
 </dl>
-<p>Notes</p>
 <ul class="simple">
-<li>cet_make_exec() and art_make_exec() are more flexible than building
-the test exec with cet_test(), and are to be preferred (use the
-NO_INSTALL option to same as appropriate). Use
-cet_test(… HANDBUILT TEST_EXEC …) to use test execs built this
-way.</li>
 <li>The CMake properties PASS_REGULAR_EXPRESSION and
 FAIL_REGULAR_EXPRESSION are incompatible with the REF option, but we
 cannot check for them if you use CMake’s add_tests_properties()
@@ -413,7 +419,7 @@ cet_test() or add_test(). At least one name must be supplied.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
