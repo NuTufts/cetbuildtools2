@@ -242,7 +242,7 @@ add_test(
           --test-command ${CMAKE_CTEST_COMMAND} -VV
   )
 # Check Fail cases...
-foreach(_cettestfailcase UNPARSED TEST_EXEC_NO_HANDBUILT EXECUTABLE_COMBINATION_HP EXECUTABLE_COMBINATION_HU EXECUTABLE_COMBINATION_PU)
+foreach(_cettestfailcase UNPARSED TEST_EXEC_NO_HANDBUILT EXECUTABLE_COMBINATION_HP EXECUTABLE_COMBINATION_HU EXECUTABLE_COMBINATION_PU NO_OUTPUTFILTERWITHOUT_REF)
   add_test(
     NAME testCetTest_${_cettestfailcase}
     COMMAND ${CMAKE_CTEST_COMMAND}
@@ -255,6 +255,19 @@ foreach(_cettestfailcase UNPARSED TEST_EXEC_NO_HANDBUILT EXECUTABLE_COMBINATION_
     )
   set_tests_properties(testCetTest_${_cettestfailcase} PROPERTIES WILL_FAIL TRUE)
 endforeach()
+
+# Test issue in 0.4.0 - Specifying REF alone is an error, but should not be
+add_test(
+  NAME testCetTest_refalone
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testCetTest ${CMAKE_CURRENT_BINARY_DIR}/testCetTest_refalone
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-D__CT_BUG_REFALONE=1"
+          --test-command ${CMAKE_CTEST_COMMAND} -VV
+  )
+
 
 # Test boost.unit
 find_package(Boost QUIET)

@@ -15,10 +15,12 @@ cet_test(dummy_test)
 if(__CT_FAILURE_UNPARSED)
   cet_test(unparsedargsareerror BAD_ARG)
 endif()
+
 # 2. TEST_EXEC without HANDBUILT is error
 if(__CT_FAILURE_TEST_EXEC_NO_HANDBUILT)
   cet_test(no_handbuilt TEST_EXEC /bin/bash)
 endif()
+
 # 3. Cannot specify any combinations of HANDBUILT PREBUILT or USE_CATCH_MAIN
 if(__CT_FAILURE_EXECUTABLE_COMBINATION_HP)
   cet_test(no_combination HANDBUILT PREBUILT)
@@ -26,5 +28,15 @@ elseif(__CT_FAILURE_EXECUTABLE_COMBINATION_HU)
   cet_test(no_combination HANDBUILT USE_CATCH_MAIN)
 elseif(__CT_FAILURE_EXECUTABLE_COMBINATION_PU)
   cet_test(no_combination PREBUILT USE_CATCH_MAIN)
+endif()
+
+# 4. Cannot have OUTPUT_FILTER without REF
+if(__CT_FAILURE_NO_OUTPUTFILTERWITHOUT_REF)
+  cet_test(badfilter OUTPUT_FILTER "bash")
+endif()
+
+# Test Bugs
+if(__CT_BUG_REFALONE)
+  cet_test(bug_refalone REF "${CMAKE_CURRENT_SOURCE_DIR}/bug_refalone.ref")
 endif()
 
