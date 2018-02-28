@@ -333,7 +333,7 @@ function(cet_test CET_TARGET)
     message(FATAL_ERROR "OUTPUT_FILTERS is incompatible with FILTER_ARGS:\nEither use the singular OUTPUT_FILTER or use double-quoted strings in OUTPUT_FILTERS\nE.g. OUTPUT_FILTERS \"filter1 -x -y\" \"filter2 -y -z\"")
   endif()
 
-  if(CET_REF AND NOT (CET_OUTPUT_FILTER OR CET_OUTPUT_FILTER_ARGS))
+  if((CET_OUTPUT_FILTER OR CET_OUTPUT_FILTER_ARGS) AND NOT CET_REF)
     message(FATAL_ERROR "OUTPUT_FILTER and OUTPUT_FILTER_ARGS are not accepted if REF is not specified.")
   endif()
 
