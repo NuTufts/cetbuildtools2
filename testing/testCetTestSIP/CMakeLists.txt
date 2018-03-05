@@ -36,9 +36,16 @@ cet_test(sip_test_by_hand HANDBUILT TEST_EXEC $<TARGET_FILE:sip_test>)
 
 # A PREBUILT script will fail on Darwin because whilst the cet_exec_test
 # forwards the dynamic loader path, script takes us back to square one
-# At present, we don't do anything other than confirm running. Check the
-# printout to confirm behaviour
+# This should only fail on Darwin (we assume SIP is active...)
 cet_test(sip_test_script.sh PREBUILT)
+if(APPLE)
+  set_tests_properties(sip_test_script.sh PROPERTIES WILL_FAIL TRUE)
+endif()
+
+# A PREBUILT script that sources cet_test_functions.sh should have dynamic
+# loader path set
+cet_test(sip_test_good_script.sh PREBUILT TEST_PROPERTIES PASS_REGULAR_EXPRESSION "^x${_path}\:.*x")
+
 
 # We should be able to set the environment in the running executable
 # Again just a check that things work.
