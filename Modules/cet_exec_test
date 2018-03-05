@@ -6,29 +6,6 @@
 #
 ########################################################################
 
-#-----------------------------------------------------------------------
-# - BEGIN SHIM
-# Shim to pass through dynamic loader settings for test programs across
-# Linux and macOS platforms. Primarily for Darwin in cases where the test
-# relies on DYLD_LIBRARY_PATH, which would otherwise be stripped by SIP.
-# NB, only works if the exec'd test program is outside SIP. In cases where
-# this program is a script, it'll only work if the intepreter is outside
-# SIP
-__CET_LIBRARY_PATH_NAME="LD_LIBRARY_PATH"
-if [[ $(uname) == 'Darwin' ]]; then
-  __CET_LIBRARY_PATH_NAME="DYLD_LIBRARY_PATH"
-fi
-
-# Build up new path
-CETD_LIBRARY_PATH=${CETD_LIBRARY_PATH:+${CETD_LIBRARY_PATH}:}${!__CET_LIBRARY_PATH_NAME}
-if [ ! -z "$CETD_LIBRARY_PATH" ]; then
-  export ${__CET_LIBRARY_PATH_NAME}=${CETD_LIBRARY_PATH}
-fi
-# - END SHIM
-#-----------------------------------------------------------------------
-
-
-
 function realdir() {
   local dir="${1:-.}"
   ( cd "$dir" && pwd -P )
@@ -637,6 +614,31 @@ if (( ${#missingfiles[@]} )); then
   echo "Required files missing from ${wd} for test: ${missingfiles[@]}" 1>&2
   exit ${skip_code:-247}
 else
+  #-----------------------------------------------------------------------
+  # - BEGIN SHIM
+  # Shim to pass through dynamic loader settings for test programs across
+  # Linux and macOS platforms. Primarily for Darwin in cases where the test
+  # relies on DYLD_LIBRARY_PATH, which would otherwise be stripped by SIP.
+  # NB, only works if the exec'd test program is outside SIP. In cases where
+  # this program is a script, it'll only work if the intepreter is outside
+  # SIP
+  __CET_LIBRARY_PATH_NAME="LD_LIBRARY_PATH"
+  if [[ $(uname) == 'Darwin' ]]; then
+    __CET_LIBRARY_PATH_NAME="DYLD_LIBRARY_PATH"
+  fi
+
+  # Build up new path
+  CETD_LIBRARY_PATH=${CETD_LIBRARY_PATH:+${CETD_LIBRARY_PATH}:}${!__CET_LIBRARY_PATH_NAME}
+  if [ ! -z "$CETD_LIBRARY_PATH" ]; then
+    export ${__CET_LIBRARY_PATH_NAME}=${CETD_LIBRARY_PATH}
+  fi
+  # - END SHIM
+  #-----------------------------------------------------------------------
+
+  # Append our directory to PATH so that subscripts can source cet_test_functions
+  # directly.
+  export PATH=$PATH:$(realdir $(dirname ${0}))
+
   # Execute command in now-clean environment.
   exec "$@"
 fi
