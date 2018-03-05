@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CetTest &mdash; cetbuildtools2 0.4.0 documentation</title>
+  <title>CetTest &mdash; cetbuildtools2 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="cetbuildtools2 0.4.0 documentation" href="../index.html"/>
+    <link rel="top" title="cetbuildtools2 0.5.0 documentation" href="../index.html"/>
         <link rel="next" title="CetUPS" href="CetUPS.html"/>
         <link rel="prev" title="CetInstallDirs" href="CetInstallDirs.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -199,17 +199,17 @@ defining their properties</p>
 <code class="docutils literal"><span class="pre">cet_test_env()</span></code> and <code class="docutils literal"><span class="pre">cet_test_assertion()</span></code>, below).</p>
 <p>Options:</p>
 <dl class="docutils">
-<dt>HANDBUILT</dt>
+<dt><code class="docutils literal"><span class="pre">HANDBUILT</span></code></dt>
 <dd>Do not build the target – it will be provided. This option is
 mutually exclusive with the PREBUILT option.</dd>
-<dt>PREBUILT</dt>
+<dt><code class="docutils literal"><span class="pre">PREBUILT</span></code></dt>
 <dd>Do not build the target – pick it up from the source dir (eg
 scripts).  This option is mutually exclusive with the HANDBUILT
 option and simply calls the cet_script() function with appropriate
 options.</dd>
-<dt>USE_BOOST_UNIT</dt>
+<dt><code class="docutils literal"><span class="pre">USE_BOOST_UNIT</span></code></dt>
 <dd>This test uses the Boost Unit Test Framework.</dd>
-<dt>USE_CATCH_MAIN</dt>
+<dt><code class="docutils literal"><span class="pre">USE_CATCH_MAIN</span></code></dt>
 <dd><p class="first">This test will use the Catch test framework
 (<a class="reference external" href="https://github.com/philsquared/Catch">https://github.com/philsquared/Catch</a>). The specified target will be
 built from a precompiled main program to run tests described in the
@@ -222,31 +222,31 @@ be aware that the compilation of a Catch main is quite expensive,
 and any tests that <em>do</em> use this option will all share the same
 compiled main.</p>
 </dd>
-<dt>NO_AUTO</dt>
+<dt><code class="docutils literal"><span class="pre">NO_AUTO</span></code></dt>
 <dd>Do not add the target to the auto test list.</dd>
 </dl>
 <p>Arguments:</p>
 <dl class="docutils">
-<dt>CONFIGURATIONS</dt>
+<dt><code class="docutils literal"><span class="pre">CONFIGURATIONS</span></code></dt>
 <dd>Configurations (Debug, etc, etc) under which the test shall be executed.</dd>
-<dt>DATAFILES</dt>
+<dt><code class="docutils literal"><span class="pre">DATAFILES</span></code></dt>
 <dd>Input and/or references files to be copied to the test area in the
 build tree for use by the test. If there is no path, or a relative
 path, the file is assumed to be in or under
 <code class="docutils literal"><span class="pre">CMAKE_CURRENT_SOURCE_DIR</span></code>.</dd>
-<dt>DEPENDENCIES</dt>
+<dt><code class="docutils literal"><span class="pre">DEPENDENCIES</span></code></dt>
 <dd>List of top-level dependencies to consider for a PREBUILT
 target. Top-level implies a target (not file) created with
 ADD_EXECUTABLE, ADD_LIBRARY or ADD_CUSTOM_TARGET.</dd>
-<dt>LIBRARIES</dt>
+<dt><code class="docutils literal"><span class="pre">LIBRARIES</span></code></dt>
 <dd>Extra libraries to link to the resulting target.</dd>
-<dt>OPTIONAL_GROUPS</dt>
+<dt><code class="docutils literal"><span class="pre">OPTIONAL_GROUPS</span></code></dt>
 <dd>Assign this test to one or more named optional groups. If the CMake
-list variable CET_TEST_GROUPS is set (e.g. with -D on the CMake
+list variable <code class="docutils literal"><span class="pre">CET_TEST_GROUPS</span></code> is set (e.g. with -D on the CMake
 command line) and there is overlap between the two lists, execute
-the test. The CET_TEST_GROUPS cache variable may additionally
+the test. The <code class="docutils literal"><span class="pre">CET_TEST_GROUPS</span></code> cache variable may additionally
 contain the optional values ALL or NONE.</dd>
-<dt>PARG_&lt;label&gt; &lt;opt&gt;[=] &lt;args&gt;+</dt>
+<dt><code class="docutils literal"><span class="pre">PARG_&lt;label&gt;</span> <span class="pre">&lt;opt&gt;[=]</span> <span class="pre">&lt;args&gt;+</span></code></dt>
 <dd><p class="first">Specify a permuted argument (multiple permitted with different
 &lt;label&gt;). This allows the creation of multiple tests with arguments
 from a set of permutations.</p>
@@ -266,24 +266,24 @@ addition of such support should be straightforward should the use
 case arise.</p>
 </dd>
 </dl>
-<p>REF &lt;file</p>
+<p><code class="docutils literal"><span class="pre">REF</span> <span class="pre">&lt;file&gt;</span></code></p>
 <blockquote>
 <div><p>The standard output of the test will be captured and compared against
 the specified reference file. It is an error to specify this
-argument and either the PASS_REGULAR_EXPRESSION or
-FAIL_REGULAR_EXPRESSION test properties to the TEST_PROPERTIES
+argument and either the <code class="docutils literal"><span class="pre">PASS_REGULAR_EXPRESSION</span></code> or
+<code class="docutils literal"><span class="pre">FAIL_REGULAR_EXPRESSION</span></code> test properties to the <code class="docutils literal"><span class="pre">TEST_PROPERTIES</span></code>
 argument: success is the logical AND of the exit code from execution
 of the test as originally specified, and the success of the
 filtering and subsequent comparison of the output (and optionally,
 the error stream). Optionally, a second element may be specified
 representing a reference for the error stream; otherwise, standard
 error will be ignored.</p>
-<p>If REF is specified, then OUTPUT_FILTERS may also be specified
-(OUTPUT_FILTER and optionally OUTPUT_FILTER_ARGS will be accepted in
-the alternative for historical reasons). OUTPUT_FILTER must be a
+<p>If <code class="docutils literal"><span class="pre">REF</span></code> is specified, then <code class="docutils literal"><span class="pre">OUTPUT_FILTERS</span></code> may also be specified
+(<code class="docutils literal"><span class="pre">OUTPUT_FILTER</span></code> and optionally <code class="docutils literal"><span class="pre">OUTPUT_FILTER_ARGS</span></code> will be accepted in
+the alternative for historical reasons). <code class="docutils literal"><span class="pre">OUTPUT_FILTER</span></code> must be a
 program which expects input on STDIN and puts the filtered output on
-STDOUT. OUTPUT_FILTERS should be a list of filters expecting input
-on STDIN and putting output on STDOUT. If DEFAULT is specified as a
+STDOUT. <code class="docutils literal"><span class="pre">OUTPUT_FILTERS</span></code> should be a list of filters expecting input
+on STDIN and putting output on STDOUT. If <code class="docutils literal"><span class="pre">DEFAULT</span></code> is specified as a
 filter, it will be replaced at that point in the list of filters by
 appropriate defaults. Examples:</p>
 <blockquote>
@@ -292,45 +292,45 @@ appropriate defaults. Examples:</p>
 </div></blockquote>
 </div></blockquote>
 <dl class="docutils">
-<dt>REQUIRED_FILES &lt;file&gt;+</dt>
+<dt><code class="docutils literal"><span class="pre">REQUIRED_FILES</span> <span class="pre">&lt;file&gt;+</span></code></dt>
 <dd>These files are required to be present before the test will be
-executed. If any are missing, ctest will record NOT RUN for this
+executed. If any are missing, <code class="docutils literal"><span class="pre">ctest</span></code> will record NOT RUN for this
 test.</dd>
 </dl>
-<p><a href="#id1"><span class="problematic" id="id2">*</span></a>SAN_OPTIONS (NOT IMPLEMENTED YET)</p>
+<p><code class="docutils literal"><span class="pre">&lt;TYPE&gt;SAN_OPTIONS</span></code> (NOT IMPLEMENTED YET)</p>
 <blockquote>
 <div>Option representing the desired value of the corresponding sanitizer
 control environment variable for the test.</div></blockquote>
 <dl class="docutils">
-<dt>SCOPED</dt>
-<dd>Test target (but not PREBUILT not HANDBUILT executable) names will
+<dt><code class="docutils literal"><span class="pre">SCOPED</span></code></dt>
+<dd>Test target (but not <code class="docutils literal"><span class="pre">PREBUILT</span></code> not <code class="docutils literal"><span class="pre">HANDBUILT</span></code> executable) names will
 be scoped by project name (&lt;PROJECT_NAME&gt;:…)</dd>
-<dt>SOURCE[S] &lt;file&gt;+</dt>
-<dd>Sources to use to build the target (default is ${target}.cc).</dd>
-<dt>TEST_ARGS &lt;arg&gt;+</dt>
+<dt><code class="docutils literal"><span class="pre">SOURCE[S]</span> <span class="pre">&lt;file&gt;+</span></code></dt>
+<dd>Sources to use to build the target (default is “${target}.cc”).</dd>
+<dt><code class="docutils literal"><span class="pre">TEST_ARGS</span> <span class="pre">&lt;arg&gt;+</span></code></dt>
 <dd>Any arguments to the test to be run.</dd>
-<dt>TEST_EXEC &lt;program&gt;</dt>
-<dd>The executable to run (if not the target). The HANDBUILT option must
+<dt><code class="docutils literal"><span class="pre">TEST_EXEC</span> <span class="pre">&lt;program&gt;</span></code></dt>
+<dd>The executable to run (if not the same as the test name). The <code class="docutils literal"><span class="pre">HANDBUILT</span></code> option must
 be specified in conjunction with this option. It should be supplied
-as a full path to the executable or cet_test will fall back to the PATH
-environment to find it. Generator expressions may be used, e.g. $&lt;TARGET_FILE:name&gt;.</dd>
-<dt>TEST_PROPERTIES &lt;PROPERTY value&gt;+</dt>
+as a full path to the executable or cet_test will fall back to the <code class="docutils literal"><span class="pre">PATH</span></code>
+environment to find it. Generator expressions may be used, e.g. <code class="docutils literal"><span class="pre">$&lt;TARGET_FILE:name&gt;</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">TEST_PROPERTIES</span> <span class="pre">&lt;PROPERTY</span> <span class="pre">value&gt;+</span></code></dt>
 <dd>Properties to be added to the test. See documentation of the cmake
 command, “set_tests_properties.”</dd>
 </dl>
 <p>Cache variables</p>
 <dl class="docutils">
-<dt>CET_DEFINED_TEST_GROUPS</dt>
+<dt><code class="docutils literal"><span class="pre">CET_DEFINED_TEST_GROUPS</span></code></dt>
 <dd>Any test group names CMake sees will be added to this list.</dd>
 </dl>
 <ul class="simple">
-<li>The CMake properties PASS_REGULAR_EXPRESSION and
-FAIL_REGULAR_EXPRESSION are incompatible with the REF option, but we
-cannot check for them if you use CMake’s add_tests_properties()
-rather than cet_test(CET_TEST_PROPERTIES …).</li>
-<li>If you intend to set the property SKIP_RETURN_CODE, you should use
-CET_TEST_PROPERTIES to set it rather than add_tests_properties(), as
-cet_test() needs to take account of your preference.</li>
+<li>The CMake properties <code class="docutils literal"><span class="pre">PASS_REGULAR_EXPRESSION</span></code> and
+<code class="docutils literal"><span class="pre">FAIL_REGULAR_EXPRESSION</span></code> are incompatible with the <code class="docutils literal"><span class="pre">REF</span></code> option, but we
+cannot check for them if you use CMake’s <code class="docutils literal"><span class="pre">add_tests_properties</span></code>
+rather than <code class="docutils literal"><span class="pre">cet_test(CET_TEST_PROPERTIES</span> <span class="pre">...)</span></code>.</li>
+<li>If you intend to set the property <code class="docutils literal"><span class="pre">SKIP_RETURN_CODE</span></code>, you should use
+<code class="docutils literal"><span class="pre">CET_TEST_PROPERTIES</span></code> to set it rather than <code class="docutils literal"><span class="pre">add_tests_properties</span></code>, as
+<code class="docutils literal"><span class="pre">cet_test</span></code> needs to take account of your preference.</li>
 </ul>
 <dl class="command">
 <dt id="command:cet_test_env">
@@ -357,6 +357,35 @@ property. For example:</p>
 when the test is launched as a child process of a SIP-protected process.
 In particular, <code class="docutils literal"><span class="pre">DYLD_LIBRARY_PATH</span></code> is stripped and this may affect the running
 of tests that rely on this (such as plugins loaded at runtime).</p>
+<p><code class="docutils literal"><span class="pre">cet_test</span></code> will cache and forward on to tests the setting of the dynamic loader path, if any, when
+<code class="docutils literal"><span class="pre">cmake</span></code> is run for the first time on a project using it. This is to assist tests that use
+external libraries that rely on the dynamic loader rather than <code class="docutils literal"><span class="pre">ld.so.conf</span></code> or
+rpath to find their dependencies. CMake builds use rpath by default to locate
+internal dependencies of a project, e.g. a project-built program <code class="docutils literal"><span class="pre">foo</span></code> that uses
+a library <code class="docutils literal"><span class="pre">libfoo</span></code> also built by the project, so you do not need to set
+or configure the dynamic loader path for tests of this case.</p>
+<p>If your project has tests that load project libraries dynamically (i.e. <code class="docutils literal"><span class="pre">cetlib</span></code>
+style plugins), then you will need to use <code class="docutils literal"><span class="pre">cet_test_env</span></code> to tell the tests
+where the find these libraries. The canonical way to do this is:</p>
+<div class="highlight-cmake"><div class="highlight"><pre><span></span><span class="nb">include</span><span class="p">(</span><span class="s">CetTest</span><span class="p">)</span>
+<span class="nb">cet_test_env</span><span class="p">(</span><span class="s2">&quot;CETD_LIBRARY_PATH=$&lt;TARGET_FILE_DIR:fooplugin&gt;:$ENV{CETD_LIBRARY_PATH}&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here <code class="docutils literal"><span class="pre">CETD_LIBRARY_PATH</span></code> is the internal, portable environment variable used by cetbuildtools2
+to store the dynamic loader path to forward on to tests. It may be set like any path-style
+variable. It is recommended to use a CMake generator expression to point to the location
+of the project’s loadable targets as this guarantees use of the project libraries without clashing with
+any system install in addition to being portable between Make/Ninja/Xcode/Visual Studio.</p>
+<p>If the test program is a <code class="docutils literal"><span class="pre">bash</span></code> script rather than a binary executable, <cite>cet_test_env</cite>
+may not be able to forward on the dynamic loader path correctly if a SIP-enabeld <code class="docutils literal"><span class="pre">bash</span></code>
+is used. In this case, you should write the shbang and first lines of your script as</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+. cet_test_functions.sh
+<span class="c1"># ... implementation follows ...</span>
+</pre></div>
+</div>
+<p>Here, the <code class="docutils literal"><span class="pre">cet_test_functions.sh</span></code> script is sourced and will correctly forward the dynamic
+loader environment for subsequent commands.</p>
 <dl class="command">
 <dt id="command:cet_test_assertion">
 <code class="descname">cet_test_assertion</code><a class="headerlink" href="#command:cet_test_assertion" title="Permalink to this definition">¶</a></dt>
@@ -419,7 +448,7 @@ cet_test() or add_test(). At least one name must be supplied.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
