@@ -44,7 +44,7 @@ endif()
 
 # A PREBUILT script that sources cet_test_functions.sh should have dynamic
 # loader path set
-cet_test(sip_test_good_script.sh PREBUILT TEST_PROPERTIES PASS_REGULAR_EXPRESSION "^x${_path}\:\:x")
+cet_test(sip_test_good_script.sh PREBUILT TEST_PROPERTIES PASS_REGULAR_EXPRESSION "^x${_path}\:.*x")
 
 
 # We should be able to set the environment in the running executable
