@@ -1,4 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+# Sourcing this should forward on the environment for us
+. cet_test_functions.sh
 
 __SYSTEM_LIBRARY_PATH_NAME="LD_LIBRARY_PATH"
 if [[ $(uname) == 'Darwin' ]]; then

@@ -47,6 +47,27 @@
 # 2011/03/16 CG.
 ########################################################################
 
+#-----------------------------------------------------------------------
+# - BEGIN SHIM
+# Shim to pass through dynamic loader settings for test programs across
+# Linux and macOS platforms. Primarily for Darwin in cases where the test
+# relies on DYLD_LIBRARY_PATH, which would otherwise be stripped by SIP.
+# NB, only works if the exec'd test program is outside SIP. In cases where
+# this program is a script, it'll only work if the intepreter is outside
+# SIP
+__CET_LIBRARY_PATH_NAME="LD_LIBRARY_PATH"
+if [[ $(uname) == 'Darwin' ]]; then
+  __CET_LIBRARY_PATH_NAME="DYLD_LIBRARY_PATH"
+fi
+
+# Build up new path
+CETD_LIBRARY_PATH=${CETD_LIBRARY_PATH:+${CETD_LIBRARY_PATH}:}${!__CET_LIBRARY_PATH_NAME}
+if [ ! -z "$CETD_LIBRARY_PATH" ]; then
+  export ${__CET_LIBRARY_PATH_NAME}=${CETD_LIBRARY_PATH}
+fi
+# - END SHIM
+#-----------------------------------------------------------------------
+
 if [[ -n "${CET_TF_LEAVE}" ]]; then
   CET_TF_LEAVE=$(echo "${CET_TF_LEAVE}" | tr '[A-Z]' '[a-z]')
   CET_TF_LEAVE=${CET_TF_LEAVE%.}

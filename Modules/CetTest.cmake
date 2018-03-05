@@ -25,20 +25,20 @@
 #
 # Options:
 #
-# HANDBUILT
+# ``HANDBUILT``
 #   Do not build the target -- it will be provided. This option is
 #   mutually exclusive with the PREBUILT option.
 #
-# PREBUILT
+# ``PREBUILT``
 #   Do not build the target -- pick it up from the source dir (eg
 #   scripts).  This option is mutually exclusive with the HANDBUILT
 #   option and simply calls the cet_script() function with appropriate
 #   options.
 #
-# USE_BOOST_UNIT
+# ``USE_BOOST_UNIT``
 #   This test uses the Boost Unit Test Framework.
 #
-# USE_CATCH_MAIN
+# ``USE_CATCH_MAIN``
 #   This test will use the Catch test framework
 #   (https://github.com/philsquared/Catch). The specified target will be
 #   built from a precompiled main program to run tests described in the
@@ -52,36 +52,36 @@
 #   and any tests that *do* use this option will all share the same
 #   compiled main.
 #
-# NO_AUTO
+# ``NO_AUTO``
 #   Do not add the target to the auto test list.
 #
 # Arguments:
 #
-# CONFIGURATIONS
+# ``CONFIGURATIONS``
 #   Configurations (Debug, etc, etc) under which the test shall be executed.
 #
-# DATAFILES
+# ``DATAFILES``
 #   Input and/or references files to be copied to the test area in the
 #   build tree for use by the test. If there is no path, or a relative
 #   path, the file is assumed to be in or under
 #   ``CMAKE_CURRENT_SOURCE_DIR``.
 #
-# DEPENDENCIES
+# ``DEPENDENCIES``
 #   List of top-level dependencies to consider for a PREBUILT
 #   target. Top-level implies a target (not file) created with
 #   ADD_EXECUTABLE, ADD_LIBRARY or ADD_CUSTOM_TARGET.
 #
-# LIBRARIES
+# ``LIBRARIES``
 #   Extra libraries to link to the resulting target.
 #
-# OPTIONAL_GROUPS
+# ``OPTIONAL_GROUPS``
 #   Assign this test to one or more named optional groups. If the CMake
-#   list variable CET_TEST_GROUPS is set (e.g. with -D on the CMake
+#   list variable ``CET_TEST_GROUPS`` is set (e.g. with -D on the CMake
 #   command line) and there is overlap between the two lists, execute
-#   the test. The CET_TEST_GROUPS cache variable may additionally
+#   the test. The ``CET_TEST_GROUPS`` cache variable may additionally
 #   contain the optional values ALL or NONE.
 #
-# PARG_<label> <opt>[=] <args>+
+# ``PARG_<label> <opt>[=] <args>+``
 #   Specify a permuted argument (multiple permitted with different
 #   <label>). This allows the creation of multiple tests with arguments
 #   from a set of permutations.
@@ -106,12 +106,12 @@
 #   addition of such support should be straightforward should the use
 #   case arise.
 #
-# REF <file
+# ``REF <file>``
 #
 #  The standard output of the test will be captured and compared against
 #  the specified reference file. It is an error to specify this
-#  argument and either the PASS_REGULAR_EXPRESSION or
-#  FAIL_REGULAR_EXPRESSION test properties to the TEST_PROPERTIES
+#  argument and either the ``PASS_REGULAR_EXPRESSION`` or
+#  ``FAIL_REGULAR_EXPRESSION`` test properties to the ``TEST_PROPERTIES``
 #  argument: success is the logical AND of the exit code from execution
 #  of the test as originally specified, and the success of the
 #  filtering and subsequent comparison of the output (and optionally,
@@ -119,12 +119,12 @@
 #  representing a reference for the error stream; otherwise, standard
 #  error will be ignored.
 #
-#  If REF is specified, then OUTPUT_FILTERS may also be specified
-#  (OUTPUT_FILTER and optionally OUTPUT_FILTER_ARGS will be accepted in
-#  the alternative for historical reasons). OUTPUT_FILTER must be a
+#  If ``REF`` is specified, then ``OUTPUT_FILTERS`` may also be specified
+#  (``OUTPUT_FILTER`` and optionally ``OUTPUT_FILTER_ARGS`` will be accepted in
+#  the alternative for historical reasons). ``OUTPUT_FILTER`` must be a
 #  program which expects input on STDIN and puts the filtered output on
-#  STDOUT. OUTPUT_FILTERS should be a list of filters expecting input
-#  on STDIN and putting output on STDOUT. If DEFAULT is specified as a
+#  STDOUT. ``OUTPUT_FILTERS`` should be a list of filters expecting input
+#  on STDIN and putting output on STDOUT. If ``DEFAULT`` is specified as a
 #  filter, it will be replaced at that point in the list of filters by
 #  appropriate defaults. Examples:
 #
@@ -132,50 +132,50 @@
 #
 #    OUTPUT_FILTERS filterA DEFAULT filterB
 #
-# REQUIRED_FILES <file>+
+# ``REQUIRED_FILES <file>+``
 #   These files are required to be present before the test will be
-#   executed. If any are missing, ctest will record NOT RUN for this
+#   executed. If any are missing, ``ctest`` will record NOT RUN for this
 #   test.
 #
-# *SAN_OPTIONS (NOT IMPLEMENTED YET)
+# ``<TYPE>SAN_OPTIONS`` (NOT IMPLEMENTED YET)
 #
 #   Option representing the desired value of the corresponding sanitizer
 #   control environment variable for the test.
 #
-# SCOPED
-#   Test target (but not PREBUILT not HANDBUILT executable) names will
+# ``SCOPED``
+#   Test target (but not ``PREBUILT`` not ``HANDBUILT`` executable) names will
 #   be scoped by project name (<PROJECT_NAME>:...)
 #
-# SOURCE[S] <file>+
-#   Sources to use to build the target (default is ${target}.cc).
+# ``SOURCE[S] <file>+``
+#   Sources to use to build the target (default is "${target}.cc").
 #
-# TEST_ARGS <arg>+
+# ``TEST_ARGS <arg>+``
 #   Any arguments to the test to be run.
 #
-# TEST_EXEC <program>
-#   The executable to run (if not the target). The HANDBUILT option must
+# ``TEST_EXEC <program>``
+#   The executable to run (if not the same as the test name). The ``HANDBUILT`` option must
 #   be specified in conjunction with this option. It should be supplied
-#   as a full path to the executable or cet_test will fall back to the PATH
-#   environment to find it. Generator expressions may be used, e.g. $<TARGET_FILE:name>.
+#   as a full path to the executable or cet_test will fall back to the ``PATH``
+#   environment to find it. Generator expressions may be used, e.g. ``$<TARGET_FILE:name>``.
 #
-# TEST_PROPERTIES <PROPERTY value>+
+# ``TEST_PROPERTIES <PROPERTY value>+``
 #   Properties to be added to the test. See documentation of the cmake
 #   command, "set_tests_properties."
 #
 # Cache variables
 #
-# CET_DEFINED_TEST_GROUPS
+# ``CET_DEFINED_TEST_GROUPS``
 #   Any test group names CMake sees will be added to this list.
 #
 #
-# * The CMake properties PASS_REGULAR_EXPRESSION and
-#   FAIL_REGULAR_EXPRESSION are incompatible with the REF option, but we
-#   cannot check for them if you use CMake's add_tests_properties()
-#   rather than cet_test(CET_TEST_PROPERTIES ...).
+# * The CMake properties ``PASS_REGULAR_EXPRESSION`` and
+#   ``FAIL_REGULAR_EXPRESSION`` are incompatible with the ``REF`` option, but we
+#   cannot check for them if you use CMake's ``add_tests_properties``
+#   rather than ``cet_test(CET_TEST_PROPERTIES ...)``.
 #
-# * If you intend to set the property SKIP_RETURN_CODE, you should use
-#   CET_TEST_PROPERTIES to set it rather than add_tests_properties(), as
-#   cet_test() needs to take account of your preference.
+# * If you intend to set the property ``SKIP_RETURN_CODE``, you should use
+#   ``CET_TEST_PROPERTIES`` to set it rather than ``add_tests_properties``, as
+#   ``cet_test`` needs to take account of your preference.
 #
 #
 # .. cmake:command:: cet_test_env
@@ -205,6 +205,42 @@
 # when the test is launched as a child process of a SIP-protected process.
 # In particular, ``DYLD_LIBRARY_PATH`` is stripped and this may affect the running
 # of tests that rely on this (such as plugins loaded at runtime).
+#
+# ``cet_test`` will cache and forward on to tests the setting of the dynamic loader path, if any, when
+# ``cmake`` is run for the first time on a project using it. This is to assist tests that use
+# external libraries that rely on the dynamic loader rather than ``ld.so.conf`` or
+# rpath to find their dependencies. CMake builds use rpath by default to locate
+# internal dependencies of a project, e.g. a project-built program ``foo`` that uses
+# a library ``libfoo`` also built by the project, so you do not need to set
+# or configure the dynamic loader path for tests of this case.
+#
+# If your project has tests that load project libraries dynamically (i.e. ``cetlib``
+# style plugins), then you will need to use ``cet_test_env`` to tell the tests
+# where the find these libraries. The canonical way to do this is:
+#
+# .. code-block:: cmake
+#
+#   include(CetTest)
+#   cet_test_env("CETD_LIBRARY_PATH=$<TARGET_FILE_DIR:fooplugin>:$ENV{CETD_LIBRARY_PATH}")
+#
+# Here ``CETD_LIBRARY_PATH`` is the internal, portable environment variable used by cetbuildtools2
+# to store the dynamic loader path to forward on to tests. It may be set like any path-style
+# variable. It is recommended to use a CMake generator expression to point to the location
+# of the project's loadable targets as this guarantees use of the project libraries without clashing with
+# any system install in addition to being portable between Make/Ninja/Xcode/Visual Studio.
+#
+# If the test program is a ``bash`` script rather than a binary executable, `cet_test_env`
+# may not be able to forward on the dynamic loader path correctly if a SIP-enabeld ``bash``
+# is used. In this case, you should write the shbang and first lines of your script as
+#
+# .. code-block:: bash
+#
+#   #!/bin/bash
+#   . cet_test_functions.sh
+#   # ... implementation follows ...
+#
+# Here, the ``cet_test_functions.sh`` script is sourced and will correctly forward the dynamic
+# loader environment for subsequent commands.
 #
 #
 # .. cmake:command:: cet_test_assertion
