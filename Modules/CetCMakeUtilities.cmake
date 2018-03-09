@@ -202,9 +202,9 @@ function(set_boost_unit_properties _target)
       )
   endif()
   if((NOT TARGET Boost::unit_test_framework)
-     OR (NOT Boost_UNIT_TEST_FRAMEWORK_LIBRARY))
+    AND (NOT Boost_UNIT_TEST_FRAMEWORK_LIBRARY))
     message(FATAL_ERROR
-      "set_boost_unit_properties: No Target of Variable found for Boost's Unit Test Framework\n"
+      "set_boost_unit_properties: No Target or Variable found for Boost's Unit Test Framework\n"
       "Ensure the project calls\n"
       "find_package(Boost REQUIRED unit_test_framework)\n"
       "before using this function"
@@ -212,7 +212,7 @@ function(set_boost_unit_properties _target)
   endif()
 
   # Append, don't overwrite, compile definitions.
-  # All target types need(or rather use) BOOST_TEST_DYN_LINK
+  # All target types need (or rather use) BOOST_TEST_DYN_LINK
   # BOOST_TEST_MAIN for executables only
   set_property(TARGET ${_target}
     APPEND PROPERTY
