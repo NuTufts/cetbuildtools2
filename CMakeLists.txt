@@ -2,7 +2,7 @@
 #   Though a very simple project, it requires its own functionality
 #   to install natively or using the CET/UPS policy
 cmake_minimum_required(VERSION 3.0)
-project(cetbuildtools2 VERSION 0.5.1)
+project(cetbuildtools2 VERSION 0.6.0)
 
 # - Install policy
 # Native only for now
