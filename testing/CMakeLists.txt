@@ -70,11 +70,27 @@ set_tests_properties(testEnumOption_CaseInsensitive
 
 #-----------------------------------------------------------------------
 # CetInstallDirs tests
+# - GNU style
 add_test(
   NAME testCetInstallDirs_Basic
   COMMAND ${CMAKE_COMMAND}
           -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules
           -P ${CMAKE_CURRENT_SOURCE_DIR}/testCetInstallDirs.cmake
+  )
+
+# UPS style, for now, need a project as we need to deal with binaries
+# but see if above script can be adapted
+# The below is just a smoke test and does not check that the files
+# are installed in the right place yet...
+add_test(
+  NAME testUPSInstallDirs
+  COMMAND ${CMAKE_CTEST_COMMAND}
+          --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testUPSInstallDirs ${CMAKE_CURRENT_BINARY_DIR}/testUPSInstallDirs
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCET_INSTALL_UPS=ON"
+          --test-command ${CMAKE_MAKE_PROGRAM} install
   )
 
 #-----------------------------------------------------------------------
@@ -88,7 +104,6 @@ add_test(
           --build-makeprogram ${CMAKE_MAKE_PROGRAM}
           --build-config $<CONFIG>
           --build-options "-DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules"
-
           --test-command testCetWriteCXXVersionAPI
   )
 

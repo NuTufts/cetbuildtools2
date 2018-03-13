@@ -90,6 +90,44 @@
 #
 include(CMakeParseArguments)
 
+option(CET_INSTALL_UPS "Use UPS install hierarchy" OFF)
+mark_as_advanced(CET_INSTALL_UPS)
+
+# When this is on, it's a simple override for now
+if(CET_INSTALL_UPS)
+  # There's always a prefix which is "product/ups_version"
+  # This is the base for everything as well as the prefix
+  # for arch independent parts of the package
+  if(NOT PROJECT_NAME)
+    message(FATAL_ERROR "No PROJECT_NAME set; has project() been called?")
+  endif()
+  if(NOT PROJECT_VERSION)
+    message(FATAL_ERROR "No PROJECT_VERSION set; use project(foo VERSION 1.2.3) or set(PROJECT_VERSION 1.2.3)")
+  endif()
+
+  # PROJECT_NAME == product,
+  # PROJECT_VERSION must be transformed to the form vX_Y_Z
+  # with any Y,Z < 10 padded to two digits.
+
+  set(UPS_INSTALL_PREFIX "${PROJECT_NAME}/${PROJECT_VERSION}")
+  # The arch-dependent part is then a subdir of "UPS_INSTALL_PREFIX"
+  # named "platform.arch.qualifiers". There are subdirs of this for
+  # bin/lib etc. The value is to be determined from the ups program,
+  # or queries to the system/compiler etc.
+  # NB: This is dependent on compiler/c++ standard, so needs that
+  # info. Means there's a setup order dependence...
+  # It's also partially defined by the ups/product_deps file in projects...
+  set(UPS_BINARY_ID "${CMAKE_SYSTEM_NAME}.${CMAKE_SYSTEM_VERSION}.${CMAKE_SYSTEM_PROCESSOR}")
+  set(UPS_BINARY_PREFIX "${UPS_INSTALL_PREFIX}/${UPS_BINARY_ID}")
+
+  # Now override paths that GNUInstallDirs would otherwise set
+  set(CMAKE_INSTALL_BINDIR      "${UPS_BINARY_PREFIX}/bin")
+  set(CMAKE_INSTALL_DATAROOTDIR "${UPS_INSTALL_PREFIX}")
+  set(CMAKE_INSTALL_INCLUDEDIR  "${UPS_INSTALL_PREFIX}/include")
+  set(CMAKE_INSTALL_LIBDIR      "${UPS_BINARY_PREFIX}/lib")
+  # ... and others, because UPS fixes the install hierarchy.
+endif()
+
 #-----------------------------------------------------------------------
 # GNU Install Policy - inline for now
 #
@@ -196,6 +234,8 @@ function(cet_set_output_directories)
     )
 
   # - Multimode generator overrides
+  #   TODO: For UPS installs, the binary placeholder contains the
+  #   mode, so this needs to be accounted for here if possible.
   foreach(_conftype ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${_conftype} _conftype_uppercase)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${_conftype_uppercase}
