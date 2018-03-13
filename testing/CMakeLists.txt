@@ -228,6 +228,26 @@ add_test(
           --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
   )
 
+# Boost imported targets workaround
+# On CMake < 3.11, FindBoost module won't generate imported targets for
+# unknown Boost versions, as it wants to fully define the dependencies
+# between them. From 3.11, imported targets will be generated for all known
+# libs, just without the link dependencies. This leaves it up to the user
+# to define closed set of links. In general, this is done anyway for CET
+# projects. To support older Cmake clients without patching, provide a workaround
+# to create imported targets on older cmakes.
+add_test(
+  NAME testFindBoostWorkaround
+  COMMAND ${CMAKE_CTEST_COMMAND}
+  --build-and-test ${CMAKE_CURRENT_LIST_DIR}/testFindBoostWorkaround ${CMAKE_CURRENT_BINARY_DIR}/testFindBoostWorkaround
+          --build-generator ${CMAKE_GENERATOR}
+          --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+          --build-config $<CONFIG>
+          --build-options "-Dcetbuildtools2_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+  )
+
+
+
 #-----------------------------------------------------------------------
 # Tests of cet_test
 # Basic
