@@ -22,6 +22,7 @@
    :hidden:
    :caption: Additional Find Modules
 
+   /find-modules/FindBoost
    /find-modules/FindCppUnit
    /find-modules/FindSQLite
    /find-modules/FindTBB
