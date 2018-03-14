@@ -78,6 +78,15 @@ add_test(
           -P ${CMAKE_CURRENT_SOURCE_DIR}/testCetInstallDirs.cmake
   )
 
+# - UPS basics
+add_test(
+  NAME testCetUPS_basic
+  COMMAND ${CMAKE_COMMAND}
+          -DCMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/Modules
+          -P ${CMAKE_CURRENT_SOURCE_DIR}/testCetUPS.cmake
+  )
+
+
 # UPS style, for now, need a project as we need to deal with binaries
 # but see if above script can be adapted
 # The below is just a smoke test and does not check that the files
